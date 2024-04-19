@@ -1,0 +1,214 @@
+---
+title: "Stats 572 - AN APPLICATION TO CROSS-COUNTRY GROWTH REGRESSIONS"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+## Notes
+- Did I do the Mahlahnobis distance correctly
+- Condition only on some not others
+
+## Libr.
+```{r}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(lmtest)
+library(sandwich)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+```
+
+## Functions
+```{r}
+dir = "/Users/simondn/Documents/Stats572/"
+source(paste0(dir,"Code/functions/WhichMinFunction.R"))
+
+```
+
+### Pop. Var.
+```{r}
+VHatPopFunctionLoop = function(dat, beta_hat){
+  ### Set Up ###
+  N = nrow(dat)
+  Y = dat$Y
+  X = select(dat,-c(Y,name)) %>%
+    mutate(X0 = rep(1,nrow(dat)),
+           open65 = open*gdp65) %>%
+    relocate(X0, .before = gdp65) %>%
+    as.matrix
+  
+  ### Bread ###
+  XXt = t(X) %*% X
+  Bread = solve(XXt/N)
+  
+  ### Meat ###
+  # Meat = array(numeric(), dim = c(ncol(X), ncol(X), nrow(X)))
+  # for(i in 1:nrow(X)){
+  #   Meat[,,i] = as.numeric((Y[i] - X[i,] %*% beta_hat)^2) *  X[i,] %*% t(X[i,])
+  # }
+  # Meat = rowSums(Meat, dims = 2)/nrow(X)
+  
+   ### Meat ###
+  residuals = Y - X %*% beta_hat
+  residuals_outer = as.numeric(diag(residuals %*% t(residuals)))
+  Meat = sapply(1:nrow(X), function(i) residuals_outer[i] * (X[i,] %*% t(X[i,])))
+  Meat = matrix(rowSums(Meat), nrow = 12, ncol = 12) / nrow(X)
+  
+  ### Sandwich Estimator ###
+  VPop = Bread %*% Meat %*% Bread
+  return(list(VarCovMatrix = VPop,
+              RegressionSE = as.numeric(sqrt(diag(VPop)/nrow(X)))))
+}
+```
+
+### Cond. Var.
+```{r}
+VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
+  ### Set Up ###
+  N = nrow(dat)
+  Y = dat$Y
+  X = select(dat,-c(Y,name)) %>%
+    mutate(X0 = rep(1,nrow(dat)),
+           open65 = open*gdp65) %>%
+    relocate(X0, .before = gdp65) %>%
+    as.matrix
+
+  ### lXi ###
+  dist_mah = StatMatch::mahalanobis.dist(X[,2:ncol(X)])
+  # dist_mah = StatMatch::mahalanobis.dist(X[,1:ncol(X)])
+  lXi = WhichMinFunction(dist_mah,2)
+  eHat_lXi = epsilon_hat[lXi]
+  X_lXi = X[lXi,]
+  
+  ### Bread ###
+  XXt = t(X) %*% X
+  Bread = solve(XXt/N)
+  
+  ### Meat ###
+  Meat = array(numeric(), dim = c(ncol(X), ncol(X), nrow(X)))
+  for(i in 1:nrow(X)){
+    Meat[,,i] = (epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) %*% t(epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) 
+  }
+  Meat = rowSums(Meat, dims = 2)/(2*nrow(X))
+
+  ### Sandwich Estimator
+  VCond = Bread * Meat * Bread
+  return(list(VarCovMatrix = VCond,
+              RegressionSE = as.numeric(sqrt(diag(VCond)/nrow(X)))))
+}
+```
+
+```{r}
+dat = read.csv("/Users/simondn/Documents/Stats572/data/sachs.csv")
+
+dat = dat %>% 
+  select(c(COUNTRY,OPEN6590,TROPICS,LIFE,ICRGE80,CGB7090,LGDPEA65,GEAP_POP,SXP,LIFE2,ACCESS,GR6590)) %>%
+  rename(name = COUNTRY,
+         Y = GR6590,
+         open = OPEN6590,
+         tropics = TROPICS,
+         life = LIFE,
+         inst = ICRGE80,
+         cgb = CGB7090,
+         gdp65 = LGDPEA65,
+         dpop = GEAP_POP,
+         sxp = SXP,
+         life2 = LIFE2,
+         land = ACCESS) %>%
+  mutate(life = exp(life),
+         life2 = life^2) %>%
+  relocate(Y, .after = name) %>%
+  relocate(gdp65, .after = Y) %>%
+  relocate(open, .after = gdp65) %>%
+  relocate(dpop, .after = open) %>%
+  relocate(cgb, .after = dpop) %>%
+  relocate(inst, .after = cgb) %>%
+  relocate(tropics, .after = inst) %>%
+  relocate(land, .after = tropics) %>%
+  relocate(sxp, .after = land) %>%
+  relocate(life, .after = sxp)
+dat = na.omit(dat)
+```
+
+```{r}
+model = lm(Y ~ gdp65 + open + open*gdp65 + dpop + cgb + inst + tropics + land + sxp + life + life2, data = dat)
+summary(model)
+```
+
+```{r}
+beta_hat = as.numeric(model$coefficients)
+epsilon_hat = as.numeric(model$residuals)
+VPop = VHatPopFunctionLoop(dat, beta_hat)$RegressionSE
+VCond = VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)$RegressionSE
+```
+
+```{r}
+### Check if VPop = VCov Sandwich Estimator ###
+VPop - as.numeric(lmtest::coeftest(model, vcov = sandwich)[,2]) < 1e-5
+```
+
+## AIZ
+```{r}
+# Create the data frame
+AIZ <- data.frame(
+  constant = c(1.66, 3.08, 3.03),
+  gdp65 = c(-1.50, 0.18, 0.17),
+  open = c(10.91, 2.76, 2.56),
+  dpop = c(0.69, 0.40, 0.45),
+  cgb = c(0.115, 0.025, 0.023),
+  inst = c(0.315, 0.071, 0.068),
+  tropics = c(-0.83, 0.25, 0.24),
+  land = c(-0.58, 0.21, 0.26),
+  sxp = c(-3.92, 1.22, 1.21),
+  life = c(0.35, 0.12, 0.12),
+  life2 = c(-0.003, 0.001, 0.001),
+  open65 = c(-1.08, 0.35, 0.33)
+) %>% t
+AIZ = data.frame(cbind(AIZ,round(VPop,3)))
+colnames(AIZ) = c("Estimate", "POPse", "CONDse", "VPop")
+
+# Print the data frame
+# AIZ[2:12,] %>% 
+#   select(POPse, VPop) %>% 
+#   mutate(Diff = round(POPse - VPop,3))
+```
+
+```{r}
+### Estimate Comparison ###
+EstimateComparison = data.frame(cbind(AIZ$Estimate, beta_hat, AIZ$Estimate - beta_hat)) %>% round(2)
+colnames(EstimateComparison) = c("AIZ Estimate", "My Estimate", "Difference")
+rownames(EstimateComparison) = rownames(AIZ)
+
+### Population Comparison
+PopulationComparison = data.frame(cbind(AIZ$POPse, VPop, AIZ$POPse - VPop)) %>% round(2)
+colnames(PopulationComparison) = c("AIZ Population", "My Population", "Difference")
+rownames(PopulationComparison) = rownames(AIZ)
+
+### Conditional Comparison
+ConditionalComparison = data.frame(cbind(AIZ$CONDse, VCond, AIZ$CONDse - VCond)) %>% round(2)
+colnames(ConditionalComparison) = c("AIZ Conditional", "My Conditional", "Difference")
+rownames(ConditionalComparison) = rownames(AIZ)
+
+EstimateComparison
+PopulationComparison
+ConditionalComparison
+```
+
+
+
+
+
+
+

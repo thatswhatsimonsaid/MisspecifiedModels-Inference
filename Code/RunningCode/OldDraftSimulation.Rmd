@@ -1,0 +1,133 @@
+---
+title: "Stats 572 - Old Draft Simulation Study"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+## Notes
+- Did I do the Mahlahnobis distance correctly
+
+## Libr.
+```{r}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(xtable)
+library(lmtest)
+library(sandwich)
+library(MASS)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+dir = "/Users/simondn/Documents/Stats572/"
+```
+
+# Functions
+```{r}
+source(paste0(dir,"Code/functions/OneIterationFunction.R"))
+source(paste0(dir,"Code/functions/SimulationFunction.R"))
+source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
+source(paste0(dir,"Code/functions/VHatCondFunction.R"))
+source(paste0(dir,"Code/functions/VHatCondFunctionLoop.R"))
+source(paste0(dir,"Code/functions/VHatPopFunction.R"))
+source(paste0(dir,"Code/functions/VHatPopFunctionLoop.R"))
+source(paste0(dir,"Code/functions/WhichMinFunction.R"))
+```
+
+# Set Up
+```{r}
+### Parameters ###
+set.seed(420)
+N = 1000
+delta = 1.43
+```
+
+## Simulate Data
+```{r}
+OldSimulateDataFunction = function(delta, N){
+  ### Set Up ###
+  Joint_PiXi = MASS::mvrnorm(n = N,
+                             mu = c(32.0, 12.1),
+                             Sigma = matrix(c(443.1, 54.8, 54.8, 124.9), nrow = 2, ncol = 2, byrow = TRUE))
+  Pi = Joint_PiXi[,1]
+  Xi = Joint_PiXi[,2]
+  mu_i = 6.46 - 0.13*Pi + 0.75*Xi + delta/1000 *(Pi^2 + 1420 - 87*Pi - 5*Xi)
+  sigma_i = sqrt(exp(2.611 - 0.012*Pi + 0.07*Xi))
+  Yi = rnorm(n = N,
+             mean = mu_i,
+             sd = sigma_i)
+  dat = data.frame(cbind(Yi, Pi, Xi))
+  colnames(dat) = c("Y", "X1", "X2")
+  return(dat)
+}
+```
+
+## One Iteartion
+```{r}
+OldOneIterationFunction = function(N, delta){
+
+  
+  # Set Up #
+  dat = OldSimulateDataFunction(delta = delta, N = N)
+  
+  # Model #
+  model = lm(Y~., data = dat)
+  beta_hat = as.numeric(model$coefficients)
+  epsilon_hat = as.numeric(model$residuals)
+  
+  # Variance Estimates #
+  VPopSE = VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)$RegressionSE
+  VCondSE = VHatPopFunction(dat, beta_hat)$RegressionSE
+  
+  # Output #
+  RegressionSEEstimates = t(matrix(c(VPopSE[2],VCondSE[2])))
+  colnames(RegressionSEEstimates) = c("Population", "Conditional")
+  
+  return(RegressionSEEstimates = RegressionSEEstimates)
+}
+```
+
+## Simulation
+```{r}
+
+### Set Up ###
+NSim = 10000
+SimulationResultsMatrix = matrix(nrow = NSim, ncol = 2)
+
+### Progress Bar ###
+pb = txtProgressBar(min = 0, 
+                    max = NSim,
+                    style = 3,  
+                    width = 50,
+                    char = "=")
+start_time = Sys.time()
+
+### Simulation ###
+for(i in 1:NSim){
+  setTxtProgressBar(pb, i)
+  SimulationResultsMatrix[i,] = OldOneIterationFunction(N,delta)
+}
+colnames(SimulationResultsMatrix) = c("Population", "Conditional")
+colMeans(SimulationResultsMatrix)
+  
+### System Time ###
+close(pb)
+end_time = Sys.time()
+run_time = end_time - start_time
+```
+
+
+
+
+
+

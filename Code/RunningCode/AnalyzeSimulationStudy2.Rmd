@@ -1,0 +1,147 @@
+---
+title: "Stats 572 - Simulation Study Comparison"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+
+## Libr.
+```{r}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(xtable)
+library(lmtest)
+library(sandwich)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+dir = "/Users/simondn/Documents/Stats572/"
+```
+
+## Functions
+```{r}
+source(paste0(dir,"Code/functions/AIZResults.R"))
+source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
+```
+
+## Results
+```{r}
+### Set Up ###
+AIZ = AIZResults(Binary = TRUE)
+SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Logistic/SimulationResults.rds"))
+SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
+SimSEMedianList = SimulationResultsReformatted$SimSEMedianList
+RunTimeList = SimulationResultsReformatted$RunTimeList
+CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
+ParameterVector = SimulationResultsReformatted$ParameterVector
+```
+
+# Comparison
+
+## Discrepancy 
+```{r}
+### Fucked up ###
+ParameterVector = ParameterVector %>% mutate(Misspec. = c(rep("No",16),rep("Yes", 16)))
+SimSEMedianList = SimSEMedianList[1:16,]
+CoverageList = CoverageList[1:16,]
+ParameterVector = ParameterVector[1:16,]
+
+AIZ = AIZ[1:16,]
+```
+
+```{r}
+### Discrepancy Epsilon ###
+depsilon = .1
+
+### Discrepancy ###
+Discrepancy = list()
+Discrepancy$SEPop = as.matrix(abs(AIZ$MedianSEPop - SimSEMedianList$Population))
+Discrepancy$SECond = as.matrix(abs(AIZ$MedianSECond - SimSEMedianList$Conditional))
+Discrepancy$CoverageCondPop = as.matrix(abs(AIZ$ThetaCondVarPop - CoverageList[,3]))
+Discrepancy$CoverageCondCond = as.matrix(abs(AIZ$ThetaCondVarCond - CoverageList[,4]))
+Discrepancy$Difference = as.matrix(abs(AIZ$Difference - SimSEMedianList$Difference))
+
+### Indices ###
+LargeDiscrepancyIndices = list()
+LargeDiscrepancyIndices$SEPop = which(Discrepancy$SEPop >=depsilon)
+LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond  >=depsilon)
+LargeDiscrepancyIndices$CoverageCondPop = which(Discrepancy$CoverageCondPop >=depsilon)
+LargeDiscrepancyIndices$CoverageCondCond = which(Discrepancy$CoverageCondCond >=depsilon)
+LargeDiscrepancyIndices$Difference = which(Discrepancy$Difference >=depsilon)
+
+LargeDiscrepancyIndices
+```
+
+
+## Average Discrepancies
+
+```{r}
+mean(Discrepancy$SEPop)
+mean(Discrepancy$SECond)
+mean(Discrepancy$CoverageCondPop)
+mean(Discrepancy$CoverageCondCond)
+```
+## Differences by covariates
+
+### Population
+```{r}
+### Population ###
+# Misspecification #
+Discrepancy$SECond[ which(ParameterVector$Misspec. == "No")]
+# Discrepancy$SECond[ which(ParameterVector$Misspec. == "Yes")]
+
+# Homoskedasticity #
+Discrepancy$SECond[ which(ParameterVector$Homo. == "No")]
+Discrepancy$SECond[ which(ParameterVector$Homo. == "Yes")]
+
+# Misspecification #
+Discrepancy$SECond[ which(ParameterVector$SS == 50)]
+Discrepancy$SECond[ which(ParameterVector$SS == 200)]
+
+# Leverage #
+Discrepancy$SECond[ which(ParameterVector$Leverage == "No")]
+Discrepancy$SECond[ which(ParameterVector$Leverage == "Yes")]
+
+# Covariates #
+Discrepancy$SECond[ which(ParameterVector$K == 1)]
+Discrepancy$SECond[ which(ParameterVector$K == 5)]
+
+```
+
+### Conditional
+
+```{r}
+### Population ###
+# Misspecification #
+Discrepancy$SECond[ which(ParameterVector$Misspec. == "No")]
+# Discrepancy$SECond[ which(ParameterVector$Misspec. == "Yes")]
+
+# Homoskedasticity #
+Discrepancy$SECond[ which(ParameterVector$Homo. == "No")]
+Discrepancy$SECond[ which(ParameterVector$Homo. == "Yes")]
+
+# Misspecification #
+Discrepancy$SECond[ which(ParameterVector$SS == 50)]
+Discrepancy$SECond[ which(ParameterVector$SS == 200)]
+
+# Leverage #
+Discrepancy$SECond[ which(ParameterVector$Leverage == "No")]
+Discrepancy$SECond[ which(ParameterVector$Leverage == "Yes")]
+
+# Covariates #
+Discrepancy$SECond[ which(ParameterVector$K == 1)]
+Discrepancy$SECond[ which(ParameterVector$K == 5)]
+```
+
+
