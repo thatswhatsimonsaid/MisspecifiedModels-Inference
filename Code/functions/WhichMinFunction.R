@@ -6,7 +6,12 @@ WhichMinFunction = function(DistanceMatrix, k){
   ### Output:
     # MinIndices: The indices of the k'th lowest point
   
-  MinVal = apply(X = DistanceMatrix, MARGIN = 1, FUN = function(x) sort(x, decreasing = FALSE)[k])
-  MinIndices = sapply(1:ncol(DistanceMatrix), function(ColIndices){which(DistanceMatrix[,ColIndices] == MinVal[ColIndices])})
+  MinVal = apply(X = DistanceMatrix, 
+                 MARGIN = 1, 
+                 FUN = function(x) sort(x, decreasing = FALSE)[k])
+  sapply(1:ncol(DistanceMatrix), 
+         function(ColIndices){
+           which(DistanceMatrix[,ColIndices] == MinVal[ColIndices])
+           }) -> MinIndices
   return(MinIndices)
 }

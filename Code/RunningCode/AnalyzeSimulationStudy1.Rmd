@@ -25,7 +25,7 @@ library(sandwich)
 
 ## Rm. Var.
 ```{r}
-rm(list=ls())
+# rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
@@ -56,8 +56,8 @@ depsilon = .1
 
 ### Discrepancy ###
 Discrepancy = list()
-Discrepancy$SEPop = as.matrix(abs(AIZ$MedianSEPop - SimSEMedianList$Population))
-Discrepancy$SECond = as.matrix(abs(AIZ$MedianSECond - SimSEMedianList$Conditional))
+Discrepancy$SEPop = as.matrix(abs(AIZ$MedianSEPop - 2*SimSEMedianList$Population))
+Discrepancy$SECond = as.matrix(abs(AIZ$MedianSECond - 2*SimSEMedianList$Conditional))
 Discrepancy$CoverageCondPop = as.matrix(abs(AIZ$ThetaCondVarPop - CoverageList[,3]))
 Discrepancy$CoverageCondCond = as.matrix(abs(AIZ$ThetaCondVarCond - CoverageList[,4]))
 Discrepancy$Difference = as.matrix(abs(AIZ$Difference - SimSEMedianList$Difference))
@@ -65,15 +65,13 @@ Discrepancy$Difference = as.matrix(abs(AIZ$Difference - SimSEMedianList$Differen
 ### Indices ###
 LargeDiscrepancyIndices = list()
 LargeDiscrepancyIndices$SEPop = which(Discrepancy$SEPop >=depsilon)
-LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond  >=depsilon)
+LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond >=depsilon)
 LargeDiscrepancyIndices$CoverageCondPop = which(Discrepancy$CoverageCondPop >=depsilon)
 LargeDiscrepancyIndices$CoverageCondCond = which(Discrepancy$CoverageCondCond >=depsilon)
 LargeDiscrepancyIndices$Difference = which(Discrepancy$Difference >=depsilon)
 
 LargeDiscrepancyIndices
 ```
-
-
 ## Average Discrepancies
 ```{r}
 mean(Discrepancy$SEPop)

@@ -12,16 +12,14 @@ ConfidenceIntervalFunction = function(ThetaHat, ThetaCond, ThetaPop, SEPop, SECo
     # Four confidence intervals
   
   ### Confidence Intervals ###
-  CI_ThetaPop_SEPop = ThetaPop + outer(SEPop*qnorm(1-alpha/2, mean = 0, sd = 1), c(-1,1))
-  CI_ThetaPop_SECond = ThetaPop + outer(SECond*qnorm(1-alpha/2, mean = 0, sd = 1), c(-1,1))
-  CI_ThetaCond_SEPop = ThetaCond + outer(SEPop*qnorm(1-alpha/2, mean = 0, sd = 1), c(-1,1))
-  CI_ThetaCond_SECond = ThetaCond + outer(SECond*qnorm(1-alpha/2, mean = 0, sd = 1), c(-1,1))
+  CI_SEPop = ThetaHat + outer(SEPop*qnorm(1-alpha/2, mean = 0, sd = 1), c(-1,1))
+  CI_SECond = ThetaHat + outer(SECond*qnorm(1-alpha/2, mean = 0, sd = 1), c(-1,1))
   
   ### Containment ###
-  Containment_ThetaPop_SEPop = ThetaHat >= CI_ThetaPop_SEPop[1] & ThetaHat <= CI_ThetaPop_SEPop[2]
-  Containment_ThetaPop_SECond = ThetaHat >= CI_ThetaPop_SECond[1] & ThetaHat <= CI_ThetaPop_SECond[2]
-  Containment_ThetaCond_SEPop = ThetaHat >= CI_ThetaCond_SEPop[1] & ThetaHat <= CI_ThetaCond_SEPop[2]
-  Containment_ThetaCond_SECond = ThetaHat >= CI_ThetaCond_SECond[1] & ThetaHat <= CI_ThetaCond_SECond[2]
+  Containment_ThetaPop_SEPop = ThetaPop >= CI_SEPop[1] & ThetaPop <= CI_SEPop[2]
+  Containment_ThetaPop_SECond = ThetaPop >= CI_SECond[1] & ThetaPop <= CI_SECond[2]
+  Containment_ThetaCond_SEPop = ThetaCond >= CI_SEPop[1] & ThetaCond <= CI_SEPop[2]
+  Containment_ThetaCond_SECond = ThetaCond >= CI_SECond[1] & ThetaCond <= CI_SECond[2]
   
   ### Old Confidence Interval ###
   # CI_ThetaPop_SEPop = abs(ThetaHat - ThetaPop/(SEPop) < qnorm(p =  1-alpha/2, mean = 0, sd = 1)
@@ -30,8 +28,15 @@ ConfidenceIntervalFunction = function(ThetaHat, ThetaCond, ThetaPop, SEPop, SECo
   # CI_ThetaCond_SECond = abs(ThetaHat - ThetaCond/SECond) < qnorm(p =  1-alpha/2, mean = 0, sd = 1)
   
   ### Output ###
-  CoverageOutput = matrix(c(Containment_ThetaPop_SEPop, Containment_ThetaPop_SECond, Containment_ThetaCond_SEPop, Containment_ThetaCond_SECond), ncol = 4)
-  colnames(CoverageOutput) = c("Coverage_ThetaPop_SEPop", "Coverage_ThetaPop_SECond", "Coverage_ThetaCond_SEPop", "Coverage_ThetaCond_SECond")
+  CoverageOutput = matrix(c(Containment_ThetaPop_SEPop, 
+                            Containment_ThetaPop_SECond, 
+                            Containment_ThetaCond_SEPop, 
+                            Containment_ThetaCond_SECond), 
+                          ncol = 4)
+  colnames(CoverageOutput) = c("Coverage_ThetaPop_SEPop", 
+                               "Coverage_ThetaPop_SECond", 
+                               "Coverage_ThetaCond_SEPop", 
+                               "Coverage_ThetaCond_SECond")
   
   return(CoverageOutput)
 }

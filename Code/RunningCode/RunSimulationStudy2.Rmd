@@ -40,6 +40,7 @@ source(paste0(dir,"Code/functions/SimData.R"))
 source(paste0(dir,"Code/functions/SimulationFunction.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 source(paste0(dir,"Code/functions/ThetaCondFunction.R"))
+source(paste0(dir,"Code/functions/ThetaPopFunction.R"))
 source(paste0(dir,"Code/functions/VHatCondFunction.R"))
 source(paste0(dir,"Code/functions/VHatCondFunctionLoop.R"))
 source(paste0(dir,"Code/functions/VHatPopFunction.R"))
@@ -51,15 +52,6 @@ source(paste0(dir,"Code/functions/WhichMinFunction.R"))
 ```{r}
 ### Set Up ###
 set.seed(420)
-BadParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),
-                        HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),
-                        SizeVec = rep(c(rep(50,4), rep(200,4)),4),
-                        LeverageVec = rep(c(0,0,0.1,0.1),8),
-                        KVec = rep(c(1,5),16)
-                        ) %>% data.frame
-
-### Set Up ###
-set.seed(420)
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                       # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
@@ -69,14 +61,14 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                  
 ```
 
 ```{r}
-### Sun Simulation ###
-NSim = 50000
+### Run Simulation ###
+NSim = 10
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
 SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector,i, Binary = TRUE)
-  write.csv(SimulationResultsList[[i]]$SimulationResults, file = paste0(dir, "data/SimulationCases/Logistic/Case",i,".csv"))
-
+  write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Logistic/StandardErrors/Case",i,".csv"))
+  write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Logistic/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
 saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Logistic/SimulationResults.rds"))

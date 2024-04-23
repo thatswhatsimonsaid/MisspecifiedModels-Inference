@@ -1,6 +1,7 @@
 VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
   
-  ### Summary: Calculates the conditional variance estimator of Abadie, Imbens, and Zheng (2014) with a for loop
+  ### Summary: Calculates the conditional variance estimator of 
+      # Abadie, Imbens, and Zheng (2014) with a for loop
   ### Input: 
     # dat: Data set
     # beta_hat: Estimated regression coefficients
@@ -31,7 +32,8 @@ VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
   ### Meat ###
   Meat = array(numeric(), dim = c(ncol(X), ncol(X), nrow(X)))
   for(i in 1:nrow(X)){
-    Meat[,,i] = (epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) %*% t(epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) 
+    Meat[,,i] = (epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) %*% 
+      t(epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) 
   }
   Meat = rowSums(Meat, dims = 2)/(2*nrow(X))
   

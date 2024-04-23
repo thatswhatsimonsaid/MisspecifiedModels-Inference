@@ -51,16 +51,6 @@ ParameterVector = SimulationResultsReformatted$ParameterVector
 
 ## Discrepancy 
 ```{r}
-### Fucked up ###
-ParameterVector = ParameterVector %>% mutate(Misspec. = c(rep("No",16),rep("Yes", 16)))
-SimSEMedianList = SimSEMedianList[1:16,]
-CoverageList = CoverageList[1:16,]
-ParameterVector = ParameterVector[1:16,]
-
-AIZ = AIZ[1:16,]
-```
-
-```{r}
 ### Discrepancy Epsilon ###
 depsilon = .1
 
@@ -75,7 +65,7 @@ Discrepancy$Difference = as.matrix(abs(AIZ$Difference - SimSEMedianList$Differen
 ### Indices ###
 LargeDiscrepancyIndices = list()
 LargeDiscrepancyIndices$SEPop = which(Discrepancy$SEPop >=depsilon)
-LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond  >=depsilon)
+LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond >=depsilon)
 LargeDiscrepancyIndices$CoverageCondPop = which(Discrepancy$CoverageCondPop >=depsilon)
 LargeDiscrepancyIndices$CoverageCondCond = which(Discrepancy$CoverageCondCond >=depsilon)
 LargeDiscrepancyIndices$Difference = which(Discrepancy$Difference >=depsilon)

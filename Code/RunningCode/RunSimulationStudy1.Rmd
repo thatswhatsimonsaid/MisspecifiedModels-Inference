@@ -23,6 +23,8 @@ library(StatMatch)
 library(xtable)
 library(lmtest)
 library(sandwich)
+library(mixtools)
+library(distr)
 ```
 
 ## Rm. Var.
@@ -40,6 +42,7 @@ source(paste0(dir,"Code/functions/SimData.R"))
 source(paste0(dir,"Code/functions/SimulationFunction.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 source(paste0(dir,"Code/functions/ThetaCondFunction.R"))
+source(paste0(dir,"Code/functions/ThetaPopFunction.R"))
 source(paste0(dir,"Code/functions/VHatCondFunction.R"))
 source(paste0(dir,"Code/functions/VHatCondFunctionLoop.R"))
 source(paste0(dir,"Code/functions/VHatPopFunction.R"))
@@ -57,24 +60,26 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                  
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
                         KVec = rep(c(1,5),16)                                        # K: Parameters
                         ) %>% data.frame
+
+SimulationCase = 1
+Binary = FALSE
+delta = ParameterVector$MisspecVec[SimulationCase]
+gamma =  ParameterVector$HomoskedVec[SimulationCase]
+N = ParameterVector$SizeVec[SimulationCase]
+rho =  ParameterVector$LeverageVec[SimulationCase]
+K = ParameterVector$KVec[SimulationCase]
 ```
 
 ```{r}
 ### Sun Simulation ###
 NSim = 50000
-SimulationResultsList = list(length = nrow(ParameterVector))
+# SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
 SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, Binary = FALSE)
-  write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Linear/StandardErrors/Case",i,".csv"))
-  write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Linear/Coverage/Case",i,".csv"))
-
+  # write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Linear/StandardErrors/Case",i,".csv"))
+  # write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimculationCases/Linear/Coverage/Case",i,".csv"))
 }
-names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
+# names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
+# saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
 ```
-
-
-
-
-

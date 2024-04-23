@@ -1,9 +1,11 @@
 ThetaCondFunction = function(dat, mu){
   
-  ### Summary: Calculates the conditional regression estimate according to Abadie, Imbens, Zheng (2014)
+  ### Summary: Calculates the conditional regression estimate 
+      #  according to Abadie, Imbens, Zheng (2014)
   ### Input: 
   # dat: Data set. Particularly, we only need covariates X
-  # mu: the N-vector whose i’th element is equal to µ_{Xi}, the mean of Y_i|X_{1i},...,X_{Ki}
+  # mu: the N-vector whose i’th element is equal to µ_{Xi}, 
+      # which is the mean of Y_i|X_{1i},...,X_{Ki}
   ### Output:
   # Conditional regression estimate
   

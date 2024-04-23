@@ -1,6 +1,7 @@
 VHatPopFunction = function(dat, beta_hat){
   
-  ### Summary: Calculates the robust sandwich estimator of standard error according to Eicker, Huber, and White
+  ### Summary: Calculates the robust sandwich estimator of 
+      # standard error according to Eicker, Huber, and White
   ### Input: 
     # dat: Data set
     # beta_hat: Estimated regression coefficients
@@ -23,8 +24,9 @@ VHatPopFunction = function(dat, beta_hat){
   ### Meat ###
   residuals = Y - X %*% beta_hat
   residuals_outer = diag(residuals %*% t(residuals)) 
-  Meat = sapply(1:nrow(X), function(i) residuals_outer[i] * (X[i,] %*% t(X[i,])))
-  Meat = matrix(rowSums(Meat), nrow = ncol(X), ncol = ncol(X)) / nrow(X)
+  Meat = sapply(1:nrow(X), 
+                function(i) residuals_outer[i] * (X[i,] %*% t(X[i,])))
+  Meat = matrix(rowSums(Meat), nrow=ncol(X), ncol=ncol(X))/nrow(X)
   
   ### Sandwich Estimator ###
   VPop = Bread %*% Meat %*% Bread

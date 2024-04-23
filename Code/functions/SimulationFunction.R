@@ -16,13 +16,17 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, Binary = FA
   SimulationSEResults = matrix(nrow = NSim, ncol = 2)
   SimulationCoverageResults = matrix(nrow = NSim, ncol = 4)
   
+  # Binary = FALSE
+  # SimulationCase = 1
+  
   ## Parameters ##
   delta = ParameterVector$MisspecVec[SimulationCase]  
   gamma =  ParameterVector$HomoskedVec[SimulationCase]  
   N = ParameterVector$SizeVec[SimulationCase]            
   rho =  ParameterVector$LeverageVec[SimulationCase]     
-  K = ParameterVector$KVec[SimulationCase]             
+  K = ParameterVector$KVec[SimulationCase]    
   
+
   ## Progress Bar ##
   pb = txtProgressBar(min = 0, 
                       max = NSim,
@@ -42,10 +46,11 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, Binary = FA
                                                K = K, 
                                                delta = delta, 
                                                gamma = gamma,
+                                               ThetaPop = ThetaPop,
                                                Binary = Binary)
     SimulationSEResults[i,] = OneIterationResults$RegressionSdErrEstimates
     SimulationCoverageResults[i,] = OneIterationResults$CoverageResults
-  }
+    }
   
   ### System Time ###
   close(pb)
