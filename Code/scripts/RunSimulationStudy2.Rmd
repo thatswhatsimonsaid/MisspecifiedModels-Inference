@@ -23,6 +23,7 @@ library(StatMatch)
 library(xtable)
 library(lmtest)
 library(sandwich)
+library(distr)
 ```
 
 ## Rm. Var.
@@ -62,11 +63,11 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                  
 
 ```{r}
 ### Run Simulation ###
-NSim = 10
+NSim = 50000
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
-SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector,i, Binary = TRUE)
+SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector,i, type = "Logistic")
   write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Logistic/StandardErrors/Case",i,".csv"))
   write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Logistic/Coverage/Case",i,".csv"))
 }

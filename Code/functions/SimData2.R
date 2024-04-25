@@ -1,4 +1,4 @@
-SimData = function(N, rho, K, delta, gamma, Binary = FALSE){
+SimData = function(N, rho, K, delta, gamma, type){
   
   ### Summary: Simulates Data according to the parameters of Abadie, Imbens, and Zhang (2014)
   ### Inputs:
@@ -35,7 +35,7 @@ SimData = function(N, rho, K, delta, gamma, Binary = FALSE){
   sigma_i = sqrt(exp(1 - gamma*X1))
   epsilon = rnorm(n = N, mean = mu_i, sd = sigma_i)
   Ystar = as.matrix(XMatrix) %*% ThetaPopVec + epsilon
-  if(Binary == FALSE){Y = Ystar}else if(Binary == TRUE){Y = 1*(Ystar>=0)}
+  if(type == "Linear"){Y = Ystar}else if(type == "Logistic"){Y = 1*(Ystar>=0)}
   
   ### Return ###
   if(K == 1){dat = data.frame(Y, X1)}else if(K>1){dat = data.frame(Y, X1, X2K)}

@@ -5,12 +5,14 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
   # SimulationResultsList: Simulation results from the SimulationFunction.R
   ### Outputs:
   # ParameterVector: Vector of Parameters for each case
+  # MonteCarloVariance: Monte carlo simulation variance across simulations
   # CoverageList: A list of coverages using a combination of {theta_pop,theta_cond} and {Vpop,Vcond}
   # SimSEMedianList: Simulation results table reformatted into the format of Abadie, Imbens, Zheng (2014)
   # RunTimeList: Run time of each case
   
   ### Set Up ###
   SimSEMedianList = numeric(length(SimulationResultsList)*9) %>% matrix(ncol = 9)
+  MonteCarloVariance = numeric(length(SimulationResultsList)*2) %>% matrix(ncol = 2)
   CoverageList = numeric(length(SimulationResultsList)*4) %>% matrix(ncol = 4)
   RunTimeList = as.matrix(numeric(length(SimulationResultsList)))
   
@@ -19,6 +21,9 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
     
     ### Run Times ###
     RunTimeList[i] = SimulationResultsList[[i]]$RunTime
+    
+    ## Monte Carlo Variance ##
+    MonteCarloVariance[i,] = apply(X = SimulationResultsList[[i]]$SimulationSEResults, MARGIN = 2, FUN = var)
     
     ### Standard Errors ###
     SimSEMedianList[i,1:5] = as.numeric(SimulationResultsList[[i]]$Parameters)
@@ -63,6 +68,7 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
                                                                     Leverage == 0.1 ~ "Yes"))
   ParameterVector = SimSEMedianList[,1:5]
   return(list(SimSEMedianList = SimSEMedianList,
+              MonteCarloVariance = MonteCarloVariance, 
               ParameterVector = ParameterVector,
               CoverageList = CoverageList,
               RunTimeList = RunTimeList))

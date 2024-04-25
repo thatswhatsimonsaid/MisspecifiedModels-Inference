@@ -1,4 +1,4 @@
-SimulationFunction = function(NSim, ParameterVector, SimulationCase, Binary = FALSE){
+SimulationFunction = function(NSim, ParameterVector, SimulationCase, type){
   
   ### Summary: Runs the simulation of Abadie, Imbens, Zheng (2014)
   ### Inputs:
@@ -15,9 +15,6 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, Binary = FA
   ### Set Up ###
   SimulationSEResults = matrix(nrow = NSim, ncol = 2)
   SimulationCoverageResults = matrix(nrow = NSim, ncol = 4)
-  
-  # Binary = FALSE
-  # SimulationCase = 1
   
   ## Parameters ##
   delta = ParameterVector$MisspecVec[SimulationCase]  
@@ -47,7 +44,7 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, Binary = FA
                                                delta = delta, 
                                                gamma = gamma,
                                                ThetaPop = ThetaPop,
-                                               Binary = Binary)
+                                               type = type)
     SimulationSEResults[i,] = OneIterationResults$RegressionSdErrEstimates
     SimulationCoverageResults[i,] = OneIterationResults$CoverageResults
     }

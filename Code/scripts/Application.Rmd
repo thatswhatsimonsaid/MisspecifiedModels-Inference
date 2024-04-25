@@ -1,0 +1,169 @@
+---
+title: "Stats 572 - AN APPLICATION TO CROSS-COUNTRY GROWTH REGRESSIONS"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+## Notes
+- Are the epsilon hats and beta hats lining up? Multiplying the correct things?
+
+## Libr.
+```{r}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(lmtest)
+library(sandwich)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+```
+
+## Functions
+```{r}
+dir = "/Users/simondn/Documents/Stats572/"
+source(paste0(dir,"Code/functions/VHatPopFunction.R"))
+source(paste0(dir,"Code/functions/ReformatApplicationData.R"))
+source(paste0(dir,"Code/functions/WhichMinFunction.R"))
+source(paste0(dir,"Code/functions/AIZResults.R"))
+```
+
+### Cond. Var.
+
+```{r}
+VHatPopFunction = function(dat, beta_hat){
+  
+  ### Summary: Calculates the robust sandwich estimator of 
+      # standard error according to Eicker, Huber, and White
+  ### Input: 
+    # dat: Data set
+    # beta_hat: Estimated regression coefficients
+  ### Output:
+    # VarCovMatrix = The population variance-covariance matrix
+    # RegressionSE = The estimated population standard errors
+  
+  ### Set Up ###
+  N = nrow(dat)
+  Y = dat$Y
+
+  ### X Values ###
+  X = select(dat,-c(Y,name)) %>%
+    mutate(X0 = rep(1,nrow(dat)),
+           open65 = open*gdp65) %>%
+    relocate(X0, .before = gdp65) %>%
+    as.matrix
+  
+  ### Bread ###
+  XXt = t(X) %*% X
+  Bread = solve(XXt/N)
+  
+  ### Meat ###
+  residuals = Y - X %*% beta_hat
+  residuals_outer = diag(residuals %*% t(residuals)) 
+  Meat = sapply(1:nrow(X), 
+                function(i) residuals_outer[i] * (X[i,] %*% t(X[i,])))
+  Meat = matrix(rowSums(Meat), nrow=ncol(X), ncol=ncol(X))/nrow(X)
+  
+  ### Sandwich Estimator ###
+  VPop = Bread %*% Meat %*% Bread
+  return(list(VarCovMatrix = VPop,
+              RegressionSE = as.numeric(sqrt(diag(VPop)/nrow(X)))))
+}
+```
+
+```{r}
+VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
+  ### Set Up ###
+  N = nrow(dat)
+  Y = dat$Y
+  X = select(dat,-c(Y,name)) %>%
+    mutate(X0 = rep(1,nrow(dat)),
+           open65 = open*gdp65) %>%
+    relocate(X0, .before = gdp65) %>%
+    as.matrix
+  
+  ### lXi ###
+  XSubset = X[,-c(1,3,5,12)]
+  dist_mah = StatMatch::mahalanobis.dist(XSubset)
+  lXi = WhichMinFunction(dist_mah,2)
+  eHat_lXi = epsilon_hat[lXi]
+  X_lXi = X[lXi,]
+  
+  ### Bread ###
+  XXt = t(X) %*% X
+  Bread = solve(XXt/N)
+  
+   ### Meat ###
+  Meat = array(numeric(), dim = c(ncol(X), ncol(X), nrow(X)))
+  for(i in 1:nrow(X)){
+    Meat[,,i] = (epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) %*% 
+      t(epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) 
+  }
+  Meat = rowSums(Meat, dims = 2)/(2*nrow(X))
+  
+  ### Sandwich Estimator
+  VCond = Bread * Meat * Bread
+  RegressionSE = as.numeric(sqrt(diag(VCond)/nrow(X)))
+  RegressionSE
+  return(list(VarCovMatrix = VCond,
+              RegressionSE = RegressionSE))
+}
+```
+
+# Run
+## Set Up 
+```{r}
+AIZ = AIZResults("Application")
+dat = read.csv("/Users/simondn/Documents/Stats572/data/sachs.csv") %>%
+  ReformatApplicationDataFunction()
+```
+
+## Model
+```{r}
+model = lm(Y ~ gdp65 + open + open*gdp65 + dpop + cgb + inst + tropics + land + sxp + life + life2, 
+           data = dat)
+beta_hat = as.numeric(model$coefficients)
+epsilon_hat = as.numeric(model$residuals)
+VPop = VHatPopFunction(dat, beta_hat)$RegressionSE
+VCond = VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)$RegressionSE
+```
+
+
+# Comparison
+```{r}
+### Estimate Comparison ###
+EstimateComparison = data.frame(cbind(AIZ$Estimate, beta_hat, AIZ$Estimate - beta_hat)) %>% round(2)
+colnames(EstimateComparison) = c("AIZ Estimate", "My Estimate", "Difference")
+rownames(EstimateComparison) = rownames(AIZ)
+
+### Population Comparison
+PopulationComparison = data.frame(cbind(AIZ$POPse, VPop, AIZ$POPse - VPop)) %>% round(2)
+colnames(PopulationComparison) = c("AIZ Population", "My Population", "Difference")
+rownames(PopulationComparison) = rownames(AIZ)
+
+### Conditional Comparison
+ConditionalComparison = data.frame(cbind(AIZ$CONDse, VCond, AIZ$CONDse - VCond)) %>% round(2)
+colnames(ConditionalComparison) = c("AIZ Conditional", "My Conditional", "Difference")
+rownames(ConditionalComparison) = rownames(AIZ)
+
+EstimateComparison
+PopulationComparison
+ConditionalComparison
+```
+
+
+
+
+
+
+

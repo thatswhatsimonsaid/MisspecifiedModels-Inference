@@ -38,10 +38,11 @@ source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ## Results
 ```{r}
 ### Set Up ###
-AIZ = AIZResults(Binary = FALSE)
+AIZ = AIZResults(type = "Linear")
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList
+MonteCarloVariance = SimulationResultsReformatted$MonteCarloVariance
 RunTimeList = SimulationResultsReformatted$RunTimeList
 CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
 ParameterVector = SimulationResultsReformatted$ParameterVector
@@ -56,24 +57,25 @@ depsilon = .1
 
 ### Discrepancy ###
 Discrepancy = list()
-Discrepancy$SEPop = as.matrix(abs(AIZ$MedianSEPop - 2*SimSEMedianList$Population))
-Discrepancy$SECond = as.matrix(abs(AIZ$MedianSECond - 2*SimSEMedianList$Conditional))
+Discrepancy$SEPop = as.matrix(abs(AIZ$MedianSEPop - SimSEMedianList$Population))
+Discrepancy$SECond = as.matrix(abs(AIZ$MedianSECond - SimSEMedianList$Conditional))
 Discrepancy$CoverageCondPop = as.matrix(abs(AIZ$ThetaCondVarPop - CoverageList[,3]))
 Discrepancy$CoverageCondCond = as.matrix(abs(AIZ$ThetaCondVarCond - CoverageList[,4]))
 Discrepancy$Difference = as.matrix(abs(AIZ$Difference - SimSEMedianList$Difference))
 
 ### Indices ###
 LargeDiscrepancyIndices = list()
-LargeDiscrepancyIndices$SEPop = which(Discrepancy$SEPop >=depsilon)
-LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond >=depsilon)
-LargeDiscrepancyIndices$CoverageCondPop = which(Discrepancy$CoverageCondPop >=depsilon)
-LargeDiscrepancyIndices$CoverageCondCond = which(Discrepancy$CoverageCondCond >=depsilon)
-LargeDiscrepancyIndices$Difference = which(Discrepancy$Difference >=depsilon)
+LargeDiscrepancyIndices$SEPop = which(Discrepancy$SEPop >= depsilon)
+LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond >= depsilon)
+LargeDiscrepancyIndices$CoverageCondPop = which(Discrepancy$CoverageCondPop >= depsilon)
+LargeDiscrepancyIndices$CoverageCondCond = which(Discrepancy$CoverageCondCond >= depsilon)
+LargeDiscrepancyIndices$Difference = which(Discrepancy$Difference >= depsilon)
 
 LargeDiscrepancyIndices
 ```
 ## Average Discrepancies
 ```{r}
+mean(Discrepancy$Difference)
 mean(Discrepancy$SEPop)
 mean(Discrepancy$SECond)
 mean(Discrepancy$CoverageCondPop)
@@ -150,5 +152,16 @@ PopulationDiscrepancyStratifiedMatrix[8,] = Discrepancy$SEPop[ which(ParameterVe
 # Covariates #
 PopulationDiscrepancyStratifiedMatrix[9,] = Discrepancy$SEPop[ which(ParameterVector$K == 1)]
 PopulationDiscrepancyStratifiedMatrix[10,] = Discrepancy$SEPop[ which(ParameterVector$K == 5)]
+```
+
+```{r}
+for(i in 1:nrow(ConditionalDiscrepancyStratifiedMatrix)){
+  print(mean(ConditionalDiscrepancyStratifiedMatrix[i,c(1:4,9:12)]) - mean(ConditionalDiscrepancyStratifiedMatrix[i,c(5:8,13:16)]))
+}
+
+print("")
+for(i in 1:nrow(PopulationDiscrepancyStratifiedMatrix)){
+  print(mean(PopulationDiscrepancyStratifiedMatrix[i,c(1:4,9:12)]) - mean(PopulationDiscrepancyStratifiedMatrix[i,c(5:8,13:16)]))
+}
 ```
 

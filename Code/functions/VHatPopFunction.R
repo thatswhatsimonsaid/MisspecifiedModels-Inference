@@ -9,13 +9,38 @@ VHatPopFunction = function(dat, beta_hat){
     # VarCovMatrix = The population variance-covariance matrix
     # RegressionSE = The estimated population standard errors
   
+  
+  ### Check if Simulation or Application ###
+  ApplicationIndicator = (colnames(dat) == c("name",
+                                             "Y",
+                                             "gdp65",
+                                             "open",
+                                             "dpop",
+                                             "cgb",
+                                             "inst",
+                                             "tropics",
+                                             "land",
+                                             "sxp",
+                                             "life",
+                                             "life2")) %>% all()
+  
   ### Set Up ###
   N = nrow(dat)
   Y = dat$Y
-  X = select(dat,-Y) %>%
-    mutate(X0 = rep(1,nrow(dat))) %>%
-    relocate(X0, .before = X1) %>%
-    as.matrix
+
+  ### X Values ###
+  if(ApplicationIndicator == TRUE){
+    X = select(dat,-c(Y,name)) %>%
+      mutate(X0 = rep(1,nrow(dat)),
+             open65 = open*gdp65) %>%
+      relocate(X0, .before = gdp65) %>%
+      as.matrix
+  }else if(ApplicationIndicator == FALSE){
+    X = select(dat,-Y) %>%
+      mutate(X0 = rep(1,nrow(dat))) %>%
+      relocate(X0, .before = X1) %>%
+      as.matrix
+  }
   
   ### Bread ###
   XXt = t(X) %*% X

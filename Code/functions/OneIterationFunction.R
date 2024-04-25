@@ -1,4 +1,4 @@
-OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, Binary = FALSE){
+OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, type){
   
   ### IMPORTANT: Need to change to return confidence interval coverage ###
   
@@ -18,12 +18,12 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, Binary = FALS
     # VarCovMatrixCond: The conditional variance-covariance matrix 
   
   # Set Up #
-  SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, Binary = Binary)
+  SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
   dat = SimulatedData$dat
   mu = SimulatedData$mu
   
   # Model #
-  if(Binary == FALSE){model = lm(Y~., data = dat)}else if(Binary == TRUE){
+  if(type == "Linear"){model = lm(Y~., data = dat)}else if(type == "Logistic"){
     model = glm(Y~., data = dat, family = "binomial")
     }
   beta_hat = as.numeric(model$coefficients)

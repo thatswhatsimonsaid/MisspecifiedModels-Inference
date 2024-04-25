@@ -1,4 +1,22 @@
-AIZResults = function(Binary = FALSE){
+AIZResults = function(type){
+  
+  ### Application Results ###
+  # Create the data frame
+  AIZApplication <- data.frame(
+    constant = c(1.66, 3.08, 3.03),
+    gdp65 = c(-1.50, 0.18, 0.17),
+    open = c(10.91, 2.76, 2.56),
+    dpop = c(0.69, 0.40, 0.45),
+    cgb = c(0.115, 0.025, 0.023),
+    inst = c(0.315, 0.071, 0.068),
+    tropics = c(-0.83, 0.25, 0.24),
+    land = c(-0.58, 0.21, 0.26),
+    sxp = c(-3.92, 1.22, 1.21),
+    life = c(0.35, 0.12, 0.12),
+    life2 = c(-0.003, 0.001, 0.001),
+    open65 = c(-1.08, 0.35, 0.33)
+  ) %>% t %>% data.frame()
+  colnames(AIZApplication) = c("Estimate", "POPse", "CONDse")
   
   ### Linear Results ###
   AIZLinear = data.frame(
@@ -32,6 +50,8 @@ AIZResults = function(Binary = FALSE){
             0.397, 0.422, 0.404, 0.434, 0.195, 0.215, 0.204, 0.233,
             0.567, 0.556, 0.561, 0.555, 0.314, 0.312, 0.318, 0.324)
   )
+  AIZLinear = AIZLinear %>% mutate(Difference = MedianSEPop - MedianSECond)
+  rownames(AIZLinear) = paste0(1:32)
   
   ### Logistic Results ###
   AIZLogistic = data.frame(
@@ -65,9 +85,13 @@ AIZResults = function(Binary = FALSE){
             0.055, 0.089, 0.059, 0.333, 0.026, 0.032, 0.028, 0.034,
             0.056, 0.089, 0.061, 0.096, 0.027, 0.033, 0.301, 0.035)
   )
+  AIZLogistic = AIZLogistic %>% mutate(Difference = MedianSEPop - MedianSECond)
+  rownames(AIZLogistic) = paste0(1:32)
+  
   ### Reformat ###
-  if(Binary == FALSE){AIZ = AIZLinear}else if(Binary == TRUE){AIZ = AIZLogistic}
-  AIZ = AIZ %>% mutate(Difference = MedianSEPop - MedianSECond)
-  rownames(AIZ) = paste0(1:32)
+  if(type == "Linear"){
+    AIZ = AIZLinear}else if(type == "Logistic"){
+    AIZ = AIZLogistic}else if(type == "Application"){
+      AIZ = AIZApplication}
   return(AIZ)
 }
