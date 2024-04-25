@@ -64,14 +64,36 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                  
 
 ```{r}
 ### Sun Simulation ###
-NSim = 5
+NSim = 500
 SimulationResultsList = list(length = nrow(ParameterVector))
-for(i in 1:nrow(ParameterVector)){
+# for(i in 1:nrow(ParameterVector)){
+for(i in 1:32){
   print(paste0("Case ",i))
 SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, type = "Linear")
   # write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Linear/StandardErrors/Case",i,".csv"))
   # write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimculationCases/Linear/Coverage/Case",i,".csv"))
 }
-names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
+# names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
 # saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
 ```
+```{r}
+AIZ = AIZResults("Linear")
+SimSEList = matrix(numeric(32*2), ncol = 2)
+for(i in 1:32){
+  SimSEList[i,] = SimulationResultsList[[i]]$SimSEMedian
+}
+rownames(SimSEList) = paste0("Case", 1:32)
+colnames(SimSEList) = c("Population", "Conditional")
+
+Discrepancy = data.frame(cbind(SimSEList[,1], AIZ$MedianSEPop, SimSEList[,2], AIZ$MedianSECond))
+colnames(Discrepancy) = c("Simon_Pop", "AIZ_Pop", "Simon_Cond", "AIZ_Cond")
+Discrepancy = Discrepancy %>% 
+  mutate(DifferencePop =Simon_Pop - AIZ_Pop,
+         DifferenceCond =Simon_Cond - AIZ_Cond) %>%
+  relocate(DifferencePop, .after = AIZ_Pop) %>%
+  relocate(DifferenceCond, .after = AIZ_Cond) %>%
+  round(3)
+
+Discrepancy[9:16,]
+```
+

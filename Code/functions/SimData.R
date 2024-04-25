@@ -13,21 +13,22 @@ SimData = function(N, rho, K, delta, gamma, type){
     # dat: A data set
   
   ### Covariates ###
-  # X1 = sample(c(rnorm(N*(1-rho), mean = 0, sd = 1),
-  #               rlnorm(N*rho, meanlog = 0, sdlog = sqrt(0.5))))
+  X1 = sample(c(rnorm(N*(1-rho), mean = 0, sd = 1),
+                rlnorm(N*rho, meanlog = 0, sdlog = sqrt(0.5))))
   
-  if(rho == 0){X1 = rnorm(N, mean = 0, sd = 1)}else if(rho !=0){
-    MixtureFunction = r(distr::UnivarMixingDistribution(Norm(mean = 0, sd = 1),
-                                                        Lnorm(meanlog = 0, 
-                                                              sdlog = sqrt(0.5)),
-                                                        mixCoeff = c(1-rho, rho)))
-    X1 = MixtureFunction(N)
-  }
+  # if(rho == 0){X1 = rnorm(N, mean = 0, sd = 1)}else if(rho !=0){
+  #   MixtureFunction = r(distr::UnivarMixingDistribution(Norm(mean = 0, sd = 1),
+  #                                                       Lnorm(meanlog = 0, 
+  #                                                             sdlog = sqrt(0.5)),
+  #                                                       mixCoeff = c(1-rho, rho)))
+  #   X1 = MixtureFunction(N)
+  # }
   X2K = sapply(1:(K-1), function(x) rnorm(n = N, mean = 0, sd = 1))
   
   ### Response ###
-  mu_i = X1 + delta *(X1^2 - 1)
-  sigma_i = sqrt(exp(1 - gamma*X1))
+  mu_i = X1 + delta * (X1^2 - 1)
+  sigma_i = exp(1-gamma*X1)
+  # sigma_i = exp(1)
   Ystar = rnorm(n = N, mean = mu_i, sd = sigma_i)
   if(type == "Linear"){Y = Ystar}else if(type == "Logistic"){Y = 1*(Ystar>=0)}
   

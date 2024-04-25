@@ -23,7 +23,6 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, type){
   rho =  ParameterVector$LeverageVec[SimulationCase]     
   K = ParameterVector$KVec[SimulationCase]    
   
-
   ## Progress Bar ##
   pb = txtProgressBar(min = 0, 
                       max = NSim,
