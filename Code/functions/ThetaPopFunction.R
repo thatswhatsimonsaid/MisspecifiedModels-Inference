@@ -14,7 +14,7 @@ ThetaPopFunction = function(dat, delta, rho){
   if(delta ==0.0 && rho ==0.0){EMu = 0}
   if(delta ==0.0 && rho ==0.1){EMu = 0.1*exp(1/8)}
   if(delta ==0.1 && rho ==0.0){EMu = 0}
-  if(delta ==0.1 && rho ==0.1){EMu = 0.1001*exp(1/2) + 0.19}
+  if(delta ==0.1 && rho ==0.1){EMu =0.1 *exp(1/8) + 0.001*exp(1/2) - 0.19}
   
   ### Set Up ###
   N = nrow(dat)
