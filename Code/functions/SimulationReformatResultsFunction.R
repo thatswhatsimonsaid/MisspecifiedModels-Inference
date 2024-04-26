@@ -61,7 +61,7 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
   rownames(SimSEMedianList) = paste0(1:length(SimulationResultsList))
   SimSEMedianList = as.data.frame(SimSEMedianList)
   SimSEMedianList = SimSEMedianList %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-                                                                    Misspec. == 0.1 ~ "Yes"),
+                                                                    Misspec. == 1 ~ "Yes"),
                                                Homo. = case_when(Homo. == 0 ~ "Yes",
                                                                  Homo. == 0.5 ~ "No"),
                                                Leverage = case_when(Leverage == 0 ~ "No",

@@ -26,7 +26,7 @@ SimData = function(N, rho, K, delta, gamma, type){
   X2K = sapply(1:(K-1), function(x) rnorm(n = N, mean = 0, sd = 1))
   
   ### Response ###
-  mu_i = X1 + delta * (X1^2 - 1)
+  mu_i = X1 + 10*delta * (X1^2 - 1)
   sigma_i = exp(1-gamma*X1)
   # sigma_i = exp(1)
   Ystar = rnorm(n = N, mean = mu_i, sd = sigma_i)
