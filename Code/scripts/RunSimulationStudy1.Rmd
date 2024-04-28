@@ -54,7 +54,7 @@ source(paste0(dir,"Code/functions/WhichMinFunction.R"))
 ```{r}
 ### Set Up ###
 set.seed(420)
-ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                       # Delta: Misspecification Rate
+ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
@@ -62,52 +62,21 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
                         ) %>% data.frame
 ```
 
+## Linear
 ```{r}
-### Sun Simulation ###
-NSim = 1000
-SimulationResultsList = list(length = 17)
-ParameterVector = ParameterVector[17:32,]
-for(i in 1:16){
+### Run Simulation ###
+NSim = 50000
+SimulationResultsList = list(length = nrow(ParameterVector))
+for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
 SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, type = "Linear")
-print(SimulationResultsList[[i]]$SimSEMedian)
+  write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Linear/StandardErrors/Case",i,".csv"))
+  write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Linear/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
+saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
 ```
 
 
-```{r}
-# ### Sun Simulation ###
-# NSim = 5000
-# SimulationResultsList = list(length = nrow(ParameterVector))
-# for(i in 1:nrow(ParameterVector)){
-#   print(paste0("Case ",i))
-# SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, type = "Linear")
-#   write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Linear/StandardErrors/Case",i,".csv"))
-#   write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Linear/Coverage/Case",i,".csv"))
-# }
-# names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-# saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
-```
 
-```{r}
-AIZ = AIZResults("Linear")
-SimSEList = matrix(numeric(32*2), ncol = 2)
-for(i in 1:32){
-  SimSEList[i,] = SimulationResultsList[[i]]$SimSEMedian
-}
-rownames(SimSEList) = paste0("Case", 1:32)
-colnames(SimSEList) = c("Population", "Conditional")
-
-Discrepancy = data.frame(cbind(SimSEList[,1], AIZ$MedianSEPop, SimSEList[,2], AIZ$MedianSECond))
-colnames(Discrepancy) = c("Simon_Pop", "AIZ_Pop", "Simon_Cond", "AIZ_Cond")
-Discrepancy = Discrepancy %>% 
-  mutate(DifferencePop =Simon_Pop - AIZ_Pop,
-         DifferenceCond =Simon_Cond - AIZ_Cond) %>%
-  relocate(DifferencePop, .after = AIZ_Pop) %>%
-  relocate(DifferenceCond, .after = AIZ_Cond) %>%
-  round(3)
-
-Discrepancy
-```
 

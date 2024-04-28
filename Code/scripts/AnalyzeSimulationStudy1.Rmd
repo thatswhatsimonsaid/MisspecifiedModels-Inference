@@ -41,7 +41,7 @@ source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 AIZ = AIZResults(type = "Linear")
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
-SimSEMedianList = SimulationResultsReformatted$SimSEMedianList
+SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
 MonteCarloVariance = SimulationResultsReformatted$MonteCarloVariance
 RunTimeList = SimulationResultsReformatted$RunTimeList
 CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
@@ -80,88 +80,5 @@ mean(Discrepancy$SEPop)
 mean(Discrepancy$SECond)
 mean(Discrepancy$CoverageCondPop)
 mean(Discrepancy$CoverageCondCond)
-```
-## Difference Ranking
-### Conditional
-```{r}
-### Set Up ###
-ConditionalDiscrepancyStratifiedMatrix = matrix(ncol = 16, nrow =  10)
-rownames(ConditionalDiscrepancyStratifiedMatrix) = c("Misspec_No",
-                                          "Misspec_Yes",
-                                          "Homo_No",
-                                          "Homo_Yes",
-                                          "SS_50",
-                                          "SS_200",
-                                          "Leverage_No",
-                                          "Leverage_Yes",
-                                          "K_1",
-                                          "K_5")
-
-# Misspecification #
-ConditionalDiscrepancyStratifiedMatrix[1,] = Discrepancy$SECond[ which(ParameterVector$Misspec. == "No")]
-ConditionalDiscrepancyStratifiedMatrix[2,] = Discrepancy$SECond[which(ParameterVector$Misspec. == "Yes")]
-
-# Homoskedasticity #
-ConditionalDiscrepancyStratifiedMatrix[3,] = Discrepancy$SECond[ which(ParameterVector$Homo. == "No")]
-ConditionalDiscrepancyStratifiedMatrix[4,] = Discrepancy$SECond[ which(ParameterVector$Homo. == "Yes")]
-
-# Misspecification #
-ConditionalDiscrepancyStratifiedMatrix[5,] = Discrepancy$SECond[ which(ParameterVector$SS == 50)]
-ConditionalDiscrepancyStratifiedMatrix[6,] = Discrepancy$SECond[ which(ParameterVector$SS == 200)]
-
-# Leverage #
-ConditionalDiscrepancyStratifiedMatrix[7,] = Discrepancy$SECond[ which(ParameterVector$Leverage == "No")]
-ConditionalDiscrepancyStratifiedMatrix[8,] = Discrepancy$SECond[ which(ParameterVector$Leverage == "Yes")]
-
-# Covariates #
-ConditionalDiscrepancyStratifiedMatrix[9,] = Discrepancy$SECond[ which(ParameterVector$K == 1)]
-ConditionalDiscrepancyStratifiedMatrix[10,] = Discrepancy$SECond[ which(ParameterVector$K == 5)]
-```
-
-### Population
-```{r}
-### Set Up ###
-PopulationDiscrepancyStratifiedMatrix = matrix(ncol = 16, nrow =  10)
-rownames(PopulationDiscrepancyStratifiedMatrix) = c("Misspec_No",
-                                          "Misspec_Yes",
-                                          "Homo_No",
-                                          "Homo_Yes",
-                                          "SS_50",
-                                          "SS_200",
-                                          "Leverage_No",
-                                          "Leverage_Yes",
-                                          "K_1",
-                                          "K_5")
-
-# Misspecification #
-PopulationDiscrepancyStratifiedMatrix[1,] = Discrepancy$SEPop[ which(ParameterVector$Misspec. == "No")]
-PopulationDiscrepancyStratifiedMatrix[2,] = Discrepancy$SEPop[which(ParameterVector$Misspec. == "Yes")]
-
-# Homoskedasticity #
-PopulationDiscrepancyStratifiedMatrix[3,] = Discrepancy$SEPop[ which(ParameterVector$Homo. == "No")]
-PopulationDiscrepancyStratifiedMatrix[4,] = Discrepancy$SEPop[ which(ParameterVector$Homo. == "Yes")]
-
-# Misspecification #
-PopulationDiscrepancyStratifiedMatrix[5,] = Discrepancy$SEPop[ which(ParameterVector$SS == 50)]
-PopulationDiscrepancyStratifiedMatrix[6,] = Discrepancy$SEPop[ which(ParameterVector$SS == 200)]
-
-# Leverage #
-PopulationDiscrepancyStratifiedMatrix[7,] = Discrepancy$SEPop[ which(ParameterVector$Leverage == "No")]
-PopulationDiscrepancyStratifiedMatrix[8,] = Discrepancy$SEPop[ which(ParameterVector$Leverage == "Yes")]
-
-# Covariates #
-PopulationDiscrepancyStratifiedMatrix[9,] = Discrepancy$SEPop[ which(ParameterVector$K == 1)]
-PopulationDiscrepancyStratifiedMatrix[10,] = Discrepancy$SEPop[ which(ParameterVector$K == 5)]
-```
-
-```{r}
-for(i in 1:nrow(ConditionalDiscrepancyStratifiedMatrix)){
-  print(mean(ConditionalDiscrepancyStratifiedMatrix[i,c(1:4,9:12)]) - mean(ConditionalDiscrepancyStratifiedMatrix[i,c(5:8,13:16)]))
-}
-
-print("")
-for(i in 1:nrow(PopulationDiscrepancyStratifiedMatrix)){
-  print(mean(PopulationDiscrepancyStratifiedMatrix[i,c(1:4,9:12)]) - mean(PopulationDiscrepancyStratifiedMatrix[i,c(5:8,13:16)]))
-}
 ```
 

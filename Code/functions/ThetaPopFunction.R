@@ -1,4 +1,4 @@
-ThetaPopFunction = function(dat, delta, rho){
+ThetaPopFunction = function(dat, SimulationCase){
   
   ### Summary: Calculates the population regression estimate 
       # according to Abadie, Imbens, Zheng (2014)
@@ -10,25 +10,13 @@ ThetaPopFunction = function(dat, delta, rho){
   # Population regression estimate
   
 
-  ### EMu ###
-  if(delta ==0.0 && rho ==0.0){EMu = 0}
-  if(delta ==0.0 && rho ==0.1){EMu = 0.1*exp(1/8)}
-  if(delta ==0.1 && rho ==0.0){EMu = 0}
-  if(delta ==0.1 && rho ==0.1){EMu =0.1 *exp(1/8) + 0.001*exp(1/2) - 0.19}
+  ### ThetaPop ###
   
-  ### Set Up ###
-  N = nrow(dat)
-  K = ncol(dat)
-  # Y = dat$Y
-  X = select(dat,-Y) %>%
-    mutate(X0 = rep(1,nrow(dat))) %>%
-    relocate(X0, .before = X1) %>%
-    as.matrix
-  
-  EMuVec =  rep(EMu,N)
-  
-  ### Estimate ###
-  ThetaPop = (solve(t(X) %*% X) %*% (t(X) %*% EMuVec))[2]
-  
+  ## Cases 1 - 18 ##
+  if(SimulationCase <= 18){ThetaPop = 1.0}
+  if(SimulationCase %in% c(21,22,25,26,29,30)){ThetaPop = 1.0}
+  if(SimulationCase %in% c(19,20,27,28)){ThetaPop = 1.5}
+  if(SimulationCase %in% c(23,24,31,32)){ThetaPop = 1.6}
+
   return(ThetaPop)
 }

@@ -1,4 +1,4 @@
-OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, type){
+OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCase, type){
   
   ### IMPORTANT: Need to change to return confidence interval coverage ###
   
@@ -16,7 +16,7 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, type){
         # regression standard error estimates of X1
     # VarCovMatrixPop: The population variance-covariance matrix 
     # VarCovMatrixCond: The conditional variance-covariance matrix 
-  
+
   # Set Up #
   SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
   dat = SimulatedData$dat
@@ -30,8 +30,8 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, type){
   epsilon_hat = as.numeric(model$residuals)
   
   # Estimates #
+  ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase)
   ThetaCond = ThetaCondFunction(dat,mu)
-  ThetaPop = ThetaPopFunction(dat = dat, delta = delta, rho = rho)
 
   # Variance Estimates #
   # VPop = VHatPopFunctionLoop(dat, beta_hat)

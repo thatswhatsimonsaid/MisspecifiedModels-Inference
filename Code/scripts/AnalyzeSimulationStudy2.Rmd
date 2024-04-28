@@ -82,56 +82,6 @@ mean(Discrepancy$SECond)
 mean(Discrepancy$CoverageCondPop)
 mean(Discrepancy$CoverageCondCond)
 ```
-## Differences by covariates
 
-### Population
-```{r}
-### Population ###
-# Misspecification #
-Discrepancy$SECond[ which(ParameterVector$Misspec. == "No")]
-# Discrepancy$SECond[ which(ParameterVector$Misspec. == "Yes")]
-
-# Homoskedasticity #
-Discrepancy$SECond[ which(ParameterVector$Homo. == "No")]
-Discrepancy$SECond[ which(ParameterVector$Homo. == "Yes")]
-
-# Misspecification #
-Discrepancy$SECond[ which(ParameterVector$SS == 50)]
-Discrepancy$SECond[ which(ParameterVector$SS == 200)]
-
-# Leverage #
-Discrepancy$SECond[ which(ParameterVector$Leverage == "No")]
-Discrepancy$SECond[ which(ParameterVector$Leverage == "Yes")]
-
-# Covariates #
-Discrepancy$SECond[ which(ParameterVector$K == 1)]
-Discrepancy$SECond[ which(ParameterVector$K == 5)]
-
-```
-
-### Conditional
-
-```{r}
-### Population ###
-# Misspecification #
-Discrepancy$SECond[ which(ParameterVector$Misspec. == "No")]
-# Discrepancy$SECond[ which(ParameterVector$Misspec. == "Yes")]
-
-# Homoskedasticity #
-Discrepancy$SECond[ which(ParameterVector$Homo. == "No")]
-Discrepancy$SECond[ which(ParameterVector$Homo. == "Yes")]
-
-# Misspecification #
-Discrepancy$SECond[ which(ParameterVector$SS == 50)]
-Discrepancy$SECond[ which(ParameterVector$SS == 200)]
-
-# Leverage #
-Discrepancy$SECond[ which(ParameterVector$Leverage == "No")]
-Discrepancy$SECond[ which(ParameterVector$Leverage == "Yes")]
-
-# Covariates #
-Discrepancy$SECond[ which(ParameterVector$K == 1)]
-Discrepancy$SECond[ which(ParameterVector$K == 5)]
-```
 
 

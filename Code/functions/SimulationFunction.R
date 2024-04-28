@@ -43,6 +43,7 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, type){
                                                delta = delta, 
                                                gamma = gamma,
                                                ThetaPop = ThetaPop,
+                                               SimulationCase = SimulationCase,
                                                type = type)
     SimulationSEResults[i,] = OneIterationResults$RegressionSdErrEstimates
     SimulationCoverageResults[i,] = OneIterationResults$CoverageResults
