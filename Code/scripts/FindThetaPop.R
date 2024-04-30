@@ -1,4 +1,4 @@
-### Set Up ###
+### Libraries ###
 library(stats)
 library(tidyverse)
 library(StatMatch)
@@ -7,10 +7,12 @@ library(lmtest)
 library(sandwich)
 library(mixtools)
 library(distr)
+
+### Set Up ###
 rm(list=ls())
 set.seed(420)
 dir = "/Users/simondn/Documents/Stats572/"
-source(paste0(dir,"Code/functions/SimData.R"))
+source(paste0(dir,"Code/functions/SimDataLogistic.R"))
 
 NSim = 100000
 type = "Logistic"
@@ -47,7 +49,7 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   ## Simulation ##
   for(i in 1:NSim){
     setTxtProgressBar(pb, i)
-    SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
+    SimulatedData = SimDataLogistic(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
     dat = SimulatedData$dat
     mu = SimulatedData$mu
     
@@ -64,7 +66,7 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   beta_hat_simulation[SimulationCase]  = mean(beta_hat_list)
 }
 beta_hat_simulation = data.frame(beta_hat_simulation)
-saveRDS(beta_hat_simulation, file = paste0(dir,"data/beta_hat_simulation.rds"))
+saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/Logistic/beta_hat_logistic_simulation.rds"))
 
 mean(beta_hat_simulation[c(1,2,5,6,9,10,13,14),])            # Case 1: delta = 0, rho = 0.0
 mean(beta_hat_simulation[c(3,4,7,8,11,12,15,16),])           # Case 2: delta = 0, rho = 0.1

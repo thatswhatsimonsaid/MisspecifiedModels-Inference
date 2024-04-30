@@ -40,6 +40,7 @@ source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ### Set Up ###
 AIZ = AIZResults(type = "Logistic")
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Logistic/SimulationResults.rds"))
+SimulationResultsList = SimulationResultsList[c(13:32)]
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList
 RunTimeList = SimulationResultsReformatted$RunTimeList

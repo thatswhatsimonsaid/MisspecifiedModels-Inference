@@ -16,7 +16,7 @@ output:
 - Did I do the Mahlahnobis distance correctly
 
 ## Libr.
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(stats)
 library(tidyverse)
 library(StatMatch)
@@ -38,6 +38,7 @@ source(paste0(dir,"Code/functions/AIZResults.R"))
 source(paste0(dir,"Code/functions/ConfidenceIntervalFunction.R"))
 source(paste0(dir,"Code/functions/OneIterationFunction.R"))
 source(paste0(dir,"Code/functions/SimData.R"))
+source(paste0(dir,"Code/functions/SimDataLogistic.R"))
 source(paste0(dir,"Code/functions/SimulationFunction.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 source(paste0(dir,"Code/functions/ThetaCondFunction.R"))
@@ -53,7 +54,7 @@ source(paste0(dir,"Code/functions/WhichMinFunction.R"))
 ```{r}
 ### Set Up ###
 set.seed(420)
-ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                       # Delta: Misspecification Rate
+ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                       # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
@@ -63,7 +64,7 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(0.1,16)),                  
 
 ```{r}
 ### Run Simulation ###
-NSim = 5000
+NSim = 50
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))

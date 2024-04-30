@@ -25,13 +25,14 @@ library(sandwich)
 
 ## Rm. Var.
 ```{r}
-# rm(list=ls())
+rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
 ## Functions
 ```{r}
 source(paste0(dir,"Code/functions/AIZResults.R"))
+source(paste0(dir,"Code/functions/MonteCarloResults.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ```
 
@@ -42,14 +43,13 @@ AIZ = AIZResults(type = "Linear")
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
-MonteCarloVariance = SimulationResultsReformatted$MonteCarloVariance
+MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)
 RunTimeList = SimulationResultsReformatted$RunTimeList
 CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
 ParameterVector = SimulationResultsReformatted$ParameterVector
 ```
 
 # Comparison
-
 ## Discrepancy 
 ```{r}
 ### Discrepancy Epsilon ###
@@ -80,5 +80,28 @@ mean(Discrepancy$SEPop)
 mean(Discrepancy$SECond)
 mean(Discrepancy$CoverageCondPop)
 mean(Discrepancy$CoverageCondCond)
+```
+# xtable
+
+
+```{r}
+### AIZ Coverage and SE Table ###
+# cbind(SimSEMedianList[,c(1:5)],CoverageList,SimSEMedianList[,c(6,7,8)]) %>%
+# xtable(digits = 5,
+#        caption = "Simulation Results (Linear Model)")
+
+# ### Monte Carlo Results ###
+# MonteCarloREsults$MonteCarliResults_Population %>%
+#   xtable(digits = 5,
+#          caption = "Monte Carlo Simulation $\theta_{Cond}$ Results (Linear Model)")
+# 
+# MonteCarloREsults$MonteCarliResults_Conditional %>%
+#   xtable(digits = 5,
+#          caption = "Monte Carlo Simulation $\theta_{Pop}$ Results (Linear Model)")
+```
+
+# Monte Carlo Results
+```{r}
+
 ```
 

@@ -18,7 +18,11 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
     # VarCovMatrixCond: The conditional variance-covariance matrix 
 
   # Set Up #
-  SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
+  if(type == "Linear"){
+    SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
+    }else if(type == "Logistic"){
+      SimulatedData = SimDataLogistic(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
+    }
   dat = SimulatedData$dat
   mu = SimulatedData$mu
   
@@ -30,17 +34,17 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
   epsilon_hat = as.numeric(model$residuals)
   
   # Estimates #
-  ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase)
+  ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase, type = type)
   ThetaCond = ThetaCondFunction(dat,mu)
 
   # Variance Estimates #
   # VPop = VHatPopFunctionLoop(dat, beta_hat)
   VCond = VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)
-  # VPop = VHatPopFunction(dat, beta_hat)
+  VPop = VHatPopFunction(dat, beta_hat)
   # VCond = VHatCondFunction(dat, beta_hat, epsilon_hat)
 
-  # VPopSE = VPop$RegressionSE
-  VPopSE = sqrt(diag(vcovHC(model, type = "HC0")))
+  VPopSE = VPop$RegressionSE
+  # VPopSE = sqrt(diag(vcovHC(model, type = "HC0")))
   VCondSE = VCond$RegressionSE 
   # VarCovMatrixPop = VPop$VarCovMatrix
   # VarCovMatrixCond = VCond$VarCovMatrix

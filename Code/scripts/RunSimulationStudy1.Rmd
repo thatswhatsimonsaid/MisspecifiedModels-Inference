@@ -39,6 +39,7 @@ source(paste0(dir,"Code/functions/AIZResults.R"))
 source(paste0(dir,"Code/functions/ConfidenceIntervalFunction.R"))
 source(paste0(dir,"Code/functions/OneIterationFunction.R"))
 source(paste0(dir,"Code/functions/SimData.R"))
+source(paste0(dir,"Code/functions/SimDataLogistic.R"))
 source(paste0(dir,"Code/functions/SimulationFunction.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 source(paste0(dir,"Code/functions/ThetaCondFunction.R"))
@@ -63,6 +64,7 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 ```
 
 ## Linear
+
 ```{r}
 ### Run Simulation ###
 NSim = 50000

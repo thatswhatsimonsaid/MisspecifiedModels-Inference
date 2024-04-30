@@ -11,19 +11,32 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
   # RunTimeList: Run time of each case
   
   ### Set Up ###
-  SimSEMedianList = numeric(length(SimulationResultsList)*9) %>% matrix(ncol = 9)
-  MonteCarloVariance = numeric(length(SimulationResultsList)*2) %>% matrix(ncol = 2)
-  CoverageList = numeric(length(SimulationResultsList)*4) %>% matrix(ncol = 4)
-  RunTimeList = as.matrix(numeric(length(SimulationResultsList)))
+  NSim = length(SimulationResultsList)
+  alpha = 0.05
+  SimSEMedianList = numeric(NSim*9) %>% matrix(ncol = 9)
+  MonteCarloMean = numeric(NSim*2) %>% matrix(ncol = 2)
+  MonteCarloVariance = numeric(NSim*2) %>% matrix(ncol = 2)
+  MonteCarloCI_Population = numeric(NSim*2) %>% matrix(ncol = 2)
+  MonteCarloCI_Conditional = numeric(NSim*2) %>% matrix(ncol = 2)
+  CoverageList = numeric(NSim*4) %>% matrix(ncol = 4)
+  RunTimeList = as.matrix(numeric(NSim))
   
   ### Fill in values ###
-  for(i in 1:length(SimulationResultsList)){
+  for(i in 1:NSim){
     
     ### Run Times ###
     RunTimeList[i] = SimulationResultsList[[i]]$RunTime
     
-    ## Monte Carlo Variance ##
+    ## Monte Carlo ##
+    MonteCarloMean[i,] = SimulationResultsList[[i]]$SimulationSEResults %>% colMeans
     MonteCarloVariance[i,] = apply(X = SimulationResultsList[[i]]$SimulationSEResults, MARGIN = 2, FUN = var)
+    MonteCarloCI_Population[i,] = MonteCarloMean[i,1] + outer(MonteCarloVariance[i,1]/NSim*qnorm(1-alpha/2,0,1), c(-1,1))
+    MonteCarloCI_Conditional[i,] = MonteCarloMean[i,2] + outer(MonteCarloVariance[i,1]/NSim*qnorm(1-alpha/2,0,1), c(-1,1))
+    
+    colnames(MonteCarloMean) = c("Population", "Conditional")
+    colnames(MonteCarloVariance) = c("Population", "Conditional")
+    colnames(MonteCarloCI_Population) = c("LL", "UL")
+    colnames(MonteCarloCI_Conditional) = c("LL", "UL")
     
     ### Standard Errors ###
     SimSEMedianList[i,1:5] = as.numeric(SimulationResultsList[[i]]$Parameters)
@@ -42,11 +55,11 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
   
   ### Reformatting ###
   # Run Time #
-  rownames(RunTimeList) = paste0(1:32)
+  rownames(RunTimeList) = paste0(1:NSim)
 
   # Coverage List #
   colnames(CoverageList) = c("ThetaPop_VPop", "ThetaPop_VCond", "ThetaCond_VPop", "ThetaCond_VCond")
-  rownames(CoverageList) = paste0(1:32)
+  rownames(CoverageList) = paste0(1:NSim)
   
   # Standard Error List #
   colnames(SimSEMedianList) = c("Misspec.", 
@@ -58,17 +71,20 @@ SimulationReformatResultsFunction = function(SimulationResultsList){
                                 "Conditional", 
                                 "Difference", 
                                 "Indicator")
-  rownames(SimSEMedianList) = paste0(1:length(SimulationResultsList))
+  rownames(SimSEMedianList) = paste0(1:NSim)
   SimSEMedianList = as.data.frame(SimSEMedianList)
-  SimSEMedianList = SimSEMedianList %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-                                                                    Misspec. == 1 ~ "Yes"),
-                                               Homo. = case_when(Homo. == 0 ~ "Yes",
-                                                                 Homo. == 0.5 ~ "No"),
-                                               Leverage = case_when(Leverage == 0 ~ "No",
-                                                                    Leverage == 0.1 ~ "Yes"))
+  # SimSEMedianList = SimSEMedianList %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+  #                                                                   Misspec. == 1 ~ "Yes"),
+  #                                              Homo. = case_when(Homo. == 0 ~ "Yes",
+  #                                                                Homo. == 0.5 ~ "No"),
+  #                                              Leverage = case_when(Leverage == 0 ~ "No",
+  #                                                                   Leverage == 0.1 ~ "Yes"))
   ParameterVector = SimSEMedianList[,1:5]
   return(list(SimSEMedianList = SimSEMedianList,
-              MonteCarloVariance = MonteCarloVariance, 
+              MonteCarloResults = list(MonteCarloMean = MonteCarloMean, 
+                                       MonteCarloVariance = MonteCarloVariance, 
+                                       MonteCarloCI_Population = MonteCarloCI_Population,
+                                       MonteCarloCI_Conditional = MonteCarloCI_Conditional),
               ParameterVector = ParameterVector,
               CoverageList = CoverageList,
               RunTimeList = RunTimeList))
