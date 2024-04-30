@@ -100,8 +100,35 @@ mean(Discrepancy$CoverageCondCond)
 #          caption = "Monte Carlo Simulation $\theta_{Pop}$ Results (Linear Model)")
 ```
 
-# Monte Carlo Results
+# Evaluate
 ```{r}
-
+head(SimSEMedianList)
 ```
+
+### Misspecificaition
+```{r}
+# Models with misspecification and more variables
+SimSEMedianList %>% filter(SS == 50) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+SimSEMedianList %>% filter(SS == 200) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+```
+
+```{r}
+SimSEMedianList %>% filter(SS == 50) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+SimSEMedianList %>% filter(SS == 200) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+```
+### Homo
+```{r}
+SimSEMedianList %>% filter(Homo. == 0) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+SimSEMedianList %>% filter(Homo. == 0.5) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+```
+```{r}
+SimSEMedianList %>% filter(Homo. == 0) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+SimSEMedianList %>% filter(Homo. == 0.5) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
+```
+
+
+
+
+
+
 
