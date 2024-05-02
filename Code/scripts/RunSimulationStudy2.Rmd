@@ -29,7 +29,7 @@ library(distr)
 ## Rm. Var.
 ```{r}
 rm(list=ls())
-dir = "/Users/simondn/Documents/Stats572/"
+# dir = "/Users/simondn/Documents/Stats572/"
 ```
 
 # Functions
