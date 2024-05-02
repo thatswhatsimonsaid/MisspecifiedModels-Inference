@@ -30,6 +30,7 @@ ReformatApplicationDataFunction = function(dat){
     relocate(sxp, .after = land) %>%
     relocate(life, .after = sxp)
   dat = na.omit(dat)
+  rownames(dat) = 1:nrow(dat)
   
   return(dat)
 }

@@ -36,6 +36,7 @@ dir = "/Users/simondn/Documents/Stats572/"
 ```{r}
 source(paste0(dir,"Code/functions/AIZResults.R"))
 source(paste0(dir,"Code/functions/ConfidenceIntervalFunction.R"))
+source(paste0(dir,"Code/functions/DiscrepancyFunction.R"))
 source(paste0(dir,"Code/functions/OneIterationFunction.R"))
 source(paste0(dir,"Code/functions/SimData.R"))
 source(paste0(dir,"Code/functions/SimDataLogistic.R"))
@@ -64,7 +65,9 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 
 ```{r}
 ### Run Simulation ###
-NSim = 50
+# UpToNum = 2
+# ParameterVector = ParameterVector[1:UpToNum,]
+NSim = 1000
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
@@ -73,5 +76,31 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector,i, 
   write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Logistic/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Logistic/SimulationResults.rds"))
+# saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Logistic/SimulationResults.rds"))
 ```
+
+# Analyze
+```{r}
+### Set Up ###
+AIZ = AIZResults(type = "Logistic")
+SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
+SimSEMedianList = SimulationResultsReformatted$SimSEMedianList
+RunTimeList = SimulationResultsReformatted$RunTimeList
+CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
+ParameterVector = SimulationResultsReformatted$ParameterVector
+DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZResults, SimSEMedianList, CoverageList)
+```
+
+
+```{r}
+DiscrepancyResults$MeanDiscrepancy
+```
+
+
+
+
+
+
+
+
+

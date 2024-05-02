@@ -32,6 +32,7 @@ dir = "/Users/simondn/Documents/Stats572/"
 ## Functions
 ```{r}
 source(paste0(dir,"Code/functions/AIZResults.R"))
+source(paste0(dir,"Code/functions/DiscrepancyFunction.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ```
 
@@ -40,7 +41,6 @@ source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ### Set Up ###
 AIZ = AIZResults(type = "Logistic")
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Logistic/SimulationResults.rds"))
-SimulationResultsList = SimulationResultsList[c(13:32)]
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList
 RunTimeList = SimulationResultsReformatted$RunTimeList
@@ -52,26 +52,7 @@ ParameterVector = SimulationResultsReformatted$ParameterVector
 
 ## Discrepancy 
 ```{r}
-### Discrepancy Epsilon ###
-depsilon = .1
-
-### Discrepancy ###
-Discrepancy = list()
-Discrepancy$SEPop = as.matrix(abs(AIZ$MedianSEPop - SimSEMedianList$Population))
-Discrepancy$SECond = as.matrix(abs(AIZ$MedianSECond - SimSEMedianList$Conditional))
-Discrepancy$CoverageCondPop = as.matrix(abs(AIZ$ThetaCondVarPop - CoverageList[,3]))
-Discrepancy$CoverageCondCond = as.matrix(abs(AIZ$ThetaCondVarCond - CoverageList[,4]))
-Discrepancy$Difference = as.matrix(abs(AIZ$Difference - SimSEMedianList$Difference))
-
-### Indices ###
-LargeDiscrepancyIndices = list()
-LargeDiscrepancyIndices$SEPop = which(Discrepancy$SEPop >=depsilon)
-LargeDiscrepancyIndices$SECond = which(Discrepancy$SECond >=depsilon)
-LargeDiscrepancyIndices$CoverageCondPop = which(Discrepancy$CoverageCondPop >=depsilon)
-LargeDiscrepancyIndices$CoverageCondCond = which(Discrepancy$CoverageCondCond >=depsilon)
-LargeDiscrepancyIndices$Difference = which(Discrepancy$Difference >=depsilon)
-
-LargeDiscrepancyIndices
+DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZResults, SimSEMedianList, CoverageList)
 ```
 
 

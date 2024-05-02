@@ -13,10 +13,9 @@ output:
 
 # Set Up
 ## Notes
-- Are the epsilon hats and beta hats lining up? Multiplying the correct things?
-
+- This whole time we forgot open65
 ## Libr.
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(stats)
 library(tidyverse)
 library(StatMatch)
@@ -38,49 +37,27 @@ source(paste0(dir,"Code/functions/WhichMinFunction.R"))
 source(paste0(dir,"Code/functions/AIZResults.R"))
 ```
 
-### Cond. Var.
-
 ```{r}
-VHatPopFunction = function(dat, beta_hat){
-  
-  ### Summary: Calculates the robust sandwich estimator of 
-      # standard error according to Eicker, Huber, and White
-  ### Input: 
-    # dat: Data set
-    # beta_hat: Estimated regression coefficients
-  ### Output:
-    # VarCovMatrix = The population variance-covariance matrix
-    # RegressionSE = The estimated population standard errors
-  
-  ### Set Up ###
-  N = nrow(dat)
-  Y = dat$Y
-
-  ### X Values ###
-  X = select(dat,-c(Y,name)) %>%
-    mutate(X0 = rep(1,nrow(dat)),
-           open65 = open*gdp65) %>%
-    relocate(X0, .before = gdp65) %>%
-    as.matrix
-  
-  ### Bread ###
-  XXt = t(X) %*% X
-  Bread = solve(XXt/N)
-  
-  ### Meat ###
-  residuals = Y - X %*% beta_hat
-  residuals_outer = diag(residuals %*% t(residuals)) 
-  Meat = sapply(1:nrow(X), 
-                function(i) residuals_outer[i] * (X[i,] %*% t(X[i,])))
-  Meat = matrix(rowSums(Meat), nrow=ncol(X), ncol=ncol(X))/nrow(X)
-  
-  ### Sandwich Estimator ###
-  VPop = Bread %*% Meat %*% Bread
-  return(list(VarCovMatrix = VPop,
-              RegressionSE = as.numeric(sqrt(diag(VPop)/nrow(X)))))
+pb = txtProgressBar(min = 0, 
+                      max = nrow(dat)^2,
+                      style = 3,  
+                      width = 50,
+                      char = "=")
+Vx = cov(dat[,c(3,5,7,8,9,10,11,12)])
+DifferenceMatrix = numeric(83*83) %>% matrix(nrow = 83)
+for(i in 1:nrow(dat)){
+  for(j in 1:nrow(dat)){
+    setTxtProgressBar(pb, j + 83*(i-1))
+    DifferenceIteartion = as.matrix(dat[i,c(3,5,7,8,9,10,11,12)] - dat[j,c(3,5,7,8,9,10,11,12)],nrow = 1)
+    MahlanobisDistanceIteration = DifferenceIteartion %*% Vx %*% t(DifferenceIteartion)
+    DifferenceMatrix[i,j] = MahlanobisDistanceIteration
+  }
 }
+
 ```
 
+
+### Cond. Var.
 ```{r}
 VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
   ### Set Up ###
@@ -92,9 +69,9 @@ VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
     relocate(X0, .before = gdp65) %>%
     as.matrix
   
-  ### lXi ###
-  XSubset = X[,-c(1,3,5,12)]
-  dist_mah = StatMatch::mahalanobis.dist(XSubset)
+  ### lXi ### 
+  # XSubset =  select(data.frame(X), -c(open, open65, cgb)) %>% as.matrix()
+  # dist_mah = StatMatch::mahalanobis.dist(XSubset)
   lXi = WhichMinFunction(dist_mah,2)
   eHat_lXi = epsilon_hat[lXi]
   X_lXi = X[lXi,]
@@ -125,17 +102,42 @@ VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
 ```{r}
 AIZ = AIZResults("Application")
 dat = read.csv("/Users/simondn/Documents/Stats572/data/sachs.csv") %>%
-  ReformatApplicationDataFunction()
+  ReformatApplicationDataFunction() 
 ```
+
+
+## Difference in Models
+```{r}
+### Data ###
+dat = dat %>% mutate(open65 = gdp65*open)
+
+### Model Differences
+ModelInteraction = lm(Y ~ gdp65 + open + open:gdp65 + dpop + cgb + inst + tropics + land + sxp + life + life2, data = dat)
+ModelData = lm(Y ~ gdp65 + open + open65 + dpop + cgb + inst + tropics + land + sxp + life + life2, data = dat)
+# summary(ModelInteraction)$coefficients[c(1,2,3,12,4,5,6,7,8,9,10,11),2]
+# summary(ModelData)$coefficients[,2]
+
+### Population Comparison ###
+# (vcovHC(ModelInteraction, type = "HC0") %>% diag() %>% sqrt())[c(1,2,3,12,4,5,6,7,8,9,10,11)] - AIZ[c(1,2,3,12,4,5,6,7,8,9,10,11),2]
+# (vcovHC(ModelData, type = "HC0") %>% diag() %>% sqrt()) - AIZ[c(1,2,3,12,4,5,6,7,8,9,10,11),2]
+
+### Conditional ###
+beta_hat = coefficients(ModelData)[c(1,2,3,5,6,7,8,9,10,11,5)]
+epsilon_hat = ModelData$residuals
+VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)
+
+```
+
 
 ## Model
 ```{r}
-model = lm(Y ~ gdp65 + open + open*gdp65 + dpop + cgb + inst + tropics + land + sxp + life + life2, 
+model = lm(Y ~ gdp65 + open + open:gdp65 + dpop + cgb + inst + tropics + land + sxp + life + life2, 
            data = dat)
 beta_hat = as.numeric(model$coefficients)
 epsilon_hat = as.numeric(model$residuals)
 VPop = VHatPopFunction(dat, beta_hat)$RegressionSE
 VCond = VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)$RegressionSE
+VCond
 ```
 
 
@@ -161,7 +163,62 @@ PopulationComparison
 ConditionalComparison
 ```
 
+# Test
+```{r}
+### Nota Bene ###
+# Note that 0's in ExpandGridCombinations mean they were conditioned on
+# Note that 1's in ExpandGridCombinations mean they were NOT conditioned (excluded)
+ ### Set Up ###
+N = nrow(dat)
+Y = dat$Y
+X = select(dat,-c(Y,name)) %>%
+  mutate(X0 = rep(1,nrow(dat)),
+         open65 = open*gdp65) %>%
+  relocate(X0, .before = gdp65) %>%
+    as.matrix
 
+### Combinations ###
+ExpandGridCombinations <- expand.grid(replicate(12, c(0, 1), simplify = FALSE))
+colnames(ExpandGridCombinations) = colnames(X)
+VCondList = matrix(numeric(12*nrow(ExpandGridCombinations)), ncol = 12)
+DifferenceList = matrix(numeric(12*nrow(ExpandGridCombinations)), ncol = 12)
+
+## Progress Bar ##
+pb = txtProgressBar(min = 0,
+                    max = nrow(ExpandGridCombinations),
+                    style = 3,
+                    width = 50,
+                    char = "=")
+
+
+### Loop ###
+for (i in 1:nrow(ExpandGridCombinations)) {
+  # Progress Bar #
+  setTxtProgressBar(pb, i)
+
+  # Subset #
+  included_vars <- which(ExpandGridCombinations[i, ] == 1)
+  XSubset <- X[, -included_vars]
+
+  # VCond Intercept #
+  VCondIteration = tryCatch(VHatCondFunctionLoop(dat, beta_hat, epsilon_hat, XSubset)$RegressionSE, error=function(err) NA)
+  if(any(is.na(VCondIteration))){VCondIteration = rep(NA,12)}
+  VCondList[i,] = VCondIteration
+  DifferenceList[i,] = VCondIteration - AIZ[,3]
+}
+VCondListNA = VCondList
+DifferenceListNA = DifferenceList
+DifferenceList = data.frame(na.omit(DifferenceList))
+VCondList = data.frame(na.omit(VCondList))
+apply(X = DifferenceList, MARGIN = 2, FUN = min)
+apply(X = DifferenceList, MARGIN = 2, FUN = which.min)
+
+MinimumVConds = VCondList[as.numeric(apply(X = DifferenceList, MARGIN = 2, FUN = which.min)),]
+
+for(i in 1:nrow(MinimumVConds)){
+  print(MinimumVConds[i,]/AIZ$CONDse)
+}
+```
 
 
 
