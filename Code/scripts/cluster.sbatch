@@ -11,4 +11,4 @@
 
 module load R
 cd ~/Stats572/
-Rscript Code/RunSimulationStudy1.R
+Rscript Code/RunSimulationStudy.R
