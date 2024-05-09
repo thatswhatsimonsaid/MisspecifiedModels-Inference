@@ -10,12 +10,12 @@ library(distr)
 
 ### Set Up ###
 rm(list=ls())
+TypeSetting = "Linear"
 set.seed(420)
 dir = "/Users/simondn/Documents/Stats572/"
-source(paste0(dir,"Code/functions/SimDataLogistic.R"))
+source(paste0(dir,"Code/functions/SimData",TypeSetting,".R"))
 
 NSim = 100000
-type = "Logistic"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
@@ -49,12 +49,18 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   ## Simulation ##
   for(i in 1:NSim){
     setTxtProgressBar(pb, i)
-    SimulatedData = SimDataLogistic(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
+
+    if(TypeSetting == "Linear"){
+      SimulatedData = SimDataLinear(N = N, rho = rho, K = K, delta = delta, gamma = gamma)
+    }else if(TypeSetting == "Logistic"){
+      SimulatedData = SimDataLogistic(N = N, rho = rho, K = K, delta = delta, gamma = gamma)
+    }
+    
     dat = SimulatedData$dat
     mu = SimulatedData$mu
     
     # Model #
-    if(type == "Linear"){model = lm(Y~., data = dat)}else if(type == "Logistic"){
+    if(TypeSetting == "Linear"){model = lm(Y~., data = dat)}else if(TypeSetting == "Logistic"){
       model = glm(Y~., data = dat, family = "binomial")
     }
     beta_hat = as.numeric(model$coefficients)
@@ -66,12 +72,12 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   beta_hat_simulation[SimulationCase]  = mean(beta_hat_list)
 }
 beta_hat_simulation = data.frame(beta_hat_simulation)
-saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/Logistic/beta_hat_logistic_simulation.rds"))
+saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_logistic_simulation.rds"))
 
-mean(beta_hat_simulation[c(1,2,5,6,9,10,13,14),])            # Case 1: delta = 0, rho = 0.0
-mean(beta_hat_simulation[c(3,4,7,8,11,12,15,16),])           # Case 2: delta = 0, rho = 0.1
-mean(beta_hat_simulation[c(17,18,21,22,25,26,29,30),])       # Case 3: delta = 1, rho = 0.0
-beta_hat_simulation[c(19,20,23,24,27,28,31,32),]             # Case 4: delta = 1, rho = 0.1
+# mean(beta_hat_simulation[c(1,2,5,6,9,10,13,14),])            # Case 1: delta = 0, rho = 0.0
+# mean(beta_hat_simulation[c(3,4,7,8,11,12,15,16),])           # Case 2: delta = 0, rho = 0.1
+# mean(beta_hat_simulation[c(17,18,21,22,25,26,29,30),])       # Case 3: delta = 1, rho = 0.0
+# beta_hat_simulation[c(19,20,23,24,27,28,31,32),]             # Case 4: delta = 1, rho = 0.1
 
 
 

@@ -42,7 +42,7 @@ source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ### Set Up ###
 SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
-# SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
+SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
 MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)

@@ -20,5 +20,13 @@ ThetaPopFunction = function(dat, SimulationCase, TypeSetting){
       ThetaPopLogisticList = readRDS(file = paste0(dir,"data/SimulationCases/Logistic/beta_hat_logistic_simulation.rds"))
       ThetaPop = ThetaPopLogisticList[SimulationCase,1]
     }
+
+  # if(TypeSetting == "Linear"){
+  #   ThetaPopLinearList = readRDS(file = paste0(dir,"data/SimulationCases/Logistic/beta_hat_logistic_simulation.rds"))
+  #   ThetaPop = ThetaPopLinearList[SimulationCase,1]
+  # }else if(TypeSetting == "Logistic"){
+  #     ThetaPopLogisticList = readRDS(file = paste0(dir,"data/SimulationCases/Logistic/beta_hat_logistic_simulation.rds"))
+  #     ThetaPop = ThetaPopLogisticList[SimulationCase,1]
+  #   }
   return(ThetaPop)
 }
