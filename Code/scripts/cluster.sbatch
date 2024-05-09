@@ -11,4 +11,4 @@
 
 module load R
 cd ~/Stats572/
-Rscript Code/RunSimulationStudy.R
+Rscript Code/scripts/FindThetaPop.R
