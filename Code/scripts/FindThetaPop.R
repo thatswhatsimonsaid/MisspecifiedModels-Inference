@@ -12,8 +12,7 @@ library(distr)
 rm(list=ls())
 TypeSetting = "Linear"
 set.seed(420)
-dir = "/Users/simondn/Documents/Stats572/"
-source(paste0(dir,"Code/functions/SimData",TypeSetting,".R"))
+source("Code/functions/SimData",TypeSetting,".R")
 
 NSim = 100000
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
@@ -72,7 +71,8 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   beta_hat_simulation[SimulationCase]  = mean(beta_hat_list)
 }
 beta_hat_simulation = data.frame(beta_hat_simulation)
-saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_logistic_simulation.rds"))
+# saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_logistic_simulation.rds"))
+saveRDS(beta_hat_simulation, "data/SimulationCases/",TypeSetting,"/beta_hat_logistic_simulation.rds")
 
 # mean(beta_hat_simulation[c(1,2,5,6,9,10,13,14),])            # Case 1: delta = 0, rho = 0.0
 # mean(beta_hat_simulation[c(3,4,7,8,11,12,15,16),])           # Case 2: delta = 0, rho = 0.1
