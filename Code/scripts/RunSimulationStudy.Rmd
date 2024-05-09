@@ -16,7 +16,7 @@ output:
 - Did I do the Mahlahnobis distance correctly
 
 ## Libr.
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(stats)
 library(tidyverse)
 library(StatMatch)
@@ -38,23 +38,22 @@ dir = "/Users/simondn/Documents/Stats572/"
 source(paste0(dir,"Code/functions/AIZResults.R"))
 source(paste0(dir,"Code/functions/ConfidenceIntervalFunction.R"))
 source(paste0(dir,"Code/functions/OneIterationFunction.R"))
-source(paste0(dir,"Code/functions/SimData.R"))
+source(paste0(dir,"Code/functions/SimDataLinear.R"))
 source(paste0(dir,"Code/functions/SimDataLogistic.R"))
 source(paste0(dir,"Code/functions/SimulationFunction.R"))
 source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 source(paste0(dir,"Code/functions/ThetaCondFunction.R"))
 source(paste0(dir,"Code/functions/ThetaPopFunction.R"))
 source(paste0(dir,"Code/functions/VHatCondFunction.R"))
-source(paste0(dir,"Code/functions/VHatCondFunctionLoop.R"))
 source(paste0(dir,"Code/functions/VHatPopFunction.R"))
-source(paste0(dir,"Code/functions/VHatPopFunctionLoop.R"))
 source(paste0(dir,"Code/functions/WhichMinFunction.R"))
 ```
 
-# Simulation
+# Set Up
 ```{r}
 ### Set Up ###
 set.seed(420)
+TypeSetting = "Linear"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
@@ -63,20 +62,25 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
                         ) %>% data.frame
 ```
 
-## Linear
-
+# Simulation
 ```{r}
 ### Run Simulation ###
-NSim = 50000
+NSim = 10
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
-SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, type = "Linear")
-  write.csv(SimulationResultsList[[i]]$SimulationSEResults, file = paste0(dir, "data/SimulationCases/Linear/StandardErrors/Case",i,".csv"))
-  write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = paste0(dir, "data/SimulationCases/Linear/Coverage/Case",i,".csv"))
+SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, 
+                                                ParameterVector = ParameterVector, 
+                                                SimulationCase = i, 
+                                                VarFixed = NA,
+                                                TypeSetting = TypeSetting)
+  # write.csv(SimulationResultsList[[i]]$SimulationSEResults, 
+            # file = paste0(dir, "data/SimulationCases/",TypeSetting,"/StandardErrors/Case",i,".csv"))
+  # write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, 
+            # file = paste0(dir, "data/SimulationCases/",TypeSetting,"/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
+# saveRDS(SimulationResultsList, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/SimulationResults.rds"))
 ```
 
 

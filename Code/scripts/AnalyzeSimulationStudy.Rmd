@@ -40,12 +40,13 @@ source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
 ## Results
 ```{r}
 ### Set Up ###
-AIZ = AIZResults(type = "Linear")
-SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/Linear/SimulationResults.rds"))
+SettingType = "Linear"
+AIZ = AIZResults(type = SettingType)
+# SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
 SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
 MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)
-RunTimeList = SimulationResultsReformatted$RunTimeList
+RunTimeList = SimulationResultsReformatted$RunTimeList # in seconds
 CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
 ParameterVector = SimulationResultsReformatted$ParameterVector
 ```
@@ -75,35 +76,6 @@ DiscrepancyMeans
 #   xtable(digits = 5,
 #          caption = "Monte Carlo Simulation $\theta_{Pop}$ Results (Linear Model)")
 ```
-
-# Evaluate
-```{r}
-head(SimSEMedianList)
-```
-
-### Misspecificaition
-```{r}
-# Models with misspecification and more variables
-SimSEMedianList %>% filter(SS == 50) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-SimSEMedianList %>% filter(SS == 200) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-```
-
-```{r}
-SimSEMedianList %>% filter(SS == 50) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-SimSEMedianList %>% filter(SS == 200) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-```
-### Homo
-```{r}
-SimSEMedianList %>% filter(Homo. == 0) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-SimSEMedianList %>% filter(Homo. == 0.5) %>% filter(K == 1)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-```
-```{r}
-SimSEMedianList %>% filter(Homo. == 0) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-SimSEMedianList %>% filter(Homo. == 0.5) %>% filter(K == 5)  %>% select(Difference) %>% colMeans() %>% as.numeric()
-```
-
-
-
 
 
 

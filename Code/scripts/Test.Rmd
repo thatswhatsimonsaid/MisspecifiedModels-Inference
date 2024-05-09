@@ -1,0 +1,126 @@
+---
+title: "Stats 572 - AN APPLICATION TO CROSS-COUNTRY GROWTH REGRESSIONS"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+## Notes
+
+## Libr.
+```{r message=FALSE, warning=FALSE}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(lmtest)
+library(sandwich)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+```
+
+## Functions
+```{r}
+dir = "/Users/simondn/Documents/Stats572/"
+source(paste0(dir,"Code/functions/VHatPopFunction.R"))
+source(paste0(dir,"Code/functions/VHatCondFunctionLoop.R"))
+source(paste0(dir,"Code/functions/ReformatApplicationData.R"))
+source(paste0(dir,"Code/functions/WhichMinFunction.R"))
+source(paste0(dir,"Code/functions/AIZResults.R"))
+```
+
+# Set Up 
+```{r}
+N = 10
+GroupA = data.frame(X1 = rnorm(n = 2*N, mean=0, sd=1),
+                    X2 = rnorm(n = 2*N, mean=100, sd=1),
+                    group = rep(1,N))
+
+GroupB = data.frame(X1 = rnorm(n = N, mean=0, sd=1),
+                    X2 = rnorm(n = N, mean=200, sd=1),
+                    group = rep(2,N))
+
+GroupC = data.frame(X1 = rnorm(n = N, mean=200, sd=1),
+                    X2 = rnorm(n = N, mean=100, sd=1),
+                    group = rep(3,N))
+dat = rbind(GroupA,GroupB,GroupC)
+dat$Y = 2*dat$X1+ 1*dat$X2 + rnorm(N,0,1)
+dat = dat %>% relocate(Y, .before = X1)
+```
+
+# Matching
+```{r}
+### Set Up ###
+N = nrow(dat)
+Y = dat$Y
+X = select(dat,-c(Y)) %>%
+  mutate(X0 = rep(1,nrow(dat))) %>%
+  relocate(X0, .before = X1) %>%
+  as.matrix
+
+### lXi ### 
+XSubset =  select(data.frame(X), -c(X0, X2, group)) %>% as.matrix()
+dist_mah = StatMatch::mahalanobis.dist(XSubset)
+lXi = WhichMinFunction(dist_mah,2)
+cbind(dat$group,dat$group[lXi])
+```
+
+```{r}
+VHatCondFunctionLoop = function(dat, beta_hat, epsilon_hat){
+  ### Set Up ###
+  N = nrow(dat)
+  Y = dat$Y
+  X = select(dat,-c(Y,name)) %>%
+    mutate(X0 = rep(1,nrow(dat)),
+           open65 = open*gdp65) %>%
+    relocate(X0, .before = gdp65) %>%
+    as.matrix
+  
+  ### lXi ### 
+  XSubset =  select(data.frame(X), -c(X0, open, open65, cgb)) %>% as.matrix()
+  dist_mah = StatMatch::mahalanobis.dist(XSubset)
+  lXi = WhichMinFunction(dist_mah,2)
+  eHat_lXi = epsilon_hat[lXi]
+  X_lXi = X[lXi,]
+  
+  ### Bread ###
+  XXt = t(X) %*% X
+  Bread = solve(XXt/N)
+  
+  ### Meat ###
+  Meat = array(numeric(), dim = c(ncol(X), ncol(X), nrow(X)))
+  for(i in 1:nrow(X)){
+    Meat[,,i] = (epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,]) %*%
+      t(epsilon_hat[i]*X[i,] - eHat_lXi[i]*X_lXi[i,])
+  }
+  Meat = rowSums(Meat, dims = 2)/(2*nrow(X))
+  
+  ### Alternative Meat ###
+  MeatAlt = array(numeric(), dim = c(ncol(X), ncol(X), nrow(X)))
+  for(i in 1:nrow(X)){
+    MeatAlt[,,i] = (epsilon_hat[i] - eHat_lXi[i])^2 * (X[i,] %*% t(X[i,]))
+    XiXit = X[i,] 
+  }
+  MeatAlt = rowSums(MeatAlt, dims = 2)/(2*nrow(X))
+  
+  ### Sandwich Estimator
+  VCond = Bread * Meat * Bread
+  RegressionSE = as.numeric(sqrt(diag(VCond)/nrow(X)))
+  # RegressionSE
+  return(list(VarCovMatrix = VCond,
+              RegressionSE = RegressionSE))
+}
+```
+
+
+
+

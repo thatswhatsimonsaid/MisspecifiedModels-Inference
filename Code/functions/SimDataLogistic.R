@@ -1,4 +1,4 @@
-SimDataLogistic = function(N, rho, K, delta, gamma, type){
+SimDataLogistic = function(N, rho, K, delta, gamma){
   
   ### Summary: Simulates Data according to the parameters of 
       # Abadie, Imbens, and Zhang (2014)
@@ -13,13 +13,15 @@ SimDataLogistic = function(N, rho, K, delta, gamma, type){
     # dat: A data set
   
   ### Coefficient Matrix ###
-  if(K == 1){CoefficientVector = matrix(1)}else if(K>1){CoefficientVector = matrix(c(1,rep(0,K-1)))}
+  if(K == 1){CoefficientVector = matrix(1)}else if(K>1){
+    CoefficientVector = matrix(c(1,rep(0,K-1)))}
   
   ### Covariates ###
   X1 = sample(c(rnorm(N*(1-rho), mean = 0, sd = 1),
                 rlnorm(N*rho, meanlog = 0, sdlog = sqrt(0.5))))
   X2K = sapply(1:(K-1), function(x) rnorm(n = N, mean = 0, sd = 1))
-  if(K == 1){XMatrix = as.numeric(X1)}else if(K>1){XMatrix = matrix(cbind(X1, X2K), ncol = K)}
+  if(K == 1){XMatrix = as.numeric(X1)}else if(K>1){
+    XMatrix = matrix(cbind(X1, X2K), ncol = K)}
   
   ### Error ###
   epsilon_star_i = rlogis(n = N, location = 0, scale = 1)
@@ -39,8 +41,9 @@ SimDataLogistic = function(N, rho, K, delta, gamma, type){
     }
   
   ### Mu ###
-  mu = 1/(1+ exp(rep(0,N) + XMatrix %*% CoefficientVector))
   
+  # mu = 1*((1/(1+ exp(rep(0,N) + XMatrix %*% CoefficientVector)))>0.5)
+   
   ### Response ###
   Y = 1*(Ystar>=0)
 

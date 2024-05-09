@@ -1,4 +1,4 @@
-SimulationFunction = function(NSim, ParameterVector, SimulationCase, type){
+SimulationFunction = function(NSim, ParameterVector, SimulationCase, VarFixed, TypeSetting){
   
   ### Summary: Runs the simulation of Abadie, Imbens, Zheng (2014)
   ### Inputs:
@@ -6,6 +6,7 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, type){
     # ParameterVector: A matrix containing the parameters delta, gamma, N, rho, and K.
     # SimulationCase: Which row of the parameter vector to run. 
     #                 Simulation cases are the same case as the table in Abadie, Imbens, Zheng (2014)
+    # VarFixed: Variables to condition on
   ### Output:
     # SimulationSEResults: A (NSim x 2) matrix containing the standard error estimates of each iteration
     # SimSEMedian: A (2x1) vector containing the median population and conditional standard errors
@@ -44,7 +45,8 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, type){
                                                gamma = gamma,
                                                ThetaPop = ThetaPop,
                                                SimulationCase = SimulationCase,
-                                               type = type)
+                                               VarFixed = VarFixed,
+                                               TypeSetting = TypeSetting)
     SimulationSEResults[i,] = OneIterationResults$RegressionSdErrEstimates
     SimulationCoverageResults[i,] = OneIterationResults$CoverageResults
     }

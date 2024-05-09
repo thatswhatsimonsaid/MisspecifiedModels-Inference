@@ -1,4 +1,4 @@
-OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCase, type){
+OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCase, VarFixed, TypeSetting){
   
   ### IMPORTANT: Need to change to return confidence interval coverage ###
   
@@ -10,6 +10,7 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
         # of a standard normal and log normal(0,0.5^2)
     # delta: Misspecification parameter
     # gamma: Heterogeneity parameter
+    # VarFixed: Variables to condition on
   ### Output:
   
     # RegressionSdErrEstimates: A 2x1 vector containing the population and conditional 
@@ -18,39 +19,30 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
     # VarCovMatrixCond: The conditional variance-covariance matrix 
 
   # Set Up #
-  if(type == "Linear"){
-    SimulatedData = SimData(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
-    }else if(type == "Logistic"){
-      SimulatedData = SimDataLogistic(N = N, rho = rho, K = K, delta = delta, gamma = gamma, type = type)
+  if(TypeSetting == "Linear"){
+    SimulatedData = SimDataLinear(N = N, rho = rho, K = K, delta = delta, gamma = gamma)
+    }else if(TypeSetting == "Logistic"){
+      SimulatedData = SimDataLogistic(N = N, rho = rho, K = K, delta = delta, gamma = gamma)
     }
   dat = SimulatedData$dat
   mu = SimulatedData$mu
   
   # Model #
-  if(type == "Linear"){model = lm(Y~., data = dat)}else if(type == "Logistic"){
+  if(TypeSetting == "Linear"){model = lm(Y~., data = dat)}else if(TypeSetting == "Logistic"){
     model = glm(Y~., data = dat, family = "binomial")
     }
   beta_hat = as.numeric(model$coefficients)
   epsilon_hat = as.numeric(model$residuals)
   
   # Estimates #
-  ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase, type = type)
+  ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase, TypeSetting = TypeSetting)
   ThetaCond = ThetaCondFunction(dat,mu)
+  # ThetaCond = ThetaPop
 
   # Variance Estimates #
-  # VPop = VHatPopFunctionLoop(dat, beta_hat)
-  VCond = VHatCondFunctionLoop(dat, beta_hat, epsilon_hat)
-  VPop = VHatPopFunction(dat, beta_hat)
-  # VCond = VHatCondFunction(dat, beta_hat, epsilon_hat)
+  VCondSE = VHatCondFunction(dat, epsilon_hat, VarFixed)$RegressionSE
+  VPopSE = VHatPopFunction(dat, beta_hat)$RegressionSE
 
-  VPopSE = VPop$RegressionSE
-  # VPopSE = sqrt(diag(vcovHC(model, type = "HC0")))
-  VCondSE = VCond$RegressionSE 
-  # VarCovMatrixPop = VPop$VarCovMatrix
-  # VarCovMatrixCond = VCond$VarCovMatrix
-  
-  # VPopSE-sqrt(diag(vcovHC(model, type = "HC0"))) <1e-15 # Check if VPop == Standard Error from VCOV
-  
   # Confidence Interval #
   CoverageResults = ConfidenceIntervalFunction(ThetaHat = beta_hat[2],
                                                ThetaCond = ThetaCond[2],
@@ -64,7 +56,9 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
   colnames(RegressionSEEstimates) = c("Population", "Conditional")
   
   return(list(RegressionSdErrEstimates = RegressionSEEstimates,
-              # VarCovMatrixPop = VarCovMatrixPop,
-              # VarCovMatrixCond = VarCovMatrixCond,
               CoverageResults = CoverageResults))
 }
+
+
+
+

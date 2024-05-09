@@ -11,18 +11,7 @@ VHatPopFunction = function(dat, beta_hat){
   
   
   ### Check if Simulation or Application ###
-  ApplicationIndicator = (colnames(dat) == c("name",
-                                             "Y",
-                                             "gdp65",
-                                             "open",
-                                             "dpop",
-                                             "cgb",
-                                             "inst",
-                                             "tropics",
-                                             "land",
-                                             "sxp",
-                                             "life",
-                                             "life2")) %>% all()
+  ApplicationIndicator = "cgb" %in% colnames(dat)
   
   ### Set Up ###
   N = nrow(dat)
@@ -55,6 +44,7 @@ VHatPopFunction = function(dat, beta_hat){
   
   ### Sandwich Estimator ###
   VPop = Bread %*% Meat %*% Bread
+  RegressionSE = as.numeric(sqrt(diag(VPop)/nrow(X)))
   return(list(VarCovMatrix = VPop,
-              RegressionSE = as.numeric(sqrt(diag(VPop)/nrow(X)))))
+              RegressionSE = RegressionSE))
 }
