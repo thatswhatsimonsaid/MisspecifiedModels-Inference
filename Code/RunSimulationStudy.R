@@ -9,11 +9,9 @@ library(sandwich)
 library(mixtools)
 library(distr)
 
-
 ## Rm. Var.
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
-
 
 # Functions
 source("Code/AIZResults.R")
