@@ -40,7 +40,7 @@ NSim = 100
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
-  SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, type = "Linear")
+  SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, ParameterVector, i, TypeSetting = "Linear")
   #write.csv(SimulationResultsList[[i]]$SimulationSEResults, file ="data/SimulationCases/Linear/StandardErrors/Case",i,".csv")
   # write.csv(SimulationResultsList[[i]]$SimCoverageFrequency, file = "data/SimulationCases/Linear/Coverage/Case",i,".csv")
 }
