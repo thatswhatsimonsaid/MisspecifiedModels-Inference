@@ -44,7 +44,7 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 # Simulation
 
 ### Run Simulation ###
-NSim = 10
+NSim = 50000
 SimulationResultsList = list(length = nrow(ParameterVector))
 for(i in 1:nrow(ParameterVector)){
   print(paste0("Case ",i))
@@ -59,7 +59,7 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
             # file =  "data/SimulationCases/",TypeSetting,"/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-saveRDS(SimulationResultsList, file = paste0("data/SimulationCases/",TypeSetting,"/SimulationResult_TEST.rds"))
+saveRDS(SimulationResultsList, file = paste0("data/SimulationCases/",TypeSetting,"/SimulationResult_50_200.rds"))
 
 
 

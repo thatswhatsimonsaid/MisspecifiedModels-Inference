@@ -18,7 +18,6 @@ source(paste0("Code/SimData",TypeSetting,".R"))
 
 ### Parameters ###               
 NSim = 1000000
-NSim = 10
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
