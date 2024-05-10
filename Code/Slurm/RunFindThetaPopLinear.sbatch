@@ -11,4 +11,4 @@
 
 cd ~/Stats572
 module load R
-Rscript /Code/FindThetaPopLinear.R
+Rscript Code/FindThetaPopLinear.R
