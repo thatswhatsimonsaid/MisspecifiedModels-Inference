@@ -10,5 +10,4 @@
 #SBATCH --mail-user=simondn@uw.edu # Email to which notifications will be sent
 
 module load R
-cd ~/Stats572/
-Rscript Code/scripts/FindThetaPopLinear.R
+Rscript FindThetaPopLinear.R
