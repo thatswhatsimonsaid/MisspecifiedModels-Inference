@@ -76,7 +76,7 @@ for(SimulationCase in 1:nrow(ParameterVector)){
 }
 beta_hat_simulation = data.frame(beta_hat_simulation)
 # saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_",TypeSetting,"_New_simulation.rds"))
-saveRDS(beta_hat_simulation, paste0("/Data/beta_hat_",TypeSetting,"_simulation.rds"))
+saveRDS(beta_hat_simulation, paste0("/data/beta_hat_",TypeSetting,"_simulation.rds"))
 
 # mean(beta_hat_simulation[c(1,2,5,6,9,10,13,14),])            # Case 1: delta = 0, rho = 0.0
 # mean(beta_hat_simulation[c(3,4,7,8,11,12,15,16),])           # Case 2: delta = 0, rho = 0.1
