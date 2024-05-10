@@ -10,11 +10,11 @@ library(distr)
 
 ### Set Up ###
 rm(list=ls())
-TypeSetting = "Logistic"
+TypeSetting = "Linear"
 set.seed(420)
 
 ### Data Generating Process ###
-source("SimDataLogistic.R")
+source(paste0("SimData",TypeSetting,".R"))
 
 ### Parameters ###               
 NSim = 1000000
