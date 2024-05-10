@@ -44,7 +44,7 @@ SimDataLinear = function(N, rho, K, delta, gamma){
               mu = mu_i))
 }
                
-NSim = 100
+NSim = 1000000
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
@@ -101,7 +101,7 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   beta_hat_simulation[SimulationCase]  = mean(beta_hat_list)
 }
 beta_hat_simulation = data.frame(beta_hat_simulation)
-# saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_",TypeSetting,"_simulation.rds"))
+# saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_",TypeSetting,"_New_simulation.rds"))
 saveRDS(beta_hat_simulation, paste0("data/SimulationCases/Linear/beta_hat_Linear_simulation.rds"))
 
 # mean(beta_hat_simulation[c(1,2,5,6,9,10,13,14),])            # Case 1: delta = 0, rho = 0.0
