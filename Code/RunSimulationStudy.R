@@ -16,18 +16,18 @@ dir = "/Users/simondn/Documents/Stats572/"
 
 
 # Functions
-source("Code/functions/AIZResults.R")
-source("Code/functions/ConfidenceIntervalFunction.R")
-source("Code/functions/OneIterationFunction.R")
-source("Code/functions/SimDataLinear.R")
-source("Code/functions/SimDataLogistic.R")
-source("Code/functions/SimulationFunction.R")
-source("Code/functions/SimulationReformatResultsFunction.R")
-source("Code/functions/ThetaCondFunction.R")
-source("Code/functions/ThetaPopFunction.R")
-source("Code/functions/VHatCondFunction.R")
-source("Code/functions/VHatPopFunction.R")
-source("Code/functions/WhichMinFunction.R")
+source("Code/AIZResults.R")
+source("Code/ConfidenceIntervalFunction.R")
+source("Code/OneIterationFunction.R")
+source("Code/SimDataLinear.R")
+source("Code/SimDataLogistic.R")
+source("Code/SimulationFunction.R")
+source("Code/SimulationReformatResultsFunction.R")
+source("Code/ThetaCondFunction.R")
+source("Code/ThetaPopFunction.R")
+source("Code/VHatCondFunction.R")
+source("Code/VHatPopFunction.R")
+source("Code/WhichMinFunction.R")
 
 
 # Set Up
@@ -61,7 +61,7 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
             # file =  "data/SimulationCases/",TypeSetting,"/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-# saveRDS(SimulationResultsList, file = "data/SimulationCases/",TypeSetting,"/SimulationResults.rds"))
+saveRDS(SimulationResultsList, file = "data/SimulationCases/",TypeSetting,"/SimulationResult_TEST.rds"))
 
 
 
