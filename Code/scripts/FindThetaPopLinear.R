@@ -12,7 +12,7 @@ library(distr)
 rm(list=ls())
 TypeSetting = "Linear"
 set.seed(420)
-source("Stats572/Code/functions/SimData",TypeSetting,".R")
+source("Stats572/Code/functions/SimData",TypeSetting,".R", local = TRUE)
 
 NSim = 100
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
