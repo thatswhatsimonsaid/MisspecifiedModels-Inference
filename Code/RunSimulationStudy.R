@@ -61,7 +61,8 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
             # file =  "data/SimulationCases/",TypeSetting,"/Coverage/Case",i,".csv"))
 }
 names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
-saveRDS(SimulationResultsList, file = "data/SimulationCases/",TypeSetting,"/SimulationResult_TEST.rds")
+saveRDS(SimulationResultsList, file = paste0("data/SimulationCases/",TypeSetting,"/SimulationResult_TEST.rds"))
+
 
 
 
