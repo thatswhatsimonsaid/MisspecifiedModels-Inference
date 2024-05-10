@@ -12,26 +12,26 @@ library(distr)
 rm(list=ls())
 
 # Functions
-source("Code/functions/AIZResults.R")
-source("Code/functions/ConfidenceIntervalFunction.R")
-source("Code/functions/OneIterationFunction.R")
-source("Code/functions/SimData.R")
-source("Code/functions/SimDataLogistic.R")
-source("Code/functions/SimulationFunction.R")
-source("Code/functions/SimulationReformatResultsFunction.R")
-source("Code/functions/ThetaCondFunction.R")
-source("Code/functions/ThetaPopFunction.R")
-source("Code/functions/VHatCondFunction.R")
-source("Code/functions/VHatCondFunctionLoop.R")
-source("Code/functions/VHatPopFunction.R")
-source("Code/functions/VHatPopFunctionLoop.R")
-source("Code/functions/WhichMinFunction.R")
+source("AIZResults.R")
+source("ConfidenceIntervalFunction.R")
+source("OneIterationFunction.R")
+source("SimData.R")
+source("SimDataLogistic.R")
+source("SimulationFunction.R")
+source("SimulationReformatResultsFunction.R")
+source("ThetaCondFunction.R")
+source("ThetaPopFunction.R")
+source("VHatCondFunction.R")
+source("VHatCondFunctionLoop.R")
+source("VHatPopFunction.R")
+source("VHatPopFunctionLoop.R")
+source("WhichMinFunction.R")
 
 
 # Simulation
 ### Set Up ###
 set.seed(420)
-ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
+ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
