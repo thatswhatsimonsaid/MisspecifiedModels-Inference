@@ -1,6 +1,5 @@
 # Set Up
 ## Libr.
-{r message=FALSE, warning=FALSE}
 library(stats)
 library(tidyverse)
 library(StatMatch)
