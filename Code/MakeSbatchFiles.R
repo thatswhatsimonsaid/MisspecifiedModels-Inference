@@ -17,7 +17,7 @@ for (i in 1:nrow(ParameterVector)) {
   
 
   # Create .sbatch file for the current simulation
-  sbatch_file <- file(paste0(dir,"/Code/Slurm/",job_name, ".sbatch"), "w")
+  sbatch_file <- file(paste0(dir,"/Code/Slurm/N50_200",job_name, ".sbatch"), "w")
   writeLines(
     c(
       "#!/bin/bash",
