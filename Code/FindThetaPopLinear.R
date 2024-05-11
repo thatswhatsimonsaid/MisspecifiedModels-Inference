@@ -12,7 +12,7 @@ library(distr)
 rm(list=ls())
 TypeSetting = "Linear"
 set.seed(420)
-
+jjj
 ### Data Generating Process ###
 source(paste0("Code/SimData",TypeSetting,".R"))
 

@@ -35,18 +35,18 @@ dir = "/Users/simondn/Documents/Stats572/"
 
 # Functions
 ```{r}
-source(paste0(dir,"Code/functions/AIZResults.R"))
-source(paste0(dir,"Code/functions/ConfidenceIntervalFunction.R"))
-source(paste0(dir,"Code/functions/OneIterationFunction.R"))
-source(paste0(dir,"Code/functions/SimDataLinear.R"))
-source(paste0(dir,"Code/functions/SimDataLogistic.R"))
-source(paste0(dir,"Code/functions/SimulationFunction.R"))
-source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
-source(paste0(dir,"Code/functions/ThetaCondFunction.R"))
-source(paste0(dir,"Code/functions/ThetaPopFunction.R"))
-source(paste0(dir,"Code/functions/VHatCondFunction.R"))
-source(paste0(dir,"Code/functions/VHatPopFunction.R"))
-source(paste0(dir,"Code/functions/WhichMinFunction.R"))
+source(paste0(dir,"Code/AIZResults.R"))
+source(paste0(dir,"Code/ConfidenceIntervalFunction.R"))
+source(paste0(dir,"Code/OneIterationFunction.R"))
+source(paste0(dir,"Code/SimDataLinear.R"))
+source(paste0(dir,"Code/SimDataLogistic.R"))
+source(paste0(dir,"Code/SimulationFunction.R"))
+source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
+source(paste0(dir,"Code/ThetaCondFunction.R"))
+source(paste0(dir,"Code/ThetaPopFunction.R"))
+source(paste0(dir,"Code/VHatCondFunction.R"))
+source(paste0(dir,"Code/VHatPopFunction.R"))
+source(paste0(dir,"Code/WhichMinFunction.R"))
 ```
 
 # Set Up
