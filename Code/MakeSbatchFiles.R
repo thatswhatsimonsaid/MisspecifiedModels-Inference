@@ -40,7 +40,7 @@ for (i in 1:nrow(ParameterVector)) {
       paste("    --Gamma ", leverage_vec, " \\", sep=""),
       paste("    --K ", k_vec, " \\", sep=""),
       paste("    --TypeSetting '", type_setting, "' \\", sep=""),
-      paste("    --Output ", output, " \\", sep="")
+      paste("    --Output ", output, ".rds \\", sep="")
     ),
     con=sbatch_file
   )
