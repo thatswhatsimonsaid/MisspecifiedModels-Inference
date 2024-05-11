@@ -18,4 +18,4 @@ Rscript Code/RunSimulationStudyNew.R \
     --Gamma 0 \
     --K 1 \
     --TypeSetting 'Linear' \
-    --Output ../Results/Linear/sim_D1_R0.5_N200_G0_K1 \
+    --Output Results/Linear/sim_D1_R0.5_N200_G0_K1 \
