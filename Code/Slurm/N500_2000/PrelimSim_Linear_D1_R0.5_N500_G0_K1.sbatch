@@ -2,7 +2,7 @@
 #SBATCH --job-name PrelimSim_Linear_D1_R0.5_N500_G0_K1
 #SBATCH --partition short
 #SBATCH --ntasks 1
-#SBATCH --time 0-10:00
+#SBATCH --time 0-12:00
 #SBATCH --mem-per-cpu=3000
 #SBATCH -o ClusterMessages/out/myscript_PrelimSim_Linear_D1_R0.5_N500_G0_K1_%j.out
 #SBATCH -e ClusterMessages/error/myscript_PrelimSim_Linear_D1_R0.5_N500_G0_K1_%j.err

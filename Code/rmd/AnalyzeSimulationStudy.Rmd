@@ -40,7 +40,7 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ## Results
 
 ```{r}
-file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
+file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"), 
                         pattern = "\\.rds$", 
                         full.names = TRUE)
 data_list = list()
