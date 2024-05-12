@@ -76,8 +76,8 @@ DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SimSEMedianList, Co
 Dicrepancy = DiscrepancyResults$Discrepancy
 LargeDiscrepancyIndices = DiscrepancyResults$LargeDiscrepancyIndices
 DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
-# LargeDiscrepancyIndices
-# DiscrepancyMeans
+LargeDiscrepancyIndices
+DiscrepancyMeans
 ```
 # xtable
 ```{r}
