@@ -31,19 +31,32 @@ dir = "/Users/simondn/Documents/Stats572/"
 
 ## Functions
 ```{r}
-source(paste0(dir,"Code/functions/AIZResults.R"))
-source(paste0(dir,"Code/functions/DiscrepancyFunction.R"))
-source(paste0(dir,"Code/functions/MonteCarloResults.R"))
-source(paste0(dir,"Code/functions/SimulationReformatResultsFunction.R"))
+source(paste0(dir,"Code/AIZResults.R"))
+source(paste0(dir,"Code/DiscrepancyFunction.R"))
+source(paste0(dir,"Code/MonteCarloResults.R"))
+source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
 ## Results
+
+```{r}
+file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
+                        pattern = "\\.rds$", 
+                        full.names = TRUE)
+data_list = list()
+data_list = lapply(file_list, readRDS)
+rm(file_list)
+names(data_list) = paste0("Case",1:length(data_list))
+```
+
+
 ```{r}
 ### Set Up ###
 SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
-SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
+# SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
+SimulationResultsReformatted = SimulationReformatResultsFunction(data_list)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
 MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)
 RunTimeList = SimulationResultsReformatted$RunTimeList # in seconds
