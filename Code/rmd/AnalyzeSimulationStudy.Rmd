@@ -66,6 +66,7 @@ ParameterVector = SimulationResultsReformatted$ParameterVector
 
 ```{r}
 SimSEMedianList = SimSEMedianList %>% arrange(Misspec., Homo., SS, Leverage, K)
+SimSEMedianList
 ```
 
 
