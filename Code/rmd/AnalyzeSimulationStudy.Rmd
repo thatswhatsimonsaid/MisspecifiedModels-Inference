@@ -46,7 +46,7 @@ file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"),
 data_list = list()
 data_list = lapply(file_list, readRDS)
 rm(file_list)
-names(data_list) = paste0("Case",1:length(data_list))
+# names(data_list) = paste0("Case",1:length(data_list))
 ```
 
 
@@ -64,14 +64,19 @@ CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
 ParameterVector = SimulationResultsReformatted$ParameterVector
 ```
 
+```{r}
+SimSEMedianList = SimSEMedianList %>% arrange(Misspec., Homo., SS, Leverage, K)
+```
+
+
 # Comparison
 ```{r}
 DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SimSEMedianList, CoverageList)
 Dicrepancy = DiscrepancyResults$Discrepancy
 LargeDiscrepancyIndices = DiscrepancyResults$LargeDiscrepancyIndices
 DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
-LargeDiscrepancyIndices
-DiscrepancyMeans
+# LargeDiscrepancyIndices
+# DiscrepancyMeans
 ```
 # xtable
 ```{r}
