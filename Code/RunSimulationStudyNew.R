@@ -57,7 +57,7 @@ ParameterVector= data.frame(MisspecVec = MisspecVec,
 
 ### Simulation ###
 set.seed(420)
-NSim = 50000
+NSim = 5
 SimulationResults = SimulationFunction(NSim = NSim, 
                                        ParameterVector = ParameterVector, 
                                        SimulationCase = 1, 
