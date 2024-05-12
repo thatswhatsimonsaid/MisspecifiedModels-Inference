@@ -2,3 +2,10 @@
 *.Rhistory
 *.RData
 *.DS_Store
+*.html
+*.key
+*.ppt
+*.png
+*.jpeg
+*.webp
+*.mp4
