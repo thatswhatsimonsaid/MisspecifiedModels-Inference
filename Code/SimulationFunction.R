@@ -64,7 +64,7 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, VarFixed, T
 
   ### Return ###
   return(list(SimSEMedian = SimSEMedian,
-              # SimulationSEResults = SimulationSEResults,
+              SimulationSEResults = SimulationSEResults,
               SimCoverageFrequency = SimCoverageFrequency,
               Parameters =  list(delta = delta,
                                  gamma = gamma,
