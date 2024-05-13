@@ -37,7 +37,6 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
   # Estimates #
   ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase, TypeSetting = TypeSetting)
   ThetaCond = ThetaCondFunction(dat,mu)
-  # ThetaCond = ThetaPop
 
   # Variance Estimates #
   VCondSE = VHatCondFunction(dat, epsilon_hat, VarFixed)$RegressionSE

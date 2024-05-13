@@ -25,7 +25,7 @@ library(sandwich)
 
 ## Rm. Var.
 ```{r}
-rm(list=ls())
+# rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
@@ -38,25 +38,12 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
 ## Results
-
-```{r}
-file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"), 
-                        pattern = "\\.rds$", 
-                        full.names = TRUE)
-data_list = list()
-data_list = lapply(file_list, readRDS)
-rm(file_list)
-# names(data_list) = paste0("Case",1:length(data_list))
-```
-
-
 ```{r}
 ### Set Up ###
 SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
 SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
-# SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
-SimulationResultsReformatted = SimulationReformatResultsFunction(data_list)
+SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
 SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
 MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)
 RunTimeList = SimulationResultsReformatted$RunTimeList # in seconds
@@ -79,6 +66,7 @@ DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
 LargeDiscrepancyIndices
 DiscrepancyMeans
 ```
+
 # xtable
 ```{r}
 ### AIZ Coverage and SE Table ###
