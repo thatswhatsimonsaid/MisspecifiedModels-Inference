@@ -60,7 +60,16 @@ LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
                                 LargeSampleSEMedianList[,c(6,7,8)]) %>%
   arrange(Misspec., Homo., SS, Leverage, K)
 rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable)) 
-# LargeSampleResultsTable %>% xtable(digits = 5,caption = "Difference between Conditional and Population Standard Error estimates between ")
+
+LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+
+LargeSampleResultsTable %>% xtable(digits = 5,caption = "Simulation results for a linear sample with large samples")
+
 ```
 
 
@@ -86,21 +95,52 @@ SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
                                 SmallSampleCoverageList,
                                 SmallSampleSEMedianList[,c(6,7,8)]) %>%
   arrange(Misspec., Homo., SS, Leverage, K)
+
+SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+SmallSampleResultsTable
+
+SmallSampleResultsTable %>% xtable(digits = 5,caption = "Simulation results for a linear sample with large samples")
+
 ```
 
 
 # Standard Errors
 ```{r}
-DifferencesTable = data.frame(SmallSampleParameterVector[,c(1,2,3)],
-                              LargeSampleParameterVector[,c(3,4,5)],
-                              DifferenceN50_200 = SmallSampleResultsTable$Difference,
-                              DifferenceN500_2000 = LargeSampleResultsTable$Difference) %>%
-  mutate(Differences = DifferenceN50_200 - DifferenceN500_2000,
-         PercentChange = (DifferenceN500_2000 - DifferenceN50_200)/DifferenceN50_200) %>%
-  round(4)
-DifferencesTable %>% xtable(digits = 5,caption = "Difference between Conditional and Population Standard Error estimates between ")
-```
+### Pivoting ###
+SmallSampleSEMedianList %>% 
+  select(-c(Population, Conditional, Indicator)) %>%
+  pivot_wider(names_from = SS,
+              values_from = Difference) -> PivotWiderSmallSampleSE
+LargeSampleSEMedianList %>% 
+  select(-c(Population, Conditional, Indicator)) %>%
+  pivot_wider(names_from = SS,
+              values_from = Difference) -> PivotWiderLargeSampleSE
 
+### Difference Table ###
+DifferenceTable = merge(PivotWiderSmallSampleSE, 
+                        PivotWiderLargeSampleSE, by = c("Misspec.","Homo.","Leverage","K")) %>%
+  rename("N=50" = `50`,
+         "N=500" = `500`,
+         "N=200" = `200`,
+         "N=2000" = `2000`) %>%
+  relocate(`N=500`, .after = `N=200`)
+
+DifferenceTable = DifferenceTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+
+### xtable ###
+DifferenceTable %>% xtable(digits = 5,
+                           caption = "Difference in standard errors when increasing sample size")
+```
 
 
 # Coverage
@@ -126,20 +166,4 @@ DifferencesTable %>% xtable(digits = 5,caption = "Difference between Conditional
 #          ThetaCond_VCond) %>%
 #   mutate(ThetaPopDifference = ThetaCond_VPop - ThetaCond_VCond) %>%
 #   filter(SS == 500)
-```
-
-# xtable
-```{r}
-### AIZ Coverage and SE Table ###
-# MyLargeSampleResults = cbind(SimSEMedianList[,c(1:5)],CoverageList,SimSEMedianList[,c(6,7,8)]) %>%
-#   arrange(Misspec., Homo., SS, Leverage, K)
-# MyLargeSampleResults %>% xtable(digits = 5,caption = "Simulation Results (Linear Model)")
-# ### Monte Carlo Results ###
-# MonteCarloREsults$MonteCarliResults_Population %>%
-#   xtable(digits = 5,
-#          caption = "Monte Carlo Simulation $\theta_{Cond}$ Results (Linear Model)")
-#
-# MonteCarloREsults$MonteCarliResults_Conditional %>%
-#   xtable(digits = 5,
-#          caption = "Monte Carlo Simulation $\theta_{Pop}$ Results (Linear Model)")
 ```
