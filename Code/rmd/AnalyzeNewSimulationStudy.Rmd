@@ -12,6 +12,7 @@ output:
 ---
 
 # Set Up
+- NEED TO ORDER
 
 ## Libr.
 ```{r}
@@ -43,10 +44,23 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"), 
                         pattern = "\\.rds$", 
                         full.names = TRUE)
-data_list = list()
-data_list = lapply(file_list, readRDS)
+LargeSampleSimulation = list()
+LargeSampleSimulation = lapply(file_list, readRDS)
 rm(file_list)
-# names(data_list) = paste0("Case",1:length(data_list))
+
+LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
+LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList 
+LargeSampleMonteCarloREsults = MonteCarloResults(LargeSampleSimulation, 5)
+LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList # in seconds
+LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList)
+LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
+
+LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
+                                LargeSampleCoverageList,
+                                LargeSampleSEMedianList[,c(6,7,8)]) %>%
+  arrange(Misspec., Homo., SS, Leverage, K)
+rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable)) 
+# LargeSampleResultsTable %>% xtable(digits = 5,caption = "Difference between Conditional and Population Standard Error estimates between ")
 ```
 
 
@@ -54,117 +68,78 @@ rm(file_list)
 ### Set Up ###
 SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
-SimulationResultsReformatted = SimulationReformatResultsFunction(data_list)
-SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
-MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)
-RunTimeList = SimulationResultsReformatted$RunTimeList # in seconds
-CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
-ParameterVector = SimulationResultsReformatted$ParameterVector
-CoverageList = cbind(ParameterVector,CoverageList)
-```
-
-## Reformat
-```{r}
+SmallSampleSimulation = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
+SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
+SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
+SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList # in seconds
+SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList)
+SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
 AIZ = AIZ %>% mutate(Misspec. = case_when(Misspec. == "No" ~ 0,
                                           Misspec. == "Yes" ~ 1),
                      Homo. = case_when(Homo. == "Yes" ~ 0,
                                        Homo. == "No" ~ 0.5),
                      Leverage = case_when(Leverage == "No" ~ 0,
-                                          Leverage == "Yes" ~ 0.1),)
+                                          Leverage == "Yes" ~ 0.1))
+
+SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
+                                SmallSampleCoverageList,
+                                SmallSampleSEMedianList[,c(6,7,8)]) %>%
+  arrange(Misspec., Homo., SS, Leverage, K)
 ```
 
 
 # Standard Errors
 ```{r}
-SEComparison500 = full_join(AIZ[,c(1:5,10:12)], filter(SimSEMedianList, SS == 500), 
-                            by = c("Misspec.", "Homo.", "Leverage", "K")) %>%
-  select(Misspec.,
-         Homo.,
-         SS.x,
-         Leverage,
-         K,
-         MedianSEPop,
-         MedianSECond,
-         Difference.x,
-         Population,
-         Conditional,
-         Difference.y) %>%
-  rename(SS = SS.x,
-         PopSE_N50_200 = MedianSEPop,
-         CondSE_N50_200 = MedianSECond,
-         Difference_N50_200 = Difference.x,
-         PopSE_N500_2000 = Population,
-         CondSE_N500_2000 = Conditional,
-         Difference_N500_2000 = Difference.y) %>%
-  mutate(Indicator = 1*(abs(Difference_N50_200)>=abs(Difference_N500_2000))) %>%
-  select(Misspec.,
-         Homo.,
-         SS,
-         Leverage,
-         K,
-         Difference_N50_200,
-         Difference_N500_2000,
-         Indicator)
-
-SEComparison2000 = full_join(AIZ[,c(1:5,10:12)], filter(SimSEMedianList,SS == 2000), 
-                            by = c("Misspec.", "Homo.", "Leverage", "K")) %>%
-  select(Misspec.,
-         Homo.,
-         SS.x,
-         Leverage,
-         K,
-         MedianSEPop,
-         MedianSECond,
-         Difference.x,
-         Population,
-         Conditional,
-         Difference.y) %>%
-  rename(SS = SS.x,
-         PopSE_N50_200 = MedianSEPop,
-         CondSE_N50_200 = MedianSECond,
-         Difference_N50_200 = Difference.x,
-         PopSE_N500_2000 = Population,
-         CondSE_N500_2000 = Conditional,
-         Difference_N500_2000 = Difference.y) %>%
-  mutate(Indicator = 1*(abs(Difference_N50_200)>=abs(Difference_N500_2000))) %>%
-  select(Misspec.,
-         Homo.,
-         SS,
-         Leverage,
-         K,
-         Difference_N50_200,
-         Difference_N500_2000,
-         Indicator)
+DifferencesTable = data.frame(SmallSampleParameterVector[,c(1,2,3)],
+                              LargeSampleParameterVector[,c(3,4,5)],
+                              DifferenceN50_200 = SmallSampleResultsTable$Difference,
+                              DifferenceN500_2000 = LargeSampleResultsTable$Difference) %>%
+  mutate(Differences = DifferenceN50_200 - DifferenceN500_2000,
+         PercentChange = (DifferenceN500_2000 - DifferenceN50_200)/DifferenceN50_200) %>%
+  round(4)
+DifferencesTable %>% xtable(digits = 5,caption = "Difference between Conditional and Population Standard Error estimates between ")
 ```
 
-```{r}
-SEComparison500
-SEComparison2000
-```
 
 
 # Coverage
 ```{r}
-CoverageThetaPop = CoverageList %>% 
-  select(Misspec.,
-         Homo.,
-         SS,
-         Leverage,
-         K,
-         ThetaPop_VPop,
-         ThetaPop_VCond) %>%
-  mutate(ThetaPopDifference = ThetaPop_VPop - ThetaPop_VCond) %>%
-  filter(SS == 500)
-
-CoverageThetaCond = CoverageList %>% 
-  select(Misspec.,
-         Homo.,
-         SS,
-         Leverage,
-         K,
-         ThetaCond_VPop,
-         ThetaCond_VCond) %>%
-  mutate(ThetaPopDifference = ThetaCond_VPop - ThetaCond_VCond) %>%
-  filter(SS == 500)
+# CoverageThetaPop = CoverageList %>% 
+#   select(Misspec.,
+#          Homo.,
+#          SS,
+#          Leverage,
+#          K,
+#          ThetaPop_VPop,
+#          ThetaPop_VCond) %>%
+#   mutate(ThetaPopDifference = ThetaPop_VPop - ThetaPop_VCond) %>%
+#   filter(SS == 500)
+# 
+# CoverageThetaCond = CoverageList %>% 
+#   select(Misspec.,
+#          Homo.,
+#          SS,
+#          Leverage,
+#          K,
+#          ThetaCond_VPop,
+#          ThetaCond_VCond) %>%
+#   mutate(ThetaPopDifference = ThetaCond_VPop - ThetaCond_VCond) %>%
+#   filter(SS == 500)
 ```
 
+# xtable
+```{r}
+### AIZ Coverage and SE Table ###
+# MyLargeSampleResults = cbind(SimSEMedianList[,c(1:5)],CoverageList,SimSEMedianList[,c(6,7,8)]) %>%
+#   arrange(Misspec., Homo., SS, Leverage, K)
+# MyLargeSampleResults %>% xtable(digits = 5,caption = "Simulation Results (Linear Model)")
+# ### Monte Carlo Results ###
+# MonteCarloREsults$MonteCarliResults_Population %>%
+#   xtable(digits = 5,
+#          caption = "Monte Carlo Simulation $\theta_{Cond}$ Results (Linear Model)")
+#
+# MonteCarloREsults$MonteCarliResults_Conditional %>%
+#   xtable(digits = 5,
+#          caption = "Monte Carlo Simulation $\theta_{Pop}$ Results (Linear Model)")
+```
