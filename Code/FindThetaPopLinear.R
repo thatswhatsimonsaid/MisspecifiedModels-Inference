@@ -12,15 +12,15 @@ library(distr)
 rm(list=ls())
 TypeSetting = "Linear"
 set.seed(420)
-jjj
+
 ### Data Generating Process ###
 source(paste0("Code/SimData",TypeSetting,".R"))
 
 ### Parameters ###               
-NSim = 1000000
+NSim = 100000
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                         # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
-                        SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
+                        SizeVec = rep(c(rep(500,4), rep(2000,4)),4),                   # N: Observations
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
                         KVec = rep(c(1,5),16)                                        # K: Parameters
 ) %>% data.frame
@@ -73,6 +73,8 @@ for(SimulationCase in 1:nrow(ParameterVector)){
   ## Save ##
   beta_hat_simulation[SimulationCase]  = mean(beta_hat_list)
 }
+
+beta_hat_simulation = cbind(ParameterVector,beta_hat_simulation)
 beta_hat_simulation = data.frame(beta_hat_simulation)
 # saveRDS(beta_hat_simulation, file = paste0(dir,"data/SimulationCases/",TypeSetting,"/beta_hat_",TypeSetting,"_New_simulation.rds"))
 saveRDS(beta_hat_simulation, paste0("data/EstimatedThetaPop/ThetaPop",TypeSetting,"_simulation.rds"))

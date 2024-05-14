@@ -35,7 +35,13 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
   epsilon_hat = as.numeric(model$residuals)
   
   # Estimates #
-  ThetaPop = ThetaPopFunction(dat = dat, SimulationCase = SimulationCase, TypeSetting = TypeSetting)
+  ThetaPop = ThetaPopFunction(dat = dat, 
+                              rho = rho, 
+                              N = N,
+                              K = K, 
+                              delta = delta, 
+                              gamma = gamma, 
+                              TypeSetting = TypeSetting)
   ThetaCond = ThetaCondFunction(dat,mu)
 
   # Variance Estimates #
