@@ -7,6 +7,7 @@ library(lmtest)
 library(sandwich)
 library(mixtools)
 library(distr)
+library(optparse)
 
 ### Set Up ###
 rm(list=ls())
@@ -39,9 +40,7 @@ TypeSetting = args$TypeSetting
 Output = args$Output
 
 ### Set Up ###               
-NSim = 100
-SimulationResultsList = list(length = nrow(ParameterVector))
-beta_hat_simulation = numeric(nrow(ParameterVector))
+NSim = 1000
 
 pb = txtProgressBar(min = 0, 
                     max = NSim,
