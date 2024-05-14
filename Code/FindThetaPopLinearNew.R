@@ -75,6 +75,7 @@ for(i in 1:NSim){
   epsilon_hat = as.numeric(model$residuals)
   beta_hat_list[i] = beta_hat[2]
 }
+close(pb)
 
 ## Save ##
 beta_hat_simulation = c(delta = delta, rho = rho, N = N, gamma = gamma, K = K, BetaPop = mean(beta_hat_list))
