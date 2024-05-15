@@ -1,0 +1,50 @@
+---
+title: "Stats 572 - Simulation Study Comparison"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+
+## Libr.
+```{r}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(xtable)
+library(lmtest)
+library(sandwich)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+dir = "/Users/simondn/Documents/Stats572/"
+```
+
+## Functions
+```{r}
+FileList = list.files(path =  paste0(dir,"data/EstimatedThetaPop"), 
+                      pattern = "\\.csv$", 
+                      full.names = TRUE)
+FileList = lapply(FileList, read.csv)
+
+ThetaPopList = matrix(nrow = length(FileList), ncol = 6)
+for(i in 1:length(FileList)){
+  ThetaPopList[i,] = FileList[[i]]$x
+}
+
+ThetaPopList = data.frame(ThetaPopList)
+colnames(ThetaPopList) = c("delta","rho","N","gamma","K","BetaPop")
+ThetaPopList = ThetaPopList %>% mutate(BetaPop = round(BetaPop,2)) 
+
+saveRDS(ThetaPopList,paste0(dir,"/data/EstimatedThetaPop/EstimatedThetaPop.rds"))
+```
+

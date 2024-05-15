@@ -15,6 +15,7 @@ TypeSetting = "Linear"
 set.seed(420)
 
 ### Data Generating Process ###
+# source("/Users/simondn/Documents/Stats572/Code/SimDataLinear.R")
 source(paste0("Code/SimData",TypeSetting,".R"))
 
 ## Parser ###
@@ -48,6 +49,11 @@ pb = txtProgressBar(min = 0,
                     width = 50,
                     char = "=")
 
+delta = 1
+rho = 0.5
+N = 200
+gamma = 0
+K = 1
 
 ### Run Simulation ###
 ## Set Up ##
