@@ -20,13 +20,7 @@ ConfidenceIntervalFunction = function(ThetaHat, ThetaCond, ThetaPop, SEPop, SECo
   Containment_ThetaPop_SECond = ThetaPop >= CI_SECond[1] & ThetaPop <= CI_SECond[2]
   Containment_ThetaCond_SEPop = ThetaCond >= CI_SEPop[1] & ThetaCond <= CI_SEPop[2]
   Containment_ThetaCond_SECond = ThetaCond >= CI_SECond[1] & ThetaCond <= CI_SECond[2]
-  
-  ### Old Confidence Interval ###
-  # CI_ThetaPop_SEPop = abs(ThetaHat - ThetaPop/(SEPop) < qnorm(p =  1-alpha/2, mean = 0, sd = 1)
-  # CI_ThetaPop_SECond = abs(ThetaHat - ThetaPop/SECond) < qnorm(p =  1-alpha/2, mean = 0, sd = 1)
-  # CI_ThetaCond_SEPop = abs(ThetaHat - ThetaCond/(SEPop) < qnorm(p =  1-alpha/2, mean = 0, sd = 1)
-  # CI_ThetaCond_SECond = abs(ThetaHat - ThetaCond/SECond) < qnorm(p =  1-alpha/2, mean = 0, sd = 1)
-  
+
   ### Output ###
   CoverageOutput = matrix(c(Containment_ThetaPop_SEPop, 
                             Containment_ThetaPop_SECond, 

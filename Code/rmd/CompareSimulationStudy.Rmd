@@ -39,23 +39,38 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 
 ## Results
 ```{r}
-### Set Up ###
+### AIZ Results ###
 SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
-SimulationResultsList = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
-SimulationResultsReformatted = SimulationReformatResultsFunction(SimulationResultsList)
-SimSEMedianList = SimulationResultsReformatted$SimSEMedianList 
-MonteCarloREsults = MonteCarloResults(SimulationResultsReformatted, 5)
-RunTimeList = SimulationResultsReformatted$RunTimeList # in seconds
-CoverageList = data.frame(SimulationResultsReformatted$CoverageList)
-ParameterVector = SimulationResultsReformatted$ParameterVector
-```
 
-```{r}
-SimSEMedianList = SimSEMedianList %>% arrange(Misspec., Homo., SS, Leverage, K)
-SimSEMedianList
-```
+### My Results ###
+file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
+                        pattern = "\\.rds$", 
+                        full.names = TRUE)
+SmallSampleSimulation = list()
+SmallSampleSimulation = lapply(file_list, readRDS)
+rm(file_list)
 
+SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
+SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
+SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList # in seconds
+SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList)
+SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
+
+SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
+                                SmallSampleCoverageList,
+                                SmallSampleSEMedianList[,c(6,7,8)]) %>%
+  arrange(Misspec., Homo., SS, Leverage, K)
+rownames(SmallSampleResultsTable) = paste0("Case ", 1:nrow(SmallSampleResultsTable)) 
+
+SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+```
 
 # Comparison
 ```{r}
