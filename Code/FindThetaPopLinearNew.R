@@ -40,7 +40,7 @@ TypeSetting = args$TypeSetting
 Output = args$Output
 
 ### Set Up ###               
-NSim = 1000
+NSim = 100000
 
 pb = txtProgressBar(min = 0, 
                     max = NSim,
