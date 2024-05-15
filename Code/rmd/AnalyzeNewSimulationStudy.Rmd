@@ -39,7 +39,7 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
 ## Results
-
+### Large Sample
 ```{r}
 file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"), 
                         pattern = "\\.rds$", 
@@ -71,30 +71,27 @@ LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_whe
 LargeSampleResultsTable %>% xtable(digits = 5,caption = "Simulation results for a linear sample with large samples")
 
 ```
-
-
+### Small Sample
 ```{r}
-### Set Up ###
-SettingType = "Linear"
-AIZ = AIZResults(type = SettingType)
-SmallSampleSimulation = readRDS(file = paste0(dir,"data/SimulationCases/", SettingType, "/SimulationResults.rds"))
+file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
+                        pattern = "\\.rds$", 
+                        full.names = TRUE)
+SmallSampleSimulation = list()
+SmallSampleSimulation = lapply(file_list, readRDS)
+rm(file_list)
+
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
 SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
 SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
 SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList # in seconds
 SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList)
 SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
-AIZ = AIZ %>% mutate(Misspec. = case_when(Misspec. == "No" ~ 0,
-                                          Misspec. == "Yes" ~ 1),
-                     Homo. = case_when(Homo. == "Yes" ~ 0,
-                                       Homo. == "No" ~ 0.5),
-                     Leverage = case_when(Leverage == "No" ~ 0,
-                                          Leverage == "Yes" ~ 0.1))
 
 SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
                                 SmallSampleCoverageList,
                                 SmallSampleSEMedianList[,c(6,7,8)]) %>%
   arrange(Misspec., Homo., SS, Leverage, K)
+rownames(SmallSampleResultsTable) = paste0("Case ", 1:nrow(SmallSampleResultsTable)) 
 
 SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
                                                                   Misspec. == 1 ~ "Yes"),
@@ -102,12 +99,10 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
                                                                Homo. == 0.5 ~ "No"),
                                              Leverage = case_when(Leverage == 0 ~ "No",
                                                                   Leverage == 0.1 ~ "Yes"))
-SmallSampleResultsTable
 
-SmallSampleResultsTable %>% xtable(digits = 5,caption = "Simulation results for a linear sample with large samples")
+SmallSampleResultsTable %>% xtable(digits = 5,caption = "Simulation results for a linear sample with small samples")
 
 ```
-
 
 # Standard Errors
 ```{r}
