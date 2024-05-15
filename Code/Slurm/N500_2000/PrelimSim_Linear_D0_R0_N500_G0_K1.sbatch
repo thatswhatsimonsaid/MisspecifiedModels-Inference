@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name PrelimSim_Linear_D0_R0_N500_G0_K1
-#SBATCH --partition short
+#SBATCH --partition medium
 #SBATCH --ntasks 1
-#SBATCH --time 0-12:00
-#SBATCH --mem-per-cpu=3000
+#SBATCH --time 2-00:00
+#SBATCH --mem-per-cpu=6000
 #SBATCH -o ClusterMessages/out/myscript_PrelimSim_Linear_D0_R0_N500_G0_K1_%j.out
 #SBATCH -e ClusterMessages/error/myscript_PrelimSim_Linear_D0_R0_N500_G0_K1_%j.err
 #SBATCH --mail-type=ALL
