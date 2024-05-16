@@ -75,6 +75,9 @@ for(i in 1:NSim){
 }
 close(pb)
 
+readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds") ->test
+
 ## Save ##
 beta_hat_simulation = c(delta = delta, rho = rho, N = N, gamma = gamma, K = K, BetaPop = mean(beta_hat_list))
+cbind()
 write.csv(beta_hat_simulation, Output)
