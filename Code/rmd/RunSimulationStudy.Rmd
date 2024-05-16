@@ -53,10 +53,10 @@ source(paste0(dir,"Code/WhichMinFunction.R"))
 ```{r}
 ### Set Up ###
 set.seed(420)
-TypeSetting = ""
+TypeSetting = "Logistic"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
-                        SizeVec = rep(c(rep(500,4), rep(2000,4)),4),                   # N: Observations
+                        SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
                         KVec = rep(c(1,5),16)                                        # K: Parameters
                         ) %>% data.frame
@@ -66,23 +66,18 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 ```{r}
 ### Run Simulation ###
 # NSim = 5000
-NSim = 100
-SimulationResultsList = list(length = nrow(ParameterVector))
-for(i in 1:nrow(ParameterVector)){
-  print(paste0("Case ",i))
+NSim = 1000
 SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, 
                                                 ParameterVector = ParameterVector, 
-                                                SimulationCase = i, 
+                                                SimulationCase = 1, 
                                                 VarFixed = NA,
                                                 TypeSetting = TypeSetting)
-}
-names(SimulationResultsList) = paste0("Case",1:nrow(ParameterVector))
 ```
 
 
 ```{r}
-for(i in 1:nrow(ParameterVector)){
-  print(SimulationResultsList[[i]]$SimCoverageFrequency)
+for(i in 1:16){
+  print(as.numeric(SimulationResultsList[[i]]$SimCoverageFrequency))
 }
 ```
 
