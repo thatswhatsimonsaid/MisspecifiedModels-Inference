@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name ResearchPrelimSimulation_D1_R0_N50_R0_K5
-#SBATCH --partition medium
+#SBATCH --partition short
 #SBATCH --ntasks 1
-#SBATCH --time 2-00:00
-#SBATCH --mem-per-cpu=3000
+#SBATCH --time 1-00:00
+#SBATCH --mem-per-cpu=300
 #SBATCH -o ClusterMessages/out/myscript_ResearchPrelimSimulation_D1_R0_N50_R0_K5_%j.out
 #SBATCH -e ClusterMessages/error/myscript_ResearchPrelimSimulation_D1_R0_N50_R0_K5_%j.err
 #SBATCH --mail-type=ALL

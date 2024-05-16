@@ -22,10 +22,10 @@ for (i in 1:nrow(ParameterVector)) {
     c(
       "#!/bin/bash",
       paste("#SBATCH --job-name", job_name),
-      "#SBATCH --partition medium",
+      "#SBATCH --partition short",
       "#SBATCH --ntasks 1",
-      "#SBATCH --time 2-00:00",
-      "#SBATCH --mem-per-cpu=3000",
+      "#SBATCH --time 1-00:00",
+      "#SBATCH --mem-per-cpu=300",
       paste("#SBATCH -o ClusterMessages/out/myscript_", job_name, "_%j.out", sep=""),
       paste("#SBATCH -e ClusterMessages/error/myscript_", job_name, "_%j.err", sep=""),
       "#SBATCH --mail-type=ALL",
