@@ -14,8 +14,6 @@ rm(list=ls())
 set.seed(420)
 
 ### Data Generating Process ###
-# source("/Users/simondn/Documents/Stats572/Code/SimDataLinear.R")
-source(paste0("Code/SimData",TypeSetting,".R"))
 
 ## Parser ###
 option_list = list(
@@ -41,6 +39,7 @@ Output = args$Output
 
 ### Set Up ###               
 NSim = 100000
+source(paste0("Code/SimData",TypeSetting,".R"))
 
 pb = txtProgressBar(min = 0, 
                     max = NSim,
