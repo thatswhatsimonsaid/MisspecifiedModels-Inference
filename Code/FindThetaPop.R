@@ -38,7 +38,7 @@ TypeSetting = args$TypeSetting
 Output = args$Output
 
 ### Set Up ###               
-NSim = 10000
+NSim = 100000
 source(paste0("Code/SimData",TypeSetting,".R"))
 
 pb = txtProgressBar(min = 0, 

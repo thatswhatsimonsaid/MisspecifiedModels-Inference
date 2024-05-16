@@ -39,13 +39,13 @@ SimDataLogistic = function(N, rho, K, delta, gamma){
     }else if(delta !=0){
     Ystar = X1 + (X1^2 - 1) + epsilon_i
     }
-  
-  ### Mu ###
-  
-  mu = NA
    
   ### Response ###
   Y = 1*(Ystar>=0)
+  
+  ### Mu ###
+  mu = Ystar
+  mu = solve(1+ exp(0 + XMatrix %*% CoefficientVector))
 
   ### Return ###
   dat = data.frame(Y, XMatrix)
