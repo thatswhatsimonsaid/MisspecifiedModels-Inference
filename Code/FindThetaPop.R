@@ -47,11 +47,6 @@ pb = txtProgressBar(min = 0,
                     width = 50,
                     char = "=")
 
-delta = 1
-rho = 0.5
-N = 200
-gamma = 0
-K = 1
 
 ### Run Simulation ###
 ## Set Up ##
