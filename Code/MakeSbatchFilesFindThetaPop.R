@@ -1,7 +1,8 @@
 # Read CSV file
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572"
-ParameterVector <- read.csv(paste0(dir,"/data/ParameterVectorFindThetaPop.csv"))
+typeSetting= "Logistic"
+ParameterVector <- read.csv(paste0(dir,"/data/",typeSetting,"/Parameters/ParameterVectorFindThetaPop.csv"))
 
 # Loop through each row
 for (i in 1:nrow(ParameterVector)) {
@@ -14,18 +15,9 @@ for (i in 1:nrow(ParameterVector)) {
   k_vec <- ParameterVector[i, "KVec"]
   type_setting <- ParameterVector[i, "TypeSetting"]
   output <- ParameterVector[i, "Output"]
-  
-  # print(paste0("Case ", i, ": ",misspec_vec, homosked_vec, size_vec, leverage_vec, k_vec))
-  # print(paste0("Misspec: ",misspec_vec))
-  # print(paste0("Homo: ",homosked_vec))
-  # print(paste0("SS: ",size_vec))
-  # print(paste0("Leverage: ",leverage_vec))
-  # print(paste0("K: ",k_vec))
-  # print("---")
-  
 
   # Create .sbatch file for the current simulation
-  sbatch_file <- file(paste0(dir,"/Code/Slurm/FindThetaPop/",job_name, ".sbatch"), "w")
+  sbatch_file <- file(paste0(dir,"/Code/Slurm/",typeSetting,"/FindThetaPop/",job_name, ".sbatch"), "w")
   writeLines(
     c(
       "#!/bin/bash",
@@ -41,7 +33,7 @@ for (i in 1:nrow(ParameterVector)) {
       "",
       "cd ~/Stats572",
       "module load R",
-      "Rscript Code/FindThetaPopLinear.R \\",
+      "Rscript Code/FindThetaPop.R \\",
       paste("    --Delta ", misspec_vec, " \\", sep=""),
       paste("    --Rho ", homosked_vec, " \\", sep=""),
       paste("    --N ", size_vec, " \\", sep=""),
