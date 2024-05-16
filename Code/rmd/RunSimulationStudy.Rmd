@@ -67,7 +67,7 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 ### Run Simulation ###
 # NSim = 5000
 NSim = 1000
-SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, 
+SimulationResultsList = SimulationFunction(NSim = NSim, 
                                                 ParameterVector = ParameterVector, 
                                                 SimulationCase = 1, 
                                                 VarFixed = NA,
@@ -76,9 +76,7 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
 
 
 ```{r}
-for(i in 1:16){
-  print(as.numeric(SimulationResultsList[[i]]$SimCoverageFrequency))
-}
+SimulationResultsList$SimCoverageFrequency
 ```
 
 
