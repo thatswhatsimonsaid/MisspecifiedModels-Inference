@@ -42,7 +42,7 @@ SimDataLogistic = function(N, rho, K, delta, gamma){
   
   ### Mu ###
   
-  # mu = 1*((1/(1+ exp(rep(0,N) + XMatrix %*% CoefficientVector)))>0.5)
+  mu = NA
    
   ### Response ###
   Y = 1*(Ystar>=0)
