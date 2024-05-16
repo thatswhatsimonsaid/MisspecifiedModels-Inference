@@ -46,8 +46,9 @@ OneIterationFunction = function(N, rho, K, delta, gamma, SimulationCase, VarFixe
 
   # Variance Estimates #
   VCondSE = VHatCondFunction(dat, epsilon_hat, VarFixed)$RegressionSE
-  VPopSE = VHatPopFunction(dat, beta_hat)$RegressionSE
-
+  # VPopSE = VHatPopFunction(dat, beta_hat)$RegressionSE
+  VPopSE = sqrt(diag(vcovHC(model, type = "HC0")))
+  
   # Confidence Interval #
   CoverageResults = ConfidenceIntervalFunction(ThetaHat = beta_hat[2],
                                                ThetaCond = ThetaCond[2],
