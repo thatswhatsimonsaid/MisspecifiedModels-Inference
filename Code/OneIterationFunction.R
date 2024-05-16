@@ -1,4 +1,4 @@
-OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCase, VarFixed, TypeSetting){
+OneIterationFunction = function(N, rho, K, delta, gamma, SimulationCase, VarFixed, TypeSetting){
   
   ### IMPORTANT: Need to change to return confidence interval coverage ###
   
@@ -31,7 +31,7 @@ OneIterationFunction = function(N, rho, K, delta, gamma, ThetaPop, SimulationCas
   if(TypeSetting == "Linear"){model = lm(Y~., data = dat)}else if(TypeSetting == "Logistic"){
     model = glm(Y~., data = dat, family = "binomial")
     }
-  beta_hat = as.numeric(model$coefficients)
+  beta_hat = as.numeric(model$coefficients) 
   epsilon_hat = as.numeric(model$residuals)
   
   # Estimates #

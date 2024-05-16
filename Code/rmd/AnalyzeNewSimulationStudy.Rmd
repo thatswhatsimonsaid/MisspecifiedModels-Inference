@@ -76,10 +76,6 @@ SmallSampleResultsTable %>%
   xtable(digits = 5,caption = "Simulation results for a linear sample with small samples")
 ```
 
-```{r}
-LargeSampleResultsTable %>% filter(Leverage == 0) %>% select(PercentChange) %>% colMeans
-LargeSampleResultsTable %>% filter(Leverage == 0.1) %>% select(PercentChange) %>% colMeans
-```
 
 ### Large Sample
 ```{r}
@@ -191,4 +187,35 @@ DifferenceTable %>% xtable(digits = 5, caption = "Percent change in using condit
 #          ThetaCond_VCond) %>%
 #   mutate(ThetaPopDifference = ThetaCond_VPop - ThetaCond_VCond) %>%
 #   filter(SS == 500)
+```
+
+# Presentation Xtable
+```{r}
+LargeSampleResultsTable %>% 
+  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference)) %>%
+  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                              Misspec. == 1 ~ "Yes"),
+         Homo. = case_when(Homo. == 0 ~ "Yes",
+                           Homo. == 0.5 ~ "No"),
+         Leverage = case_when(Leverage == 0 ~ "No",
+                              Leverage == 0.1 ~ "Yes")) %>%
+  xtable(digits = 5,
+         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+
+
+LargeSampleResultsTable %>% 
+  select(-c(Population, Conditional, Difference, PercentChange)) %>%
+  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                              Misspec. == 1 ~ "Yes"),
+         Homo. = case_when(Homo. == 0 ~ "Yes",
+                           Homo. == 0.5 ~ "No"),
+         Leverage = case_when(Leverage == 0 ~ "No",
+                              Leverage == 0.1 ~ "Yes")) %>%
+  xtable(digits = 5,
+         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+```
+
+```{r}
+SmallSampleResultsTable %>% filter(SS == 50) %>% select(PercentChange) %>% colMeans
+SmallSampleResultsTable %>% filter(SS == 200) %>% select(PercentChange) %>% colMeans
 ```

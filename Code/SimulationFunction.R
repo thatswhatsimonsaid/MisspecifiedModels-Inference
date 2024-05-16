@@ -43,7 +43,6 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, VarFixed, T
                                                K = K, 
                                                delta = delta, 
                                                gamma = gamma,
-                                               ThetaPop = ThetaPop,
                                                SimulationCase = SimulationCase,
                                                VarFixed = VarFixed,
                                                TypeSetting = TypeSetting)

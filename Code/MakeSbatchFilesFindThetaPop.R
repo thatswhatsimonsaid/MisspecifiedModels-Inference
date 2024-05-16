@@ -25,14 +25,14 @@ for (i in 1:nrow(ParameterVector)) {
   
 
   # Create .sbatch file for the current simulation
-  sbatch_file <- file(paste0(dir,"/Code/Slurm/FindThetaPopLinear/",job_name, ".sbatch"), "w")
+  sbatch_file <- file(paste0(dir,"/Code/Slurm/FindThetaPop/",job_name, ".sbatch"), "w")
   writeLines(
     c(
       "#!/bin/bash",
       paste("#SBATCH --job-name", job_name),
       "#SBATCH --partition medium",
       "#SBATCH --ntasks 1",
-      "#SBATCH --time 1-00:00",
+      "#SBATCH --time 2-00:00",
       "#SBATCH --mem-per-cpu=3000",
       paste("#SBATCH -o ClusterMessages/out/myscript_", job_name, "_%j.out", sep=""),
       paste("#SBATCH -e ClusterMessages/error/myscript_", job_name, "_%j.err", sep=""),
@@ -41,7 +41,7 @@ for (i in 1:nrow(ParameterVector)) {
       "",
       "cd ~/Stats572",
       "module load R",
-      "Rscript Code/FindThetaPopLinearNew.R \\",
+      "Rscript Code/FindThetaPopLinear.R \\",
       paste("    --Delta ", misspec_vec, " \\", sep=""),
       paste("    --Rho ", homosked_vec, " \\", sep=""),
       paste("    --N ", size_vec, " \\", sep=""),
