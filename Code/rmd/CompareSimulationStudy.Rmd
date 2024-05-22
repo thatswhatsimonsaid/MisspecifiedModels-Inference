@@ -26,8 +26,8 @@ library(sandwich)
 ## Rm. Var.
 ```{r}
 # rm(list=ls())
-dir = "/Users/simondn/Documents/Stats572/"
-# dir = "/Users/simondn/Downloads/Stats572-FindCoverageBug/"
+# dir = "/Users/simondn/Documents/Stats572/"
+dir = "/Users/simondn/Downloads/Stats572-FindCoverageBug/"
 
 ```
 
