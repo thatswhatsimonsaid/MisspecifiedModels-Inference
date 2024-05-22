@@ -13,7 +13,6 @@ output:
 
 # Set Up
 ## Notes
-- Did I do the Mahlahnobis distance correctly
 
 ## Libr.
 ```{r message=FALSE, warning=FALSE}
