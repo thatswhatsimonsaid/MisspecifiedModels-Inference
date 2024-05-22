@@ -66,7 +66,7 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 ```{r}
 ### Run Simulation ###
 SimulationResultsList = list()
-NSim = 100
+NSim = 1000
 for(i in 1:32){
   ### Case ###
   print(paste0("Case: ", i))
@@ -89,6 +89,24 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
 }
 ```
 
+```{r}
+source(paste0(dir,"Code/DiscrepancyFunction.R"))
+
+SettingType = "Linear"
+AIZ = AIZResults(type = SettingType)
+SmallSampleSimulation = SimulationReformatResultsFunction(SimulationResultsList)
+SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
+SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList # in seconds
+SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList)
+SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
+
+DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SmallSampleSEMedianList, SmallSampleCoverageList)
+Dicrepancy = DiscrepancyResults$Discrepancy
+LargeDiscrepancyIndices = DiscrepancyResults$LargeDiscrepancyIndices
+DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
+LargeDiscrepancyIndices
+DiscrepancyMeans
+```
 
 
 

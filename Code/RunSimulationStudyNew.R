@@ -32,9 +32,9 @@ source("Code/WhichMinFunction.R")
 ## Parser ###
 option_list = list(
   make_option(c("--Delta"), type = "numeric", default = 3, help = "Misspecification", metavar = "integer"),
-  make_option(c("--Rho"), type = "numeric", default = 3, help = "Homoscedasticity", metavar = "integer"),
+  make_option(c("--Gamma"), type = "numeric", default = 3, help = "Homoscedasticity", metavar = "integer"),
   make_option(c("--N"), type = "integer", default = 3, help = "Number of observations", metavar = "integer"),
-  make_option(c("--Gamma"), type = "numeric", default = 3, help = "Leverage", metavar = "integer"),
+  make_option(c("--Rho"), type = "numeric", default = 3, help = "Leverage", metavar = "integer"),
   make_option(c("--K"), type = "integer", default = 3, help = "Number of covariates", metavar = "integer"),
   make_option(c("--TypeSetting"), type = "character", default = "Linear", help = "Linear vs. Logistic", metavar = "character"),
   make_option(c("--Output"), type = "character", default = NULL, help = "Path to store", metavar = "character")
@@ -55,7 +55,7 @@ Output = args$Output
 ### Simulation ###
 set.seed(1)
 NSim = 50000
-
+NSim = 1000
 SimulationFunction(NSim = NSim, 
                    delta = delta,
                    gamma = gamma,
