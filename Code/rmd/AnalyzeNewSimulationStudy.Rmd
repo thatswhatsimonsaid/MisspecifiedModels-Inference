@@ -12,10 +12,9 @@ output:
 ---
 
 # Set Up
-- NEED TO ORDER
 
 ## Libr.
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(stats)
 library(tidyverse)
 library(StatMatch)
@@ -27,7 +26,7 @@ library(sandwich)
 ## Rm. Var.
 ```{r}
 rm(list=ls())
-dir = "/Users/simondn/Documents/Stats572/"
+dir = "/Users/simondn/Downloads/Stats572-FindCoverageBug/"
 ```
 
 ## Functions

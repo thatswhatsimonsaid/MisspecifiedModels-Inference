@@ -66,9 +66,6 @@ SimulationResults = SimulationFunction(NSim = NSim,
                                        TypeSetting = TypeSetting)
 saveRDS(SimulationResults,Output)
 
-readRDS("/Users/simondn/Downloads/sim_D1_R0_N50_G0.1_K1.rds")
-
-
 
 
 

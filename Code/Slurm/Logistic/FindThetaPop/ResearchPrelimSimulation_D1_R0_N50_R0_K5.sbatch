@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name ResearchPrelimSimulation_D1_R0_N50_R0_K5
-#SBATCH --partition short
+#SBATCH --partition medium
 #SBATCH --ntasks 1
 #SBATCH --time 1-00:00
 #SBATCH --mem-per-cpu=300
