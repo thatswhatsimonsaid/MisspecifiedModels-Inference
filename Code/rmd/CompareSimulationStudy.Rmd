@@ -72,6 +72,8 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
                                                                Homo. == 0.5 ~ "No"),
                                              Leverage = case_when(Leverage == 0 ~ "No",
                                                                   Leverage == 0.1 ~ "Yes"))
+
+SmallSampleResultsTable
 ```
 
 ```{r}
@@ -91,21 +93,13 @@ DiscrepancyMeans
 
 # xtable
 ```{r}
-### AIZ Coverage and SE Table ###
-cbind(SmallSampleResultsTable[1:16, 1:5], SmallSampleCoverageList[1:16, ]) %>% xtable(digits = 5)
-cbind(SmallSampleResultsTable[17:32, 1:5], SmallSampleCoverageList[1:16, ]) %>% xtable(digits = 5)
+### Coverage ###
+SmallSampleResultsTable[1:16, 1:9] %>% xtable(digits = 5) # Corectly Specified
+SmallSampleResultsTable[17:32, 1:9] %>% xtable(digits = 5) # Misspecified
 
-SmallSampleResultsTable[1:16,1:9] %>% xtable(digits = 5)
-# SmallSampleResultsTable[17:32,1:9] %>% xtable(digits = 5)
-
-# ### Monte Carlo Results ###
-# MonteCarloREsults$MonteCarliResults_Population %>%
-#   xtable(digits = 5,
-#          caption = "Monte Carlo Simulation $\theta_{Cond}$ Results (Linear Model)")
-# 
-# MonteCarloREsults$MonteCarliResults_Conditional %>%
-#   xtable(digits = 5,
-#          caption = "Monte Carlo Simulation $\theta_{Pop}$ Results (Linear Model)")
+### Standard Error/Percent Change ###
+SmallSampleResultsTable[1:16, c(1:5,10:12)] %>% xtable(digits = 5) # Corectly Specified
+SmallSampleResultsTable[17:32, c(1:5,10:12)] %>% xtable(digits = 5) # Misspecified
 ```
 
 
