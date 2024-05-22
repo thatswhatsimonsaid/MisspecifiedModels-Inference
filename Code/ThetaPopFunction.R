@@ -10,11 +10,11 @@ ThetaPopFunction = function(dat, rho, N, K, delta, gamma, TypeSetting){
   # Population regression estimate
   
   if(TypeSetting == "Linear"){
-    ThetaPopList = readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
-    # ThetaPopList = readRDS("data/EstimatedThetaPop/EstimatedThetaPop.rds")
+    # ThetaPopList = readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
+    ThetaPopList = readRDS("data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
   }else if(TypeSetting == "Logistic"){
     ThetaPopList = readRDS("/Users/simondn/Documents/Stats572/data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")
-    # ThetaPopList = readRDS("data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")
+    ThetaPopList = readRDS("data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")
   }
   
   InputVal = c(delta, rho, N, gamma, K)
