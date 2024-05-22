@@ -14,7 +14,7 @@ output:
 # Set Up
 
 ## Libr.
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(stats)
 library(tidyverse)
 library(StatMatch)
@@ -25,7 +25,7 @@ library(sandwich)
 
 ## Rm. Var.
 ```{r}
-# rm(list=ls())
+rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
 
 ```
@@ -45,14 +45,14 @@ SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
 
 ### My Results ###
-file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
-                        pattern = "\\.rds$", 
-                        full.names = TRUE)
-SmallSampleSimulation = list()
-SmallSampleSimulation = lapply(file_list, readRDS)
-rm(file_list)
+# file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
+#                         pattern = "\\.rds$", 
+#                         full.names = TRUE)
+# SmallSampleSimulation = list()
+# SmallSampleSimulation = lapply(file_list, readRDS)
+# rm(file_list)
 
-# SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
+SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
 SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
 SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
@@ -79,7 +79,6 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
 # cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VCond[17:32] - SmallSampleCoverageList$ThetaCond_VCond[17:32])
 ```
 
-
 # Comparison
 ```{r}
 DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SmallSampleSEMedianList, SmallSampleCoverageList)
@@ -93,9 +92,11 @@ DiscrepancyMeans
 # xtable
 ```{r}
 ### AIZ Coverage and SE Table ###
-# cbind(SimSEMedianList[,c(1:5)],CoverageList,SimSEMedianList[,c(6,7,8)]) %>%
-# xtable(digits = 5,
-#        caption = "Simulation Results (Linear Model)")
+cbind(SmallSampleResultsTable[1:16, 1:5], SmallSampleCoverageList[1:16, ]) %>% xtable(digits = 5)
+cbind(SmallSampleResultsTable[17:32, 1:5], SmallSampleCoverageList[1:16, ]) %>% xtable(digits = 5)
+
+SmallSampleResultsTable[1:16,1:9] %>% xtable(digits = 5)
+# SmallSampleResultsTable[17:32,1:9] %>% xtable(digits = 5)
 
 # ### Monte Carlo Results ###
 # MonteCarloREsults$MonteCarliResults_Population %>%
