@@ -27,7 +27,6 @@ library(sandwich)
 ```{r}
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
-
 ```
 
 ## Functions
@@ -45,14 +44,14 @@ SettingType = "Linear"
 AIZ = AIZResults(type = SettingType)
 
 ### My Results ###
-# file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
-#                         pattern = "\\.rds$", 
-#                         full.names = TRUE)
-# SmallSampleSimulation = list()
-# SmallSampleSimulation = lapply(file_list, readRDS)
-# rm(file_list)
+file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"),
+                        pattern = "\\.rds$",
+                        full.names = TRUE)
+SmallSampleSimulation = list()
+SmallSampleSimulation = lapply(file_list, readRDS)
+rm(file_list)
 
-SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
+# SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
 SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
 SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
