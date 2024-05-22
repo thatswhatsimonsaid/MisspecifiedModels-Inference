@@ -1,7 +1,7 @@
 # Read CSV file
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572"
-typeSetting= "Logistic"
+typeSetting= "Linear"
 ParameterVector <- read.csv(paste0(dir,"/data/",typeSetting,"/Parameters/ParameterVectorFindThetaPop.csv"))
 
 # Loop through each row
@@ -22,7 +22,7 @@ for (i in 1:nrow(ParameterVector)) {
     c(
       "#!/bin/bash",
       paste("#SBATCH --job-name", job_name),
-      "#SBATCH --partition short",
+      "#SBATCH --partition medium",
       "#SBATCH --ntasks 1",
       "#SBATCH --time 1-00:00",
       "#SBATCH --mem-per-cpu=300",
