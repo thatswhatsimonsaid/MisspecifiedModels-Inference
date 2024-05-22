@@ -69,6 +69,9 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
   MonteCarliResults_Conditional = MonteCarliResults_Conditional %>% select(-c(MCLL,MCUL))
   MonteCarliResults_Conditional[,6:7] = round(MonteCarliResults_Conditional[,6:7],SigFigs)
   
-  return(list(MonteCarliResults_Population = data.frame(MonteCarliResults_Population),
-              MonteCarliResults_Conditional = data.frame(MonteCarliResults_Conditional)))
+  MonteCarliResults_Population = data.frame(MonteCarliResults_Population) %>% arrange(Misspec., Homo., SS, Leverage, K)
+  MonteCarliResults_Conditional = data.frame(MonteCarliResults_Conditional) %>% arrange(Misspec., Homo., SS, Leverage, K)
+  
+  return(list(MonteCarliResults_Population = MonteCarliResults_Population,
+              MonteCarliResults_Conditional = MonteCarliResults_Conditional))
 }
