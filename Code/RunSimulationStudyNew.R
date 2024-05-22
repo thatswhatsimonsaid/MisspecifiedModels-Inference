@@ -64,7 +64,7 @@ SimulationFunction(NSim = NSim,
                    rho = rho,
                    K = K,
                    VarFixed = NA,
-                   TypeSetting = TypeSetting)
+                   TypeSetting = TypeSetting) -> SimulationResults
 
 saveRDS(SimulationResults,Output)
 
