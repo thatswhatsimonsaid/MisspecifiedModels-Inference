@@ -1,4 +1,4 @@
-OneIterationFunction = function(N, rho, K, delta, gamma, SimulationCase, VarFixed, TypeSetting){
+OneIterationFunction = function(N, rho, K, delta, gamma, VarFixed, TypeSetting){
   
   ### IMPORTANT: Need to change to return confidence interval coverage ###
   

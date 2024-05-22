@@ -20,12 +20,14 @@ source("Code/OneIterationFunction.R")
 source("Code/SimDataLinear.R")
 source("Code/SimDataLogistic.R")
 source("Code/SimulationFunction.R")
+source("Code/SimulationCaseFunction.R")
 source("Code/SimulationReformatResultsFunction.R")
 source("Code/ThetaCondFunction.R")
 source("Code/ThetaPopFunction.R")
 source("Code/VHatCondFunction.R")
 source("Code/VHatPopFunction.R")
 source("Code/WhichMinFunction.R")
+
 
 ## Parser ###
 option_list = list(
@@ -41,30 +43,29 @@ arg.parser = OptionParser(option_list = option_list)
 args = parse_args(arg.parser)
 
 ## Parameters ##
-MisspecVec = args$Delta
-HomoskedVec = args$Rho
-SizeVec = args$N
-LeverageVec = args$Gamma
-KVec = args$K
+delta = args$Delta
+rho = args$Rho
+N = args$N
+gamma = args$Gamma
+K = args$K
 TypeSetting = args$TypeSetting
 Output = args$Output
 
-
-ParameterVector= data.frame(MisspecVec = MisspecVec, 
-                            HomoskedVec = HomoskedVec, 
-                            SizeVec = SizeVec, 
-                            LeverageVec = LeverageVec, 
-                            KVec = KVec)
 
 ### Simulation ###
 set.seed(1)
 NSim = 50000
 NSim = 500
-SimulationResults = SimulationFunction(NSim = NSim, 
-                                       ParameterVector = ParameterVector, 
-                                       SimulationCase = 1, 
-                                       VarFixed = NA, 
-                                       TypeSetting = TypeSetting)
+
+SimulationFunction(NSim = NSim, 
+                   delta = delta,
+                   gamma = gamma,
+                   N = N,
+                   rho = rho,
+                   K = K,
+                   VarFixed = NA,
+                   TypeSetting = TypeSetting)
+
 saveRDS(SimulationResults,Output)
 
 

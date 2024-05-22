@@ -36,7 +36,6 @@ SimulationFunction = function(NSim, ParameterVector, delta, gamma, N, rho, K, Va
                                                K = K, 
                                                delta = delta, 
                                                gamma = gamma,
-                                               SimulationCase = SimulationCase,
                                                VarFixed = VarFixed,
                                                TypeSetting = TypeSetting)
     SimulationSEResults[i,] = OneIterationResults$RegressionSdErrEstimates
