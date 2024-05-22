@@ -1,4 +1,4 @@
-SimulationFunction = function(NSim, ParameterVector, SimulationCase, VarFixed, TypeSetting){
+SimulationFunction = function(NSim, ParameterVector, delta, gamma, N, rho, K, VarFixed, TypeSetting){
   
   ### Summary: Runs the simulation of Abadie, Imbens, Zheng (2014)
   ### Inputs:
@@ -16,13 +16,6 @@ SimulationFunction = function(NSim, ParameterVector, SimulationCase, VarFixed, T
   ### Set Up ###
   SimulationSEResults = matrix(nrow = NSim, ncol = 2)
   SimulationCoverageResults = matrix(nrow = NSim, ncol = 4)
-  
-  ## Parameters ##
-  delta = ParameterVector$MisspecVec[SimulationCase]  
-  gamma =  ParameterVector$HomoskedVec[SimulationCase]  
-  N = ParameterVector$SizeVec[SimulationCase]            
-  rho =  ParameterVector$LeverageVec[SimulationCase]     
-  K = ParameterVector$KVec[SimulationCase]    
   
   ## Progress Bar ##
   pb = txtProgressBar(min = 0, 

@@ -13,7 +13,6 @@ output:
 
 # Set Up
 ## Notes
-- Did I do the Mahlahnobis distance correctly
 
 ## Libr.
 ```{r message=FALSE, warning=FALSE}
@@ -41,6 +40,7 @@ source(paste0(dir,"Code/OneIterationFunction.R"))
 source(paste0(dir,"Code/SimDataLinear.R"))
 source(paste0(dir,"Code/SimDataLogistic.R"))
 source(paste0(dir,"Code/SimulationFunction.R"))
+source(paste0(dir,"Code/SimulationCaseFunction.R"))
 source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 source(paste0(dir,"Code/ThetaCondFunction.R"))
 source(paste0(dir,"Code/ThetaPopFunction.R"))
@@ -52,7 +52,7 @@ source(paste0(dir,"Code/WhichMinFunction.R"))
 # Set Up
 ```{r}
 ### Set Up ###
-set.seed(420)
+set.seed(1)
 TypeSetting = "Linear"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
@@ -65,22 +65,39 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 # Simulation
 ```{r}
 ### Run Simulation ###
-NSim = 5000
-for(i in 19:20){
-SimulationResultsList = SimulationFunction(NSim = NSim, 
-                                                ParameterVector = ParameterVector, 
-                                                SimulationCase = i, 
-                                                VarFixed = NA,
-                                                TypeSetting = TypeSetting)
-print(paste0("Case: ", i))
-print(c(SimulationResultsList$SimCoverageFrequency[1] - SimulationResultsList$SimCoverageFrequency[3],
-      SimulationResultsList$SimCoverageFrequency[2] - SimulationResultsList$SimCoverageFrequency[4]))
+NSim = 1000
+for(i in 1:32){
+  ### Parameters ###
+  delta = ParameterVector[i,1]
+  gamma = ParameterVector[i,2]
+  N = ParameterVector[i,3]
+  rho = ParameterVector[i,4]
+  K = ParameterVector[i,5]
+
+  ### Simulation ###
+SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, 
+                                           delta = delta,
+                                           gamma = gamma,
+                                           N = N,
+                                           rho = rho,
+                                           K = K,
+                                           VarFixed = NA,
+                                           TypeSetting = TypeSetting)
 }
 ```
 
 
 ```{r}
-SimulationResultsList$SimCoverageFrequency
+AIZ = AIZResults("Linear")
+ReformattedResults = SimulationReformatResultsFunction(SimulationResultsList)
+Diff
+ReformattedResults$SimSEMedianList$Population - AIZ$MedianSEPop
+# ReformattedResults$SimSEMedianList$Conditional - AIZ$MedianSECond
+# ReformattedResults$CoverageList[,1] - AIZ$ThetaPopVarPop
+# ReformattedResults$CoverageList[,2] - AIZ$ThetaPopVarCond
+# ReformattedResults$CoverageList[,3] - AIZ$ThetaCondVarPop
+# ReformattedResults$CoverageList[,4] - AIZ$ThetaCondVarCond
+
 ```
 
 
