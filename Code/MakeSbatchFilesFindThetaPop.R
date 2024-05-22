@@ -35,9 +35,9 @@ for (i in 1:nrow(ParameterVector)) {
       "module load R",
       "Rscript Code/FindThetaPop.R \\",
       paste("    --Delta ", misspec_vec, " \\", sep=""),
-      paste("    --Rho ", homosked_vec, " \\", sep=""),
+      paste("    --Gamma ", homosked_vec, " \\", sep=""),
       paste("    --N ", size_vec, " \\", sep=""),
-      paste("    --Gamma ", leverage_vec, " \\", sep=""),
+      paste("    --Rho ", leverage_vec, " \\", sep=""),
       paste("    --K ", k_vec, " \\", sep=""),
       paste("    --TypeSetting '", type_setting, "' \\", sep=""),
       paste("    --Output ", output, " \\", sep="")
