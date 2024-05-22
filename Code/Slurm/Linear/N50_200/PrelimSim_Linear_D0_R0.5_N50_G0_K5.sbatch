@@ -13,9 +13,9 @@ cd ~/Stats572
 module load R
 Rscript Code/RunSimulationStudyNew.R \
     --Delta 0 \
-    --Rho 0.5 \
+    --Rho 0 \
     --N 50 \
-    --Gamma 0 \
+    --Gamma 0.5 \
     --K 5 \
     --TypeSetting 'Linear' \
     --Output Results/Linear/N50_200/sim_D0_R0.5_N50_G0_K5.rds \
