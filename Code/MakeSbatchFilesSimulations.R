@@ -1,7 +1,7 @@
 # Read CSV file
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572"
-ParameterVector <- read.csv(paste0(dir,"/data/ParameterVector_500_2000.csv"))
+ParameterVector <- read.csv(paste0(dir,"/data/Linear/Parameters/ParameterVector_500_2000.csv"))
 
 # Loop through each row
 for (i in 1:nrow(ParameterVector)) {
@@ -25,7 +25,7 @@ for (i in 1:nrow(ParameterVector)) {
   
 
   # Create .sbatch file for the current simulation
-  sbatch_file <- file(paste0(dir,"/Code/Slurm/N500_2000/",job_name, ".sbatch"), "w")
+  sbatch_file <- file(paste0(dir,"/Code/Slurm/Linear/N500_2000/",job_name, ".sbatch"), "w")
   writeLines(
     c(
       "#!/bin/bash",
@@ -43,9 +43,9 @@ for (i in 1:nrow(ParameterVector)) {
       "module load R",
       "Rscript Code/RunSimulationStudyNew.R \\",
       paste("    --Delta ", misspec_vec, " \\", sep=""),
-      paste("    --Rho ", homosked_vec, " \\", sep=""),
+      paste("    --Rho ", leverage_vec, " \\", sep=""),
       paste("    --N ", size_vec, " \\", sep=""),
-      paste("    --Gamma ", leverage_vec, " \\", sep=""),
+      paste("    --Gamma ", homosked_vec, " \\", sep=""),
       paste("    --K ", k_vec, " \\", sep=""),
       paste("    --TypeSetting '", type_setting, "' \\", sep=""),
       paste("    --Output ", output, " \\", sep="")
