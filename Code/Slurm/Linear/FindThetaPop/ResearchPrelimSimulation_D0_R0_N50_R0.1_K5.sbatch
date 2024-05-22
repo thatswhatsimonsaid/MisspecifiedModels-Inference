@@ -3,7 +3,7 @@
 #SBATCH --partition medium
 #SBATCH --ntasks 1
 #SBATCH --time 1-00:00
-#SBATCH --mem-per-cpu=3000
+#SBATCH --mem-per-cpu=300
 #SBATCH -o ClusterMessages/out/myscript_ResearchPrelimSimulation_D0_R0_N50_R0.1_K5_%j.out
 #SBATCH -e ClusterMessages/error/myscript_ResearchPrelimSimulation_D0_R0_N50_R0.1_K5_%j.err
 #SBATCH --mail-type=ALL
@@ -11,11 +11,11 @@
 
 cd ~/Stats572
 module load R
-Rscript Code/FindThetaPopLinearNew.R \
+Rscript Code/FindThetaPop.R \
     --Delta 0 \
     --Rho 0 \
     --N 50 \
     --Gamma 0.1 \
     --K 5 \
     --TypeSetting 'Linear' \
-    --Output data/EstimatedThetaPop/D0_R0_N50_R0.1_K5.csv \
+    --Output data/Linear/EstimatedThetaPop/D0_R0_N50_R0.1_K5.csv \

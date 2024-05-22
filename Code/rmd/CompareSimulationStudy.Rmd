@@ -26,7 +26,9 @@ library(sandwich)
 ## Rm. Var.
 ```{r}
 # rm(list=ls())
-dir = "/Users/simondn/Documents/Stats572/"
+# dir = "/Users/simondn/Documents/Stats572/"
+dir = "/Users/simondn/Downloads/Stats572-FindCoverageBug/"
+
 ```
 
 ## Functions
@@ -75,13 +77,13 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
 
 ```{r}
 # cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VPop[17:32] - SmallSampleCoverageList$ThetaCond_VPop[17:32])
-cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VCond[17:32] - SmallSampleCoverageList$ThetaCond_VCond[17:32])
+# cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VCond[17:32] - SmallSampleCoverageList$ThetaCond_VCond[17:32])
 ```
 
 
 # Comparison
 ```{r}
-DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SimSEMedianList, CoverageList)
+DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SmallSampleSEMedianList, SmallSampleCoverageList)
 Dicrepancy = DiscrepancyResults$Discrepancy
 LargeDiscrepancyIndices = DiscrepancyResults$LargeDiscrepancyIndices
 DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
