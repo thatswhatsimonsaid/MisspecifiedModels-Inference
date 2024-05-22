@@ -33,7 +33,7 @@ dir = "/Users/simondn/Documents/Stats572/"
 ```{r}
 source(paste0(dir,"Code/AIZResults.R"))
 source(paste0(dir,"Code/DiscrepancyFunction.R"))
-source(paste0(dir,"Code/MonteCarloResults.R"))
+# source(paste0(dir,"Code/MonteCarloResults.R"))
 source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
@@ -53,16 +53,16 @@ rm(file_list)
 
 # SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
-SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
-SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
-SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList # in seconds
-SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList)
+SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList
+# SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList  # in seconds
+SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList) 
 SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
 
 SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
-                                SmallSampleCoverageList,
-                                SmallSampleSEMedianList[,c(6,7,8)]) %>%
-  arrange(Misspec., Homo., SS, Leverage, K)
+                                SmallSampleCoverageList[,6:9],
+                                SmallSampleSEMedianList[,6:10]) %>%
+  select(-c(Difference,Indicator))
 rownames(SmallSampleResultsTable) = paste0("Case ", 1:nrow(SmallSampleResultsTable)) 
 
 SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
@@ -72,12 +72,7 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
                                              Leverage = case_when(Leverage == 0 ~ "No",
                                                                   Leverage == 0.1 ~ "Yes"))
 
-SmallSampleResultsTable
-```
-
-```{r}
-# cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VPop[17:32] - SmallSampleCoverageList$ThetaCond_VPop[17:32])
-# cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VCond[17:32] - SmallSampleCoverageList$ThetaCond_VCond[17:32])
+# SmallSampleResultsTable
 ```
 
 # Comparison
@@ -93,12 +88,12 @@ DiscrepancyMeans
 # xtable
 ```{r}
 ### Coverage ###
-SmallSampleResultsTable[1:16, 1:9] %>% xtable(digits = 5) # Corectly Specified
-SmallSampleResultsTable[17:32, 1:9] %>% xtable(digits = 5) # Misspecified
-
-### Standard Error/Percent Change ###
-SmallSampleResultsTable[1:16, c(1:5,10:12)] %>% xtable(digits = 5) # Corectly Specified
-SmallSampleResultsTable[17:32, c(1:5,10:12)] %>% xtable(digits = 5) # Misspecified
+# SmallSampleResultsTable[1:16, 1:9] %>% xtable(digits = 5) # Corectly Specified
+# SmallSampleResultsTable[17:32, 1:9] %>% xtable(digits = 5) # Misspecified
+# 
+# ### Standard Error/Percent Change ###
+# SmallSampleResultsTable[1:16, c(1:5,10:12)] %>% xtable(digits = 5) # Corectly Specified
+# SmallSampleResultsTable[17:32, c(1:5,10:12)] %>% xtable(digits = 5) # Misspecified
 ```
 
 
