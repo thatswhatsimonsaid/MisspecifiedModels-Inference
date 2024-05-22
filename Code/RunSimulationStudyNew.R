@@ -55,7 +55,6 @@ Output = args$Output
 ### Simulation ###
 set.seed(1)
 NSim = 50000
-NSim = 1000
 SimulationFunction(NSim = NSim, 
                    delta = delta,
                    gamma = gamma,
