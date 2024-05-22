@@ -49,6 +49,7 @@ KVec = args$K
 TypeSetting = args$TypeSetting
 Output = args$Output
 
+
 ParameterVector= data.frame(MisspecVec = MisspecVec, 
                             HomoskedVec = HomoskedVec, 
                             SizeVec = SizeVec, 
@@ -64,9 +65,6 @@ SimulationResults = SimulationFunction(NSim = NSim,
                                        VarFixed = NA, 
                                        TypeSetting = TypeSetting)
 saveRDS(SimulationResults,Output)
-
-
-
 
 
 

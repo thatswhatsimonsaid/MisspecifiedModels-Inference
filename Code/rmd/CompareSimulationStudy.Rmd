@@ -51,6 +51,7 @@ SmallSampleSimulation = list()
 SmallSampleSimulation = lapply(file_list, readRDS)
 rm(file_list)
 
+# SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
 SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
 SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
@@ -71,6 +72,12 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
                                              Leverage = case_when(Leverage == 0 ~ "No",
                                                                   Leverage == 0.1 ~ "Yes"))
 ```
+
+```{r}
+# cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VPop[17:32] - SmallSampleCoverageList$ThetaCond_VPop[17:32])
+cbind(ParameterVector[17:32,], Diff = SmallSampleCoverageList$ThetaPop_VCond[17:32] - SmallSampleCoverageList$ThetaCond_VCond[17:32])
+```
+
 
 # Comparison
 ```{r}

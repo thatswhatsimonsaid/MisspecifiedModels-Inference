@@ -53,7 +53,7 @@ source(paste0(dir,"Code/WhichMinFunction.R"))
 ```{r}
 ### Set Up ###
 set.seed(420)
-TypeSetting = "Logistic"
+TypeSetting = "Linear"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
@@ -65,13 +65,17 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 # Simulation
 ```{r}
 ### Run Simulation ###
-# NSim = 5000
-NSim = 1000
+NSim = 5000
+for(i in 17:18){
 SimulationResultsList = SimulationFunction(NSim = NSim, 
                                                 ParameterVector = ParameterVector, 
-                                                SimulationCase = 1, 
+                                                SimulationCase = i, 
                                                 VarFixed = NA,
                                                 TypeSetting = TypeSetting)
+print(paste0("Case: ", i))
+print(c(SimulationResultsList$SimCoverageFrequency[1] - SimulationResultsList$SimCoverageFrequency[3],
+      SimulationResultsList$SimCoverageFrequency[2] - SimulationResultsList$SimCoverageFrequency[4]))
+}
 ```
 
 
