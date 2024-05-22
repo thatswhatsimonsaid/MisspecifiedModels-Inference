@@ -65,8 +65,11 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 # Simulation
 ```{r}
 ### Run Simulation ###
-NSim = 1000
+SimulationResultsList = list()
+NSim = 100
 for(i in 1:32){
+  ### Case ###
+  print(paste0("Case: ", i))
   ### Parameters ###
   delta = ParameterVector[i,1]
   gamma = ParameterVector[i,2]
@@ -87,18 +90,7 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
 ```
 
 
-```{r}
-AIZ = AIZResults("Linear")
-ReformattedResults = SimulationReformatResultsFunction(SimulationResultsList)
-Diff
-ReformattedResults$SimSEMedianList$Population - AIZ$MedianSEPop
-# ReformattedResults$SimSEMedianList$Conditional - AIZ$MedianSECond
-# ReformattedResults$CoverageList[,1] - AIZ$ThetaPopVarPop
-# ReformattedResults$CoverageList[,2] - AIZ$ThetaPopVarCond
-# ReformattedResults$CoverageList[,3] - AIZ$ThetaCondVarPop
-# ReformattedResults$CoverageList[,4] - AIZ$ThetaCondVarCond
 
-```
 
 
 
