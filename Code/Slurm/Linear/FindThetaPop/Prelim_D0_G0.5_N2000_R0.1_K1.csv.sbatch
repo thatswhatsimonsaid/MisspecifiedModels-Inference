@@ -3,7 +3,7 @@
 #SBATCH --partition medium
 #SBATCH --ntasks 1
 #SBATCH --time 1-00:00
-#SBATCH --mem-per-cpu=300
+#SBATCH --mem-per-cpu=1000
 #SBATCH -o ClusterMessages/out/myscript_Prelim_D0_G0.5_N2000_R0.1_K1.csv_%j.out
 #SBATCH -e ClusterMessages/error/myscript_Prelim_D0_G0.5_N2000_R0.1_K1.csv_%j.err
 #SBATCH --mail-type=ALL
