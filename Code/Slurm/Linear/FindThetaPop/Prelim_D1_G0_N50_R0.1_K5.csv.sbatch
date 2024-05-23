@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name Prelim_D1_G0_N50_R0.1_K5.csv
-#SBATCH --partition medium
+#SBATCH --partition short
 #SBATCH --ntasks 1
 #SBATCH --time 1-00:00
 #SBATCH --mem-per-cpu=2000
