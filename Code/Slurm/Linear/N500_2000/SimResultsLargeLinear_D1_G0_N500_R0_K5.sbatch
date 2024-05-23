@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name SimResultsLargeLinear_D1_G0_N500_R0_K5
-#SBATCH --partition medium
+#SBATCH --partition long
 #SBATCH --ntasks 1
 #SBATCH --time 2-00:00:00
-#SBATCH --mem-per-cpu=100000
+#SBATCH --mem-per-cpu=1000
 #SBATCH -o ClusterMessages/out/myscript_SimResultsLargeLinear_D1_G0_N500_R0_K5_%j.out
 #SBATCH -e ClusterMessages/error/myscript_SimResultsLargeLinear_D1_G0_N500_R0_K5_%j.err
 #SBATCH --mail-type=ALL
