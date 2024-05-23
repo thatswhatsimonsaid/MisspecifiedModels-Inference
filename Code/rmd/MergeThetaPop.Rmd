@@ -43,8 +43,8 @@ for(i in 1:length(FileList)){
 }
 
 ThetaPopList = data.frame(ThetaPopList)
-colnames(ThetaPopList) = c("delta","rho","N","gamma","K","BetaPop")
-# ThetaPopList = ThetaPopList %>% mutate(BetaPop = round(BetaPop,2)) 
+colnames(ThetaPopList) = c("delta","rho","N","gamma","K","ThetaPop")
+# ThetaPopList = ThetaPopList %>% mutate(BetaPop = round(ThetaPop,2)) 
 
 # saveRDS(ThetaPopList,paste0(dir,"/data/",TypeSetting,"/EstimatedThetaPop/EstimatedThetaPop.rds"))
 ```
