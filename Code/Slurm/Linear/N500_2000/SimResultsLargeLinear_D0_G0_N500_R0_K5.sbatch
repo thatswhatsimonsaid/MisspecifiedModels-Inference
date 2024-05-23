@@ -3,7 +3,7 @@
 #SBATCH --partition medium
 #SBATCH --ntasks 1
 #SBATCH --time 2-00:00
-#SBATCH --mem-per-cpu=6000
+#SBATCH --mem-per-cpu=300
 #SBATCH -o ClusterMessages/out/myscript_SimResultsLargeLinear_D0_G0_N500_R0_K5_%j.out
 #SBATCH -e ClusterMessages/error/myscript_SimResultsLargeLinear_D0_G0_N500_R0_K5_%j.err
 #SBATCH --mail-type=ALL
