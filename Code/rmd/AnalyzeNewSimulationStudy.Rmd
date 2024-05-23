@@ -26,7 +26,7 @@ library(sandwich)
 ## Rm. Var.
 ```{r}
 rm(list=ls())
-dir = "/Users/simondn/Downloads/Stats572-FindCoverageBug/"
+dir = "/Users/simondn/Documents/Stats572/"
 ```
 
 ## Functions
@@ -40,85 +40,69 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ## Results
 ### Small Sample
 ```{r}
-file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"), 
-                        pattern = "\\.rds$", 
+### Get Files ###
+file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"),
+                        pattern = "\\.rds$",
                         full.names = TRUE)
 SmallSampleSimulation = list()
 SmallSampleSimulation = lapply(file_list, readRDS)
 rm(file_list)
 
+### Results ###
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
-SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList 
-SmallSampleMonteCarloREsults = MonteCarloResults(SmallSampleSimulation, 5)
-SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList # in seconds
-SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList)
+SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList
+# SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList  # in seconds
+SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList) 
 SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
 
 SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
-                                SmallSampleCoverageList,
-                                SmallSampleSEMedianList[,c(6,7,8)]) %>%
-  arrange(Misspec., Homo., SS, Leverage, K)
+                                SmallSampleCoverageList[,6:9],
+                                SmallSampleSEMedianList[,6:10])
 rownames(SmallSampleResultsTable) = paste0("Case ", 1:nrow(SmallSampleResultsTable)) 
 
-# SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-#                                                                   Misspec. == 1 ~ "Yes"),
-#                                              Homo. = case_when(Homo. == 0 ~ "Yes",
-#                                                                Homo. == 0.5 ~ "No"),
-#                                              Leverage = case_when(Leverage == 0 ~ "No",
-#                                                                   Leverage == 0.1 ~ "Yes"))
-
-SmallSampleResultsTable = SmallSampleResultsTable %>% 
-  mutate(PercentChange = (Conditional - Population)/Population)
-
-SmallSampleResultsTable %>%
-  select(-c(Difference)) %>%
-  xtable(digits = 5,caption = "Simulation results for a linear sample with small samples")
+SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
 ```
-
 
 ### Large Sample
 ```{r}
-file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"), 
-                        pattern = "\\.rds$", 
-                        full.names = TRUE)
-LargeSampleSimulation = list()
-LargeSampleSimulation = lapply(file_list, readRDS)
-rm(file_list)
-
-LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
-LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList 
-LargeSampleMonteCarloREsults = MonteCarloResults(LargeSampleSimulation, 5)
-LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList # in seconds
-LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList)
-LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
-
-LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
-                                LargeSampleCoverageList,
-                                LargeSampleSEMedianList[,c(6,7,8)]) %>%
-  arrange(Misspec., Homo., SS, Leverage, K)
-rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable)) 
-
+# ### Get Files ###
+# file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"),
+#                         pattern = "\\.rds$",
+#                         full.names = TRUE)
+# LargeSampleSimulation = list()
+# LargeSampleSimulation = lapply(file_list, readRDS)
+# rm(file_list)
+# 
+# ### Results ###
+# LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
+# LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList
+# # LargeSampleMonteCarloResults = MonteCarloResults(LargeSampleSimulation, 5)
+# LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList  # in seconds
+# LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList) 
+# LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
+# 
+# LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
+#                                 LargeSampleCoverageList[,6:9],
+#                                 LargeSampleSEMedianList[,6:10]) %>%
+#   select(-c(Difference,Indicator))
+# rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable)) 
+# 
 # LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
 #                                                                   Misspec. == 1 ~ "Yes"),
 #                                              Homo. = case_when(Homo. == 0 ~ "Yes",
 #                                                                Homo. == 0.5 ~ "No"),
 #                                              Leverage = case_when(Leverage == 0 ~ "No",
 #                                                                   Leverage == 0.1 ~ "Yes"))
-
-LargeSampleResultsTable = LargeSampleResultsTable %>% 
-  mutate(PercentChange = (Conditional - Population)/Population)
-
-LargeSampleResultsTable %>%
-  select(-c(Difference)) %>%
-  xtable(digits = 5,caption = "Simulation results for a linear sample with large samples")
 ```
 
-# Standard Errors
+# Percentage Change by N
 ```{r}
-### Percent Change ###
-SmallSampleSEMedianList = SmallSampleSEMedianList %>% mutate(PercentChange = (Conditional - Population)/Population)
-LargeSampleSEMedianList = LargeSampleSEMedianList %>% mutate(PercentChange = (Conditional - Population)/Population)
-
 ### Pivoting ###
 SmallSampleSEMedianList %>% 
   select(-c(Population, Conditional, Indicator, Difference)) %>%
@@ -158,37 +142,58 @@ ChangeInDifference = DifferenceTable %>% mutate(N.2000 = case_when(abs(N.500)>ab
                                                 N.200 = case_when(abs(N.50)>abs(N.200) ~ "Smaller", 
                                                                   abs(N.50)<abs(N.200) ~ "Larger")) %>%
   select(-c(N.50))
+
 ### xtable ###
 DifferenceTable %>% xtable(digits = 5, caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.")
 ```
 
 
-# Coverage
-```{r}
-# CoverageThetaPop = CoverageList %>% 
-#   select(Misspec.,
-#          Homo.,
-#          SS,
-#          Leverage,
-#          K,
-#          ThetaPop_VPop,
-#          ThetaPop_VCond) %>%
-#   mutate(ThetaPopDifference = ThetaPop_VPop - ThetaPop_VCond) %>%
-#   filter(SS == 500)
-# 
-# CoverageThetaCond = CoverageList %>% 
-#   select(Misspec.,
-#          Homo.,
-#          SS,
-#          Leverage,
-#          K,
-#          ThetaCond_VPop,
-#          ThetaCond_VCond) %>%
-#   mutate(ThetaPopDifference = ThetaCond_VPop - ThetaCond_VCond) %>%
-#   filter(SS == 500)
-```
 
 # Presentation Xtable
+## Small Sample
+
+### Coverage
+```{r}
+### Correctly Specified Models ###
+# SmallSampleResultsTable %>% 
+#   select(-c(Population, Conditional, Difference, Indicator, PercentChange)) %>% 
+#   filter(Misspec. == "No") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation coverage rates for 50,000 replications with small samples (correctly specified models)")
+
+### Misspecified Models ###
+# SmallSampleResultsTable %>%
+#   select(-c(Population, Conditional, Difference, Indicator, PercentChange)) %>%
+#   filter(Misspec. == "Yes") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation coverage rates for 50,000 replications with small samples (misspecified models)")
+```
+### Percentage Change
+```{r}
+### Correctly Specified Models ###
+# SmallSampleResultsTable %>% 
+#   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond)) %>%
+#     filter(Misspec. == "No") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+
+### Misspecified Models ###
+SmallSampleResultsTable %>%
+  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond)) %>%
+    filter(Misspec. == "Yes") %>%
+  xtable(digits = 5,
+         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+
+```
+### Percentage Change
+```{r}
+
+```
+
+
+## Large Sample
+### Coverage
+### Percentage Change
 ```{r}
 LargeSampleResultsTable %>% 
   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference)) %>%
@@ -200,7 +205,6 @@ LargeSampleResultsTable %>%
                               Leverage == 0.1 ~ "Yes")) %>%
   xtable(digits = 5,
          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
-
 
 LargeSampleResultsTable %>% 
   select(-c(Population, Conditional, Difference, PercentChange)) %>%
