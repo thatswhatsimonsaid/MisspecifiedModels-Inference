@@ -22,7 +22,7 @@ for (i in 1:nrow(ParameterVector)) {
     c(
       "#!/bin/bash",
       paste("#SBATCH --job-name", job_name),
-      "#SBATCH --partition medium",
+      "#SBATCH --partition short",
       "#SBATCH --ntasks 1",
       "#SBATCH --time 1-00:00",
       "#SBATCH --mem-per-cpu=2000",
