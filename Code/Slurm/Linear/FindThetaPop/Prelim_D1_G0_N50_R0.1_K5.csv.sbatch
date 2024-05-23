@@ -2,7 +2,7 @@
 #SBATCH --job-name Prelim_D1_G0_N50_R0.1_K5.csv
 #SBATCH --partition short
 #SBATCH --ntasks 1
-#SBATCH --time 1-00:00
+#SBATCH --time 12:00:00
 #SBATCH --mem-per-cpu=2000
 #SBATCH -o ClusterMessages/out/myscript_Prelim_D1_G0_N50_R0.1_K5.csv_%j.out
 #SBATCH -e ClusterMessages/error/myscript_Prelim_D1_G0_N50_R0.1_K5.csv_%j.err
