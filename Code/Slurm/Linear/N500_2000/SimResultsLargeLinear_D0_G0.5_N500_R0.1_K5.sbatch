@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name SimResultsLargeLinear_D0_G0.5_N500_R0.1_K5
-#SBATCH --partition long
+#SBATCH --partition medium
 #SBATCH --ntasks 1
 #SBATCH --time 2-00:00:00
 #SBATCH --mem-per-cpu=1000
