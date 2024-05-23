@@ -171,54 +171,105 @@ DifferenceTable %>% xtable(digits = 5, caption = "Percent change in using condit
 ### Percentage Change
 ```{r}
 ### Correctly Specified Models ###
-# SmallSampleResultsTable %>% 
-#   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond)) %>%
-#     filter(Misspec. == "No") %>%
-#   xtable(digits = 5,
-#          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+SmallSampleResultsTable %>%
+  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+  mutate(PercentChange = 100*PercentChange) %>%
+    filter(Misspec. == "No") %>%
+  xtable(digits = 5,
+         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
 
 ### Misspecified Models ###
 SmallSampleResultsTable %>%
-  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond)) %>%
+  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+  mutate(PercentChange = 100*PercentChange) %>%
     filter(Misspec. == "Yes") %>%
   xtable(digits = 5,
          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
 
 ```
-### Percentage Change
+### Setting Percent Change
 ```{r}
+X11 = mean(filter(SmallSampleResultsTable, Misspec. == "No")$PercentChange)
+X12 = mean(filter(SmallSampleResultsTable, Misspec. == "Yes")$PercentChange)
 
+X21 = mean(filter(SmallSampleResultsTable, Homo. == "Yes")$PercentChange)
+X22 = mean(filter(SmallSampleResultsTable, Homo. == "No")$PercentChange)
+           
+X31 = mean(filter(SmallSampleResultsTable, Leverage == "No")$PercentChange)
+X32 = mean(filter(SmallSampleResultsTable, Leverage == "Yes")$PercentChange)
+
+X41 = mean(filter(SmallSampleResultsTable, K == 1)$PercentChange)
+X42 = mean(filter(SmallSampleResultsTable, K == 5)$PercentChange)
+
+SmallSettingPercentChange = matrix(c(X11,X12,X21,X22,X31,X32,X41,X42),
+                                   ncol = 2,
+                                   byrow = TRUE)*100
+rownames(SmallSettingPercentChange) = c("Misspecification", "Heteroscedasticity", "High Leverage",  "More Covariates")
+colnames(SmallSettingPercentChange) = c("Without setting", "In setting")
+
+# SmallSettingPercentChange %>% xtable(digits = 5)
+SmallSettingPercentChange
 ```
 
 
 ## Large Sample
+
+
 ### Coverage
+```{r}
+### Correctly Specified Models ###
+# LargeSampleResultsTable %>% 
+#   select(-c(Population, Conditional, Difference, Indicator, PercentChange)) %>% 
+#   filter(Misspec. == "No") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation coverage rates for 50,000 replications with Large samples (correctly specified models)")
+
+### Misspecified Models ###
+# LargeSampleResultsTable %>%
+#   select(-c(Population, Conditional, Difference, Indicator, PercentChange)) %>%
+#   filter(Misspec. == "Yes") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation coverage rates for 50,000 replications with Large samples (misspecified models)")
+```
 ### Percentage Change
 ```{r}
-LargeSampleResultsTable %>% 
-  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference)) %>%
-  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-                              Misspec. == 1 ~ "Yes"),
-         Homo. = case_when(Homo. == 0 ~ "Yes",
-                           Homo. == 0.5 ~ "No"),
-         Leverage = case_when(Leverage == 0 ~ "No",
-                              Leverage == 0.1 ~ "Yes")) %>%
+### Correctly Specified Models ###
+LargeSampleResultsTable %>%
+  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+  mutate(PercentChange = 100*PercentChange) %>%
+    filter(Misspec. == "No") %>%
   xtable(digits = 5,
-         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+         caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
 
-LargeSampleResultsTable %>% 
-  select(-c(Population, Conditional, Difference, PercentChange)) %>%
-  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-                              Misspec. == 1 ~ "Yes"),
-         Homo. = case_when(Homo. == 0 ~ "Yes",
-                           Homo. == 0.5 ~ "No"),
-         Leverage = case_when(Leverage == 0 ~ "No",
-                              Leverage == 0.1 ~ "Yes")) %>%
+### Misspecified Models ###
+LargeSampleResultsTable %>%
+  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+  mutate(PercentChange = 100*PercentChange) %>%
+    filter(Misspec. == "Yes") %>%
   xtable(digits = 5,
-         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+         caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
+
 ```
-
+### Setting Percent Change
 ```{r}
-SmallSampleResultsTable %>% filter(SS == 50) %>% select(PercentChange) %>% colMeans
-SmallSampleResultsTable %>% filter(SS == 200) %>% select(PercentChange) %>% colMeans
+X11 = mean(filter(LargeSampleResultsTable, Misspec. == "No")$PercentChange)
+X12 = mean(filter(LargeSampleResultsTable, Misspec. == "Yes")$PercentChange)
+
+X21 = mean(filter(LargeSampleResultsTable, Homo. == "Yes")$PercentChange)
+X22 = mean(filter(LargeSampleResultsTable, Homo. == "No")$PercentChange)
+           
+X31 = mean(filter(LargeSampleResultsTable, Leverage == "No")$PercentChange)
+X32 = mean(filter(LargeSampleResultsTable, Leverage == "Yes")$PercentChange)
+
+X41 = mean(filter(LargeSampleResultsTable, K == 1)$PercentChange)
+X42 = mean(filter(LargeSampleResultsTable, K == 5)$PercentChange)
+
+LargeSettingPercentChange = matrix(c(X11,X12,X21,X22,X31,X32,X41,X42),
+                                   ncol = 2,
+                                   byrow = TRUE)*100
+rownames(LargeSettingPercentChange) = c("Misspecification", "Heteroscedasticity", "High Leverage",  "More Covariates")
+colnames(LargeSettingPercentChange) = c("Without setting", "In setting")
+
+# LargeSettingPercentChange %>% xtable(digits = 5)
+LargeSettingPercentChange
 ```
