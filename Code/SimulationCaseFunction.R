@@ -33,7 +33,7 @@ SimulationCaseFunction = function(delta, gamma, N, rho, K){
   if(delta == 1 & gamma == 0.5 & N == 200 & K == 5 & rho == 0.0){SimulationCase = 30}
   if(delta == 1 & gamma == 0.5 & N == 200 & K == 1 & rho == 0.1){SimulationCase = 31}
   if(delta == 1 & gamma == 0.5 & N == 200 & K == 5 & rho == 0.1){SimulationCase = 32}
-
+  
   ### Large Sample ###
   if(delta == 0 & gamma == 0.0 & N == 500  & K == 1 & rho == 0.0){SimulationCase = 101}
   if(delta == 0 & gamma == 0.0 & N == 500  & K == 5 & rho == 0.0){SimulationCase = 102}
