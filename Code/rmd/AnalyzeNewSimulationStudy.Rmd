@@ -71,34 +71,33 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
 
 ### Large Sample
 ```{r}
-# ### Get Files ###
-# file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"),
-#                         pattern = "\\.rds$",
-#                         full.names = TRUE)
-# LargeSampleSimulation = list()
-# LargeSampleSimulation = lapply(file_list, readRDS)
-# rm(file_list)
-# 
-# ### Results ###
-# LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
-# LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList
-# # LargeSampleMonteCarloResults = MonteCarloResults(LargeSampleSimulation, 5)
-# LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList  # in seconds
-# LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList) 
-# LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
-# 
-# LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
-#                                 LargeSampleCoverageList[,6:9],
-#                                 LargeSampleSEMedianList[,6:10]) %>%
-#   select(-c(Difference,Indicator))
-# rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable)) 
-# 
-# LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-#                                                                   Misspec. == 1 ~ "Yes"),
-#                                              Homo. = case_when(Homo. == 0 ~ "Yes",
-#                                                                Homo. == 0.5 ~ "No"),
-#                                              Leverage = case_when(Leverage == 0 ~ "No",
-#                                                                   Leverage == 0.1 ~ "Yes"))
+### Get Files ###
+file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"),
+                        pattern = "\\.rds$",
+                        full.names = TRUE)
+LargeSampleSimulation = list()
+LargeSampleSimulation = lapply(file_list, readRDS)
+rm(file_list)
+
+### Results ###
+LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
+LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList
+# LargeSampleMonteCarloResults = MonteCarloResults(LargeSampleSimulation, 5)
+LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList  # in seconds
+LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList)
+LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
+
+LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
+                                LargeSampleCoverageList[,6:9],
+                                LargeSampleSEMedianList[,6:10])
+rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable))
+
+LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
 ```
 
 # Percentage Change by N
