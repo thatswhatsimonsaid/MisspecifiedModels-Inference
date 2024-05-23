@@ -35,8 +35,7 @@ OneIterationFunction = function(N, rho, K, delta, gamma, VarFixed, TypeSetting){
   epsilon_hat = as.numeric(model$residuals)
   
   # Estimates #
-  ThetaPop = ThetaPopFunction(dat = dat, 
-                              rho = rho, 
+  ThetaPop = ThetaPopFunction(rho = rho, 
                               N = N,
                               K = K, 
                               delta = delta, 
