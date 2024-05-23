@@ -23,7 +23,6 @@ for (i in 1:nrow(ParameterVector)) {
   print(paste0("K: ",k_vec))
   print("---")
   
-
   # Create .sbatch file for the current simulation
   sbatch_file <- file(paste0(dir,"/Code/Slurm/Linear/N500_2000/",job_name, ".sbatch"), "w")
   writeLines(
@@ -32,8 +31,8 @@ for (i in 1:nrow(ParameterVector)) {
       paste("#SBATCH --job-name", job_name),
       "#SBATCH --partition medium",
       "#SBATCH --ntasks 1",
-      "#SBATCH --time 2-00:00:00",
-      "#SBATCH --mem-per-cpu=1000",
+      "#SBATCH --time 1-00:00:00",
+      "#SBATCH --mem-per-cpu=3000",
       paste("#SBATCH -o ClusterMessages/out/myscript_", job_name, "_%j.out", sep=""),
       paste("#SBATCH -e ClusterMessages/error/myscript_", job_name, "_%j.err", sep=""),
       "#SBATCH --mail-type=ALL",

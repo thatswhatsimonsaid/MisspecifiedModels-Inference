@@ -66,8 +66,8 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 ```{r}
 ### Run Simulation ###
 SimulationResultsList = list()
-NSim = 10
-for(i in 1:32){
+NSim = 10000
+for(i in 1:1){
   ### Case ###
   print(paste0("Case: ", i))
   ### Parameters ###

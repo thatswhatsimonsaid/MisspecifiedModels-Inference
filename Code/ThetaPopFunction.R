@@ -1,4 +1,4 @@
-ThetaPopFunction = function(delta, rho, N, gamma, K, TypeSetting){
+ThetaPopFunction = function(delta_i, rho_i, N_i, gamma_i, K_i, TypeSetting){
   
   ### Summary: Calculates the population regression estimate 
       # according to Abadie, Imbens, Zheng (2014)
@@ -11,7 +11,14 @@ ThetaPopFunction = function(delta, rho, N, gamma, K, TypeSetting){
   if(TypeSetting == "Linear"){
     ThetaPopList = readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
     # ThetaPopList = readRDS("data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
-    ThetaPop = filter(ThetaPopList, delta == delta, rho == rho, N == N, gamma == gamma, K == K)$ThetaPop
+    ThetaPop = ThetaPopList %>% 
+      filter(delta == delta_i) %>%
+      filter(rho == rho_i) %>%
+      filter(N == N_i) %>%
+      filter(gamma == gamma_i) %>%
+      filter(K == K_i) %>%
+      select(ThetaPop) %>%
+      as.numeric()
   }
     
   else if(TypeSetting == "Logistic"){
@@ -37,3 +44,4 @@ ThetaPopFunction = function(delta, rho, N, gamma, K, TypeSetting){
 #   print(c(i,ThetaPopOutput,ThetaPopExpected))
 #   print('---')
 # }
+
