@@ -33,7 +33,7 @@ for (i in 1:nrow(ParameterVector)) {
       "#SBATCH --partition medium",
       "#SBATCH --ntasks 1",
       "#SBATCH --time 2-00:00:00",
-      "#SBATCH --mem-per-cpu=3000",
+      "#SBATCH --mem-per-cpu=100",
       paste("#SBATCH -o ClusterMessages/out/myscript_", job_name, "_%j.out", sep=""),
       paste("#SBATCH -e ClusterMessages/error/myscript_", job_name, "_%j.err", sep=""),
       "#SBATCH --mail-type=ALL",
