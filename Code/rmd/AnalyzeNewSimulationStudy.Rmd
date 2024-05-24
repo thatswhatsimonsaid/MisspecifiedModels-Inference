@@ -51,7 +51,7 @@ rm(file_list)
 ### Results ###
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
 SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList
-# SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
 SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList  # in seconds
 SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList) 
 SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
@@ -208,6 +208,14 @@ colnames(SmallSettingPercentChange) = c("Without setting", "In setting")
 
 # SmallSettingPercentChange %>% xtable(digits = 5)
 SmallSettingPercentChange
+```
+### Monte Carlo
+```{r}
+SmallSampleMCCombined = SmallSampleMonteCarloResults$CombinedTables
+SmallSampleMCCombined %>% 
+  xtable(digits = 5,
+         caption = "he Monte carlo average, variance, and confidence intervals of ˆSE_{Pop} and ˆSE_{Cond} across
+50,000 replications.")
 ```
 
 
