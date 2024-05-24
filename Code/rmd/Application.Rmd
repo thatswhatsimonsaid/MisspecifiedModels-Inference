@@ -63,8 +63,9 @@ VPop = VHatPopFunction(dat, beta_hat)$RegressionSE
 ```{r}
 ### Mine ###
 MyResults = cbind(beta_hat, VPop, VCond)
-colnames(MyResults) = c("Estimates", "Population SE", "Cond SE")
+colnames(MyResults) = c("Estimates", "PopSE", "CondSE")
 rownames(MyResults) = rownames(AIZ)
+MyResults = MyResults %>% mutate(PercentChange = 100*(CondSE - PopSE)/PopSE)
 
 ### Estimate Comparison ###
 EstimateComparison = data.frame(cbind(AIZ$Estimate, beta_hat, AIZ$Estimate - beta_hat)) %>% round(2)
