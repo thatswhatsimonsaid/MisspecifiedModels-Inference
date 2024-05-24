@@ -8,10 +8,12 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
   MonteCarloCI_Conditional = SimulationResultsReformatted$MonteCarloResults$MonteCarloCI_Conditional
   
   ### Population ###
-  MonteCarliResults_Population = cbind(SimSEMedianList[,c(1:5)],
-                                       MonteCarloMean[,1],
-                                       MonteCarloVariance[,1],
-                                       MonteCarloCI_Population)
+  MonteCarliResults_Population = cbind(MonteCarloMean[,1:5],
+                                       MonteCarloMean$Population,
+                                       MonteCarloVariance$Population,
+                                       MonteCarloCI_Population$LL,
+                                       MonteCarloCI_Population$UL)
+  
   colnames(MonteCarliResults_Population) = c("Misspec.", 
                                              "Homo.",
                                              "SS",
@@ -39,10 +41,11 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
   MonteCarliResults_Population[,6:7] = round(MonteCarliResults_Population[,6:7],SigFigs)
   
   ### Conditional ###
-  MonteCarliResults_Conditional = cbind(SimSEMedianList[,c(1:5)],
-                                        MonteCarloMean[,2],
-                                        MonteCarloVariance[,2],
-                                        MonteCarloCI_Conditional)
+  MonteCarliResults_Conditional = cbind(MonteCarloMean[,1:5],
+                                        MonteCarloMean$Conditional,
+                                        MonteCarloVariance$Conditional,
+                                        MonteCarloCI_Conditional$LL,
+                                        MonteCarloCI_Conditional$UL)
   colnames(MonteCarliResults_Conditional) = c("Misspec.", 
                                               "Homo.",
                                               "SS",
@@ -69,9 +72,26 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
   MonteCarliResults_Conditional = MonteCarliResults_Conditional %>% select(-c(MCLL,MCUL))
   MonteCarliResults_Conditional[,6:7] = round(MonteCarliResults_Conditional[,6:7],SigFigs)
   
+  ### Arrange ###
   MonteCarliResults_Population = data.frame(MonteCarliResults_Population) %>% arrange(Misspec., Homo., SS, Leverage, K)
   MonteCarliResults_Conditional = data.frame(MonteCarliResults_Conditional) %>% arrange(Misspec., Homo., SS, Leverage, K)
   
+  
+  ### Combined Table ###
+  CombinedTables = cbind(MonteCarliResults_Population, MonteCarliResults_Conditional[,6:8])
+  colnames(CombinedTables) = c("Misspec.", 
+                               "Homo.",
+                               "SS",
+                               "Leverage",
+                               "K",
+                               "Monte Carlo Mean - Pop",
+                               "Monte Carlo Variance - Pop",
+                               "Monte Carlo Confidence Intervals - Pop",
+                               "Monte Carlo Mean - Cond",
+                               "Monte Carlo Variance - Cond",
+                               "Monte Carlo Confidence Intervals - Cond")
+  
   return(list(MonteCarliResults_Population = MonteCarliResults_Population,
-              MonteCarliResults_Conditional = MonteCarliResults_Conditional))
+              MonteCarliResults_Conditional = MonteCarliResults_Conditional,
+              CombinedTables = CombinedTables))
 }

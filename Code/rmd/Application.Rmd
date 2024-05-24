@@ -31,18 +31,18 @@ rm(list=ls())
 ## Functions
 ```{r}
 dir = "/Users/simondn/Documents/Stats572/"
-source(paste0(dir,"Code/functions/VHatPopFunction.R"))
-source(paste0(dir,"Code/functions/VHatCondFunction.R"))
-source(paste0(dir,"Code/functions/ReformatApplicationData.R"))
-source(paste0(dir,"Code/functions/WhichMinFunction.R"))
-source(paste0(dir,"Code/functions/AIZResults.R"))
+source(paste0(dir,"Code/VHatPopFunction.R"))
+source(paste0(dir,"Code/VHatCondFunction.R"))
+source(paste0(dir,"Code/ReformatApplicationData.R"))
+source(paste0(dir,"Code/WhichMinFunction.R"))
+source(paste0(dir,"Code/AIZResults.R"))
 ```
 
 # Run
 ## Set Up 
 ```{r}
 AIZ = AIZResults("Application")
-dat = read.csv("/Users/simondn/Documents/Stats572/data/sachs.csv") %>%
+dat = read.csv("/Users/simondn/Documents/Stats572/data/SachsWarner/sachs.csv") %>%
   ReformatApplicationDataFunction() 
 ```
 
@@ -84,8 +84,8 @@ rownames(ConditionalComparison) = rownames(AIZ)
 EstimateComparison
 PopulationComparison
 ConditionalComparison
-# AIZ
-MyResults %>% round(3)
+
+MyResults %>% xtable(digits =3)
 ```
 
 # Test

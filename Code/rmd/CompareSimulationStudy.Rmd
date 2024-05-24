@@ -33,7 +33,7 @@ dir = "/Users/simondn/Documents/Stats572/"
 ```{r}
 source(paste0(dir,"Code/AIZResults.R"))
 source(paste0(dir,"Code/DiscrepancyFunction.R"))
-# source(paste0(dir,"Code/MonteCarloResults.R"))
+source(paste0(dir,"Code/MonteCarloResults.R"))
 source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
@@ -51,10 +51,9 @@ SmallSampleSimulation = list()
 SmallSampleSimulation = lapply(file_list, readRDS)
 rm(file_list)
 
-# SmallSampleSimulation = readRDS("/Users/simondn/Documents/Stats572/data/SimulationCases_Deprecated/Linear/SimulationResults.rds")
 SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
 SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList
-# SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
 SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList  # in seconds
 SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList) 
 SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
@@ -77,7 +76,7 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
 
 # Comparison
 ```{r}
-DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SmallSampleSEMedianList, SmallSampleCoverageList)
+DiscrepancyResults = DiscrepancyFunction(epsilon = 0.08, AIZ, SmallSampleSEMedianList, SmallSampleCoverageList)
 Dicrepancy = DiscrepancyResults$Discrepancy
 LargeDiscrepancyIndices = DiscrepancyResults$LargeDiscrepancyIndices
 DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
