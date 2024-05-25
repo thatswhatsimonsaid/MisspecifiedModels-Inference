@@ -66,8 +66,8 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
 ```{r}
 ### Run Simulation ###
 SimulationResultsList = list()
-NSim = 10000
-for(i in 1:nrow(ParameterVector)){
+NSim = 1000
+for(i in 29:nrow(ParameterVector)){
   ### Case ###
   print(paste0("Case: ", i))
   ### Parameters ###
@@ -85,8 +85,13 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
                                            rho = rho,
                                            K = K,
                                            VarFixed = NA,
-                                           TypeSetting = TypeSetting)
-}
+                                           TypeSetting = TypeSetting)}
+
+saveRDS(SimulationResultsList[[29]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0_K1.rds")
+saveRDS(SimulationResultsList[[30]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0_K5.rds")
+saveRDS(SimulationResultsList[[31]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0.1_K1.rds")
+saveRDS(SimulationResultsList[[32]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0.1_K5.rds")
+
 ```
 
 
