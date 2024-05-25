@@ -25,7 +25,7 @@ library(sandwich)
 
 ## Rm. Var.
 ```{r}
-rm(list=ls())
+# rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
@@ -40,11 +40,11 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ## Results
 ```{r}
 ### AIZ Results ###
-SettingType = "Linear"
+SettingType = "Logistic"
 AIZ = AIZResults(type = SettingType)
 
 ### My Results ###
-file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"),
+file_list = list.files(path =  paste0(dir,"Results/Logistic/N50_200"),
                         pattern = "\\.rds$",
                         full.names = TRUE)
 SmallSampleSimulation = list()
@@ -73,6 +73,16 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
 
 # SmallSampleResultsTable
 ```
+
+```{r}
+SmallSampleResultsTable[,1:11] %>% xtable(digits = 5)
+```
+
+
+```{r}
+cbind(AIZ[,1:5], (AIZ[,6:11] - SmallSampleResultsTable[,6:11]) %>% xtable(digits = 5)
+```
+
 
 # Comparison
 ```{r}
