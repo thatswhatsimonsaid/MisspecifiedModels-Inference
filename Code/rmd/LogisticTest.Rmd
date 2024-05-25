@@ -13,7 +13,6 @@ output:
 
 # Set Up
 ## Notes
-- Did I do the Mahlahnobis distance correctly
 
 ## Libr.
 ```{r message=FALSE, warning=FALSE}
@@ -53,7 +52,7 @@ source(paste0(dir,"Code/WhichMinFunction.R"))
 ```{r}
 AIZ = AIZResults("Logistic")
 ### Set Up ###
-set.seed(420)
+set.seed(1)
 TypeSetting = "Logistic"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
@@ -61,15 +60,7 @@ ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                    
                         LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
                         KVec = rep(c(1,5),16)                                        # K: Parameters
                         ) %>% data.frame
-SimulationCase = 1
 VarFixed = NA
-
-### Parameters ###
-delta = ParameterVector$MisspecVec[SimulationCase]  
-gamma =  ParameterVector$HomoskedVec[SimulationCase]  
-N = ParameterVector$SizeVec[SimulationCase]            
-rho =  ParameterVector$LeverageVec[SimulationCase]     
-K = ParameterVector$KVec[SimulationCase] 
 ```
 
 # Simulation
@@ -77,14 +68,23 @@ K = ParameterVector$KVec[SimulationCase]
 ### SimDataLogistic
 ```{r}
 ### Set Up ###
-NSim = 1000
-ResultsList = matrix(numeric(nrow(ParameterVector)* 7), ncol =7)
-colnames(ResultsList) = c("delta", "gamma", "N", "rho", "K", "VPop", "VCond")
+NSim = 100
+ResultsList = matrix(numeric(nrow(ParameterVector)* 11), ncol =11)
+colnames(ResultsList) = c("delta", "gamma", "N", "rho", "K", "VPop", "VCond", 
+                          "CoverageThetaPopVPop",
+                          "CoverageThetaPopVCond",
+                          "CoverageThetaCondVPop",
+                          "CoverageThetaCondVCond")
+```
 
+```{r}
 for(SimCase in 1:nrow(ParameterVector)){
   ### Set Up ###
-  VPop = numeric(NSim)
-  VCond = numeric(NSim)
+  ThetaPopList = numeric(NSim)
+  ThetaCondList = numeric(NSim)
+  VPopSEList = numeric(NSim)
+  VCondSEList = numeric(NSim)
+  CoverageResultsList = numeric(4*NSim) %>% matrix(ncol = 4)
   
   ### Progress Bar ####
   print(paste0("Case: ",SimCase))
@@ -95,12 +95,11 @@ for(SimCase in 1:nrow(ParameterVector)){
                         char = "=")
   
   ### Parameters ###
-  SimulationCase = SimCase
-  delta = ParameterVector$MisspecVec[SimulationCase]  
-  gamma =  ParameterVector$HomoskedVec[SimulationCase]  
-  N = ParameterVector$SizeVec[SimulationCase]            
-  rho =  ParameterVector$LeverageVec[SimulationCase]     
-  K = ParameterVector$KVec[SimulationCase] 
+  delta = ParameterVector$MisspecVec[SimCase]  
+  gamma =  ParameterVector$HomoskedVec[SimCase]  
+  N = ParameterVector$SizeVec[SimCase]            
+  rho =  ParameterVector$LeverageVec[SimCase]     
+  K = ParameterVector$KVec[SimCase] 
   
   for(i in 1:NSim){
     # print(i)
@@ -108,109 +107,94 @@ for(SimCase in 1:nrow(ParameterVector)){
     
     ### Data Generating Process 
     dat = SimDataLogistic(N, rho, K, delta, gamma)$dat
+    mu = SimDataLogistic(N, rho, K, delta, gamma)$mu
     
     ### Model ###
     model <- glm(Y ~ ., data = dat, family = binomial(link = "logit"))
     beta_hat = as.numeric(model$coefficients) 
     epsilon_hat = as.numeric(model$residuals)
     
-    ### Results ###
-    VPop[i] = sqrt(diag(vcovHC(model, type = "HC0")))[2]
-    VCond[i] = VHatCondFunction(dat, epsilon_hat, VarFixed = NA)$RegressionSE[2]
+    ### Theta Pop ###
+    ThetaPopList[i] = ThetaPopFunction(rho_i = rho, 
+                              N_i = N,
+                              K_i = K, 
+                              delta_i = delta, 
+                              gamma_i = gamma, 
+                              TypeSetting = TypeSetting)
+    ThetaCondList[i] = ThetaCondFunction(dat,mu,TypeSetting = TypeSetting)[2]
+    
+    ### Standard Errors ###
+    VPopSEList[i] = sqrt(diag(vcovHC(model, type = "HC0")))[2]
+    VCondSEList[i] = VHatCondFunction(dat, epsilon_hat, VarFixed = NA)$RegressionSE[2]
+    
+     # Confidence Interval #
+    CoverageResultsList[i,] = ConfidenceIntervalFunction(ThetaHat = beta_hat[2],
+                                                 ThetaCond = ThetaCondList[i],
+                                                 ThetaPop = ThetaPopList[i],
+                                                 SEPop = VPopSEList[i],
+                                                 SECond = VCondSEList[i],
+                                                 alpha = .05)
   }
   
-  ResultsList[SimCase, ] = c(delta=delta, gamma=gamma, N=N, rho=rho, K = K, VPop = mean(VPop), VCond = mean(VCond))
+  ResultsList[SimCase, ] = c(delta=delta, 
+                             gamma=gamma, 
+                             N=N, 
+                             rho=rho, 
+                             K = K, 
+                             VPop = mean(VPopSEList), 
+                             VCond = mean(VCondSEList),
+                             CoverageThetaPopVPop =  mean(CoverageResultsList[,1]),
+                             CoverageThetaPopVCond =  mean(CoverageResultsList[,2]),
+                             CoverageThetaCondVPop =  mean(CoverageResultsList[,3]),
+                             CoverageThetaCondVCond =  mean(CoverageResultsList[,4])
+                             )
 
 }
 ResultsList = data.frame(ResultsList)
 
 ```
 
-### Hard Coded ###
+
 ```{r}
-# ### Set Up ###
-# NSim = 1000
-# ResultsList = matrix(numeric(nrow(ParameterVector)* 7), ncol =7)
-# colnames(ResultsList) = c("delta", "gamma", "N", "rho", "K", "VPop", "VCond")
-# 
-# 
-# for(SimCase in 1:nrow(ParameterVector)){
-#   ### Set Up ###
-#   VPop = numeric(NSim)
-#   VCond = numeric(NSim)
-#   
-#   ### Progress Bar ####
-#   print(paste0("Case: ",SimCase))
-#   pb = txtProgressBar(min = 0, 
-#                         max = NSim,
-#                         style = 3,  
-#                         width = 50,
-#                         char = "=")
-#   
-#   ### Parameters ###
-#   SimulationCase = SimCase
-#   delta = ParameterVector$MisspecVec[SimulationCase]  
-#   gamma =  ParameterVector$HomoskedVec[SimulationCase]  
-#   N = ParameterVector$SizeVec[SimulationCase]            
-#   rho =  ParameterVector$LeverageVec[SimulationCase]     
-#   K = ParameterVector$KVec[SimulationCase] 
-#   
-# ### Simulation ###
-# for(i in 1:NSim){
-#   
-#   ### Set Up ###
-#   setTxtProgressBar(pb, i)
-#   
-#   ### Coefficient Matrix ###
-#   if(K == 1){CoefficientVector = matrix(1)}else if(K>1){
-#     CoefficientVector = matrix(c(1,rep(0,K-1)))}
-#   
-#   ### Covariates ###
-#   theta_0 = 0
-#   X1 = sample(c(rnorm(N*(1-rho), mean = 0, sd = 1),
-#                 rlnorm(N*rho, meanlog = 0, sdlog = sqrt(0.5))))
-#   X2K = sapply(1:(K-1), function(x) rnorm(n = N, mean = 0, sd = 1))
-#   if(K == 1){XMatrix = as.numeric(X1)}else if(K>1){
-#     XMatrix = matrix(cbind(X1, X2K), ncol = K)}
-#   
-#   ### Data Generating Process ###
-#   
-#   ## Gamma ##
-#   epsilon_star_i <- rlogis(N, location = 0, scale = 1)  # Logistic distribution for errors
-#   
-#   ### Heteroskedasticity Gamma ###
-#   if(gamma == 0){
-#     epsilon_i = epsilon_star_i
-#   }else if(gamma !=0){
-#     epsilon_i = epsilon_star_i*exp(1-gamma*X1)
-#   }
-#   
-#   ### Model Misspecification Delta ###
-#   if(delta == 0){
-#     Ystar = rep(0,N) + XMatrix %*% CoefficientVector + epsilon_i
-#     }else if(delta !=0){
-#     Ystar = X1 + (X1^2 - 1) + epsilon_i
-#     }
-#   
-#   ## Outcome ##
-#   Y <- as.numeric(Y_star >= 0)
-#   dat = data.frame(Y, XMatrix)
-#   colnames(dat) = c("Y",paste0("X", 1:K))
-#   
-#   ### Model ###
-#   model <- glm(Y ~ ., data = dat, family = binomial(link = "logit"))
-#   beta_hat = as.numeric(model$coefficients) 
-#   epsilon_hat = as.numeric(model$residuals)
-#   
-#   ### Results ###
-#   VPop[i] = sqrt(diag(vcovHC(model, type = "HC0")))[2]
-#   VCond[i] = VHatCondFunction(dat, epsilon_hat, VarFixed = NA)$RegressionSE[2]
-# }
-#   ResultsList[SimCase, ] = c(delta=delta, gamma=gamma, N=N, rho=rho, K = K, VPop = mean(VPop), VCond = mean(VCond))
-# }
-# ResultsList = data.frame(ResultsList)
+VPopDifference = cbind(ParameterVector, AIZ$MedianSEPop - ResultsList$VPop)
+VCondDifference = cbind(ParameterVector, AIZ$MedianSECond - ResultsList$VCond)
+ResultsList$PercentChange = (ResultsList$VCond-ResultsList$VPop)/ResultsList$VPop
+AIZ$PercentChange = (AIZ$MedianSECond-AIZ$MedianSEPop)/AIZ$MedianSEPop
+
+TPopVPopDifference = AIZ[,6] - ResultsList[,8]
+TPopVCondDifference = AIZ[,7] - ResultsList[,9]
+TCondVPopDifference = AIZ[,8] - ResultsList[,10]
+TCondVCondDifference = AIZ[,9] - ResultsList[,11]
+
+colnames(VPopDifference) = c("delta", "gamma", "N", "rho", "K", "Difference")
+colnames(VCondDifference) = c("delta", "gamma", "N", "rho", "K", "Difference")
+
+DifferenceInDifference = (AIZ$MedianSEPop - AIZ$MedianSECond) - (VPopDifference$Difference - VCondDifference$Difference)
+DifferenceInPercentChange = AIZ$PercentChange - ResultsList$PercentChange
+
+
+print(length(DifferenceInDifference))
+
+DifferenceTable = cbind(VPopDifference, 
+                        VCondDifference$Difference, 
+                        DifferenceInDifference,
+                        DifferenceInPercentChange,
+                        TPopVPopDifference,
+                        TPopVCondDifference,
+                        TCondVPopDifference,
+                        TCondVCondDifference)
+
+colnames(DifferenceTable) = c("delta", "gamma", "N", "rho", "K", 
+                              "VPopDiff", 
+                              "VCondDiff",
+                              "DifferenceInDifferences",
+                              "DifferencePercentChange",
+                              "TPopVPopDifference",
+                              "TPopVCondDifference",
+                              "TCondVPopDifference",
+                              "TCondVCondDifference")
+
+DifferenceTable
 ```
-
-
 
 
