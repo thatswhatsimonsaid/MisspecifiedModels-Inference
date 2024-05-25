@@ -25,7 +25,7 @@ for (i in 1:nrow(ParameterVector)) {
   print("---")
   
   # Create .sbatch file for the current simulation
-  sbatch_file <- file(paste0(dir,"/Code/Slurm/",TypeSetting,"/N50_200/",job_name, ".sbatch"), "w")
+  sbatch_file <- file(paste0(dir,"/Code/Slurm/",TypeSetting,"/N500_2000/",job_name, ".sbatch"), "w")
   writeLines(
     c(
       "#!/bin/bash",
@@ -56,4 +56,5 @@ for (i in 1:nrow(ParameterVector)) {
 }
 
 print("Sbatch files generated successfully.")
+
 
