@@ -1,7 +1,8 @@
 # Read CSV file
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572"
-ParameterVector <- read.csv(paste0(dir,"/data/Linear/Parameters/ParameterVector_500_2000.csv"))
+TypeSetting = "Logistic"
+ParameterVector <- read.csv(paste0(dir,"/data/",TypeSetting,"/Parameters/ParameterVector_50_200.csv"))
 
 # Loop through each row
 for (i in 1:nrow(ParameterVector)) {
@@ -24,7 +25,7 @@ for (i in 1:nrow(ParameterVector)) {
   print("---")
   
   # Create .sbatch file for the current simulation
-  sbatch_file <- file(paste0(dir,"/Code/Slurm/Linear/N500_2000/",job_name, ".sbatch"), "w")
+  sbatch_file <- file(paste0(dir,"/Code/Slurm/",TypeSetting,"/N50_200/",job_name, ".sbatch"), "w")
   writeLines(
     c(
       "#!/bin/bash",
@@ -55,3 +56,4 @@ for (i in 1:nrow(ParameterVector)) {
 }
 
 print("Sbatch files generated successfully.")
+
