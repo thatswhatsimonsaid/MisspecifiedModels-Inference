@@ -41,7 +41,7 @@ OneIterationFunction = function(N, rho, K, delta, gamma, VarFixed, TypeSetting){
                               delta_i = delta, 
                               gamma_i = gamma, 
                               TypeSetting = TypeSetting)
-  ThetaCond = ThetaCondFunction(dat,mu)
+  ThetaCond = ThetaCondFunction(dat, mu, TypeSetting = TypeSetting)
 
   # Variance Estimates #
   VCondSE = VHatCondFunction(dat, epsilon_hat, VarFixed)$RegressionSE

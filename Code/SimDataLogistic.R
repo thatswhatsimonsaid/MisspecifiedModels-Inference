@@ -19,6 +19,7 @@ SimDataLogistic = function(N, rho, K, delta, gamma){
   ### Covariates ###
   X1 = sample(c(rnorm(N*(1-rho), mean = 0, sd = 1),
                 rlnorm(N*rho, meanlog = 0, sdlog = sqrt(0.5))))
+  
   X2K = sapply(1:(K-1), function(x) rnorm(n = N, mean = 0, sd = 1))
   if(K == 1){XMatrix = as.numeric(X1)}else if(K>1){
     XMatrix = matrix(cbind(X1, X2K), ncol = K)}
@@ -44,9 +45,18 @@ SimDataLogistic = function(N, rho, K, delta, gamma){
   Y = 1*(Ystar>=0)
   
   ### Mu ###
-  mu = Ystar
-  mu = solve(1+ exp(0 + XMatrix %*% CoefficientVector))
-
+  
+  mu = 1*((Ystar - sign(epsilon_i)*sqrt(abs(epsilon_i)))>=0)
+  # mu = 1*(Ystar>=0.5)
+  # mu = as.numeric(1+ exp(0 + XMatrix %*% CoefficientVector))
+  # mu = 1*((1/(as.numeric(1+ exp(0 + XMatrix %*% CoefficientVector))))>=0.5)
+  # mu = sign(Ystar)*log(abs(Ystar))
+  # mu_goal = solve(t(X), (t(X) %*% X) %*% c(0,1))
+  
+  # ThetaCondFunction(dat,mu)
+   
+  # solve(t(X)) %*% (t(X) %*% X) %*% beta_hat
+  
   ### Return ###
   dat = data.frame(Y, XMatrix)
   colnames(dat) = c("Y",paste0("X", 1:K))

@@ -21,6 +21,7 @@ library(tidyverse)
 library(StatMatch)
 library(lmtest)
 library(sandwich)
+library(xtable)
 ```
 
 ## Rm. Var.
@@ -65,7 +66,7 @@ VPop = VHatPopFunction(dat, beta_hat)$RegressionSE
 MyResults = cbind(beta_hat, VPop, VCond)
 colnames(MyResults) = c("Estimates", "PopSE", "CondSE")
 rownames(MyResults) = rownames(AIZ)
-MyResults = MyResults %>% mutate(PercentChange = 100*(CondSE - PopSE)/PopSE)
+MyResults = data.frame(MyResults) %>% mutate(PercentChange = 100*(CondSE - PopSE)/PopSE)
 
 ### Estimate Comparison ###
 EstimateComparison = data.frame(cbind(AIZ$Estimate, beta_hat, AIZ$Estimate - beta_hat)) %>% round(2)
