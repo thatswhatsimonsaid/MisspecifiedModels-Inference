@@ -2,7 +2,7 @@
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572"
 TypeSetting = "Logistic"
-ParameterVector <- read.csv(paste0(dir,"/data/",TypeSetting,"/Parameters/ParameterVector_50_200.csv"))
+ParameterVector <- read.csv(paste0(dir,"/data/",TypeSetting,"/Parameters/ParameterVector_500_2000.csv"))
 
 # Loop through each row
 for (i in 1:nrow(ParameterVector)) {
