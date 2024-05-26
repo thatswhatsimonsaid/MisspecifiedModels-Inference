@@ -16,13 +16,13 @@ for (i in 1:nrow(ParameterVector)) {
   type_setting <- ParameterVector[i, "TypeSetting"]
   output <- ParameterVector[i, "Output"]
   
-  print(paste0("Case ", i, ": ",misspec_vec, homosked_vec, size_vec, leverage_vec, k_vec))
-  print(paste0("Misspec: ",misspec_vec))
-  print(paste0("Homo: ",homosked_vec))
-  print(paste0("SS: ",size_vec))
-  print(paste0("Leverage: ",leverage_vec))
-  print(paste0("K: ",k_vec))
-  print("---")
+  # print(paste0("Case ", i, ": ",misspec_vec, homosked_vec, size_vec, leverage_vec, k_vec))
+  # print(paste0("Misspec: ",misspec_vec))
+  # print(paste0("Homo: ",homosked_vec))
+  # print(paste0("SS: ",size_vec))
+  # print(paste0("Leverage: ",leverage_vec))
+  # print(paste0("K: ",k_vec))
+  # print("---")
   
   # Create .sbatch file for the current simulation
   sbatch_file <- file(paste0(dir,"/Code/Slurm/",TypeSetting,"/LargeSampleExtension/",job_name, ".sbatch"), "w")
