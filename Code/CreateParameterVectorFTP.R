@@ -17,7 +17,8 @@ ExpandGridCombinations= expand.grid(MisspecVec = c(0,1),
                                                 1700,
                                                 1850),
                                     LeverageVec = c(0,0.1),
-                                    KVec = c(1,5)) %>% data.frame()
+                                    KVec = c(1,5),
+                                    TypeSetting = "Linear") %>% data.frame()
 
 
 ### Find Theta Pop ###
