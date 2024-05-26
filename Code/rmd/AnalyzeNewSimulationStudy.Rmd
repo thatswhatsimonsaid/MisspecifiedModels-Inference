@@ -21,6 +21,7 @@ library(StatMatch)
 library(xtable)
 library(lmtest)
 library(sandwich)
+library(ggplot2)
 ```
 
 ## Rm. Var.
@@ -72,7 +73,7 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
 ### Large Sample
 ```{r}
 ### Get Files ###
-file_list = list.files(path =  paste0(dir,"Results/Linear/N500_2000"),
+file_list = list.files(path =  paste0(dir,"Results/Linear/ALL"),
                         pattern = "\\.rds$",
                         full.names = TRUE)
 LargeSampleSimulation = list()
@@ -82,7 +83,7 @@ rm(file_list)
 ### Results ###
 LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
 LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList
-# LargeSampleMonteCarloResults = MonteCarloResults(LargeSampleSimulation, 5)
+LargeSampleMonteCarloResults = MonteCarloResults(LargeSampleSimulation, 5)
 LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList  # in seconds
 LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList)
 LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
@@ -101,6 +102,7 @@ LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_whe
 ```
 
 # Percentage Change by N
+## Set Up
 ```{r}
 ### Pivoting ###
 SmallSampleSEMedianList %>% 
@@ -116,34 +118,82 @@ LargeSampleSEMedianList %>%
   select(-c(Population, Conditional, Indicator, Difference)) %>%
   pivot_wider(names_from = SS,
               values_from = PercentChange) %>%
-  rename(N.500 = "500",
-         N.2000 = "2000") %>%
-  relocate(N.500, .before=N.2000)%>% 
+  rename(N.50 = "50",
+         N.200 = "200",
+         N.350 = "350",
+         N.500 = "500",
+         N.650 = "650",
+         N.800 = "800",
+         N.950 = "950",
+         N.1100 = "1100",
+         N.1250 = "1250",
+         N.1400 = "1400",
+         N.1550 = "1550",
+         N.1700 = "1700",
+         N.1850 = "1850",
+         N.2000 = "2000"
+         ) %>%
+  mutate(ID = 1:16) %>%
+  relocate(ID, .before = "Misspec.") %>%
   data.frame -> PivotWiderLargeSampleSE
 
-### Difference Table ###
-DifferenceTable = merge(PivotWiderSmallSampleSE, 
-                        PivotWiderLargeSampleSE, by = c("Misspec.","Homo.","Leverage","K")) %>%
-  relocate(N.500, .after = N.200)
+PivotWiderLargeSampleSE = PivotWiderLargeSampleSE %>%
+  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                              Misspec. == 1 ~ "Yes"),
+         Homo. = case_when(Homo. == 0 ~ "Yes",
+                           Homo. == 0.5 ~ "No"),
+         Leverage = case_when(Leverage == 0 ~ "No",
+                              Leverage == 0.1 ~ "Yes"))
 
-# DifferenceTable = DifferenceTable %>% 
-#   mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-#                               Misspec. == 1 ~ "Yes"),
-#          Homo. = case_when(Homo. == 0 ~ "Yes",
-#                            Homo. == 0.5 ~ "No"),
-#          Leverage = case_when(Leverage == 0 ~ "No",
-#                               Leverage == 0.1 ~ "Yes"))
-
-ChangeInDifference = DifferenceTable %>% mutate(N.2000 = case_when(abs(N.500)>abs(N.2000) ~ "Smaller", 
-                                                                   abs(N.500)<abs(N.2000) ~ "Larger"),
-                                                N.500 = case_when(abs(N.200)>abs(N.500) ~ "Smaller", 
-                                                                  abs(N.200)<abs(N.500) ~ "Larger"),
-                                                N.200 = case_when(abs(N.50)>abs(N.200) ~ "Smaller", 
-                                                                  abs(N.50)<abs(N.200) ~ "Larger")) %>%
-  select(-c(N.50))
 
 ### xtable ###
-DifferenceTable %>% xtable(digits = 5, caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.")
+# DifferenceTable %>% xtable(digits = 5, caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.")
+```
+
+## Plot
+```{r}
+### Pivot back to long format lol
+LargeSampleBackToLong <- pivot_longer(PivotWiderLargeSampleSE, 
+                                      cols = starts_with("N."), 
+                                      names_to = "N_value", 
+                                      values_to = "value") %>%
+  rename(Misspecification = Misspec.,
+         Heterogeneity = Homo.,
+         "High Leverage" = Leverage) %>%
+  mutate(Heterogeneity = case_when(Heterogeneity == "Yes" ~ "No",
+                                   Heterogeneity == "No" ~ "Yes"))
+
+### Last Observation Label ###
+LastObservation <- LargeSampleBackToLong %>%
+  group_by(ID) %>%
+  filter(N_value == "N.2000")
+  
+options(repr.plot.width=30, repr.plot.height=5)
+ggplot(data = LargeSampleBackToLong) +
+  
+  ### Line ###
+  geom_line( mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)), 
+                          y = 100*value, 
+                          group = ID, 
+                          color = Misspecification,
+                          linetype = `High Leverage`),
+             size = 1) +
+  ### Point ###
+  geom_point(data = LastObservation,
+             mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)), 
+                           y = 100*value, 
+                           shape = Heterogeneity,
+                           color = Misspecification),  # Add shape aesthetic
+             size = 3)  +
+
+  ### Labels ###
+    xlab("Sample Size") + 
+    ylab("Percent Change (%)") + 
+    scale_y_continuous(breaks = seq(-80, 0, by = 10)) +
+    scale_x_continuous(breaks = seq(50, 2000, by = 150)) +
+    ggtitle("Standard error reduction when using the conditional standard error estimate") +
+    theme(plot.title =  element_text(size = 15, hjust = 0.5)) +
+  theme_light()-> PercentChangeSSPlot
 ```
 
 
