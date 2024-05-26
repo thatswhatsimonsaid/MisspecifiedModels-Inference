@@ -27,7 +27,7 @@ library(sandwich)
 ```{r}
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572/"
-TypeSetting  = "Logistic"
+TypeSetting  = "Linear"
 ```
 
 ## Functions
