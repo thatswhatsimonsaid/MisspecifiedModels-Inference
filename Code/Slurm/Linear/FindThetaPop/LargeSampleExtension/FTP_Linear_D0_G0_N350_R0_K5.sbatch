@@ -17,5 +17,5 @@ Rscript Code/FindThetaPop.R \
     --N 350 \
     --Rho 0 \
     --K 5 \
-    --TypeSetting '' \
+    --TypeSetting 'Linear' \
     --Output data/Linear/EstimatedThetaPop/D0_G0_N350_R0_K5.csv \
