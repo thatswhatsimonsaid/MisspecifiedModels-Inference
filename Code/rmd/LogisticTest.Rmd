@@ -78,7 +78,8 @@ colnames(ResultsList) = c("delta", "gamma", "N", "rho", "K", "VPop", "VCond",
 ```
 
 ```{r}
-for(SimCase in 1:nrow(ParameterVector)){
+# for(SimCase in 1:nrow(ParameterVector)){
+for(SimCase in 1:8){
   ### Set Up ###
   ThetaPopList = numeric(NSim)
   ThetaCondList = numeric(NSim)
@@ -106,8 +107,9 @@ for(SimCase in 1:nrow(ParameterVector)){
     setTxtProgressBar(pb, i)
     
     ### Data Generating Process 
-    dat = SimDataLogistic(N, rho, K, delta, gamma)$dat
-    mu = SimDataLogistic(N, rho, K, delta, gamma)$mu
+    SimData = SimDataLogistic(N, rho, K, delta, gamma)
+    dat = SimData$dat
+    mu = SimData$mu
     
     ### Model ###
     model <- glm(Y ~ ., data = dat, family = binomial(link = "logit"))
@@ -121,7 +123,7 @@ for(SimCase in 1:nrow(ParameterVector)){
                               delta_i = delta, 
                               gamma_i = gamma, 
                               TypeSetting = TypeSetting)
-    ThetaCondList[i] = ThetaCondFunction(dat,mu,TypeSetting = TypeSetting)[2]
+    ThetaCondList[i] = ThetaCondFunction(dat, mu, TypeSetting = TypeSetting)
     
     ### Standard Errors ###
     VPopSEList[i] = sqrt(diag(vcovHC(model, type = "HC0")))[2]
