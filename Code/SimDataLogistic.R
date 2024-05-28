@@ -45,8 +45,11 @@ SimDataLogistic = function(N, rho, K, delta, gamma){
   Y = 1*(Ystar>=0)
   
   ### Mu ###
-  mu = 1/(1 + exp(Ystar - epsilon_i))
-
+  if(delta == 0 & gamma == 0){mu = list(mu = Ystar, 
+                                        val = 2)}else{
+    mu = list(mu = 1/(1 + exp(Ystar - epsilon_i)),
+              val = 1)}
+  
   ### Return ###
   dat = data.frame(Y, XMatrix)
   colnames(dat) = c("Y",paste0("X", 1:K))

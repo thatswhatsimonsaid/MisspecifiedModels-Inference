@@ -22,12 +22,9 @@ ThetaCondFunction = function(dat, mu, TypeSetting){
       as.matrix
     ThetaCond = solve(t(X) %*% X) %*% (t(X) %*% mu) %>% as.numeric() # Linear regression mu ~ X
     }else if(TypeSetting == "Logistic"){
-      # X = select(dat,-Y) %>%
-        # mutate(X0 = rep(1,nrow(dat))) %>%
-        # relocate(X0, .before = X1) %>%
-        # as.matrix
-      Formula = as.formula(paste0("mu ~ ", paste0(paste0("dat$X", 1:K), collapse = " + "), collapse = ""))
-      ThetaCond = coefficients(lm(Formula))[1]
+
+      Formula = as.formula(paste0("mu$mu ~ ", paste0(paste0("dat$X", 1:K), collapse = " + "), collapse = ""))
+      ThetaCond = as.numeric(coefficients(lm(Formula))[mu$val])
     }
   
   return(ThetaCond)
