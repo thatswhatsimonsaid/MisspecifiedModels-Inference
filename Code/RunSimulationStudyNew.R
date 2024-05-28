@@ -54,8 +54,7 @@ Output = args$Output
 
 ### Simulation ###
 set.seed(1)
-# NSim = 50000
-NSim = 10
+NSim = 50000
 
 SimulationFunction(NSim = NSim, 
                    delta = delta,
