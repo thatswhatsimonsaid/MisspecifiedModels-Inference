@@ -78,8 +78,7 @@ colnames(ResultsList) = c("delta", "gamma", "N", "rho", "K", "VPop", "VCond",
 ```
 
 ```{r}
-# for(SimCase in 1:nrow(ParameterVector)){
-for(SimCase in 1:8){
+for(SimCase in 1:nrow(ParameterVector)){
   ### Set Up ###
   ThetaPopList = numeric(NSim)
   ThetaCondList = numeric(NSim)
