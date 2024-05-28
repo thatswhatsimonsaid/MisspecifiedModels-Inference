@@ -29,19 +29,3 @@ ThetaPopFunction = function(delta_i, rho_i, N_i, gamma_i, K_i, TypeSetting){
   return(ThetaPop)
 }
 
-
-# ThetaPopList = readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
-# for(i in 1:nrow(ParameterVector)){
-#   print(paste0("Case: ",i))
-#   
-#   delta = ParameterVector$MisspecVec[i]
-#   rho = ParameterVector$LeverageVec[i]
-#   N = ParameterVector$SizeVec[i]
-#   gamma = ParameterVector$HomoskedVec[i]
-#   K = ParameterVector$KVec[i]
-#   ThetaPopOutput = ThetaPopFunction(rho = rho, N = N, K = K, delta = delta, gamma = gamma, "Linear")
-#   ThetaPopExpected = ThetaPopList[i,]$ThetaPop
-#   print(c(i,ThetaPopOutput,ThetaPopExpected))
-#   print('---')
-# }
-
