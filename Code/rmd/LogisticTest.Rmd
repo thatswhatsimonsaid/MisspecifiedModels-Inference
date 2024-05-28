@@ -68,7 +68,7 @@ VarFixed = NA
 ### SimDataLogistic
 ```{r}
 ### Set Up ###
-NSim = 100
+NSim = 10000
 ResultsList = matrix(numeric(nrow(ParameterVector)* 11), ncol =11)
 colnames(ResultsList) = c("delta", "gamma", "N", "rho", "K", "VPop", "VCond", 
                           "CoverageThetaPopVPop",

@@ -50,7 +50,7 @@ OneIterationFunction = function(N, rho, K, delta, gamma, VarFixed, TypeSetting){
   
   # Confidence Interval #
   CoverageResults = ConfidenceIntervalFunction(ThetaHat = beta_hat[2],
-                                               ThetaCond = ThetaCond[2],
+                                               ThetaCond = ThetaCond,
                                                ThetaPop = ThetaPop,
                                                SEPop = VPopSE[2],
                                                SECond = VCondSE[2],
