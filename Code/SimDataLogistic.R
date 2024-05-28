@@ -45,19 +45,8 @@ SimDataLogistic = function(N, rho, K, delta, gamma){
   Y = 1*(Ystar>=0)
   
   ### Mu ###
-  mu = Ystar
-  # mu = 1*((Ystar - sign(epsilon_i)*sqrt(abs(epsilon_i)))>=0)
-  # mu = (rep(0,N) + XMatrix %*% CoefficientVector)
-  # mu = 1*(Ystar>=0.5)
-  # mu = as.numeric(1+ exp(0 + XMatrix %*% CoefficientVector))
-  # mu = 1*((1/(as.numeric(1+ exp(0 + XMatrix %*% CoefficientVector))))>=0.5)
-  # mu = sign(Ystar)*log(abs(Ystar))
-  # mu_goal = solve(t(X), (t(X) %*% X) %*% c(0,1))
-  
-  # ThetaCondFunction(dat,mu,TypeSetting)
-   
-  # solve(t(X)) %*% (t(X) %*% X) %*% beta_hat
-  
+  mu = 1/(1 + exp(Ystar - epsilon_i))
+
   ### Return ###
   dat = data.frame(Y, XMatrix)
   colnames(dat) = c("Y",paste0("X", 1:K))
