@@ -1,21 +1,10 @@
 ### Set Up ###
+library(tidyverse)
 rm(list=ls())
 TypeSetting = "Linear"
 ExpandGridCombinations= expand.grid(MisspecVec = c(0,1),
                                     HomoskedVec = c(0,0.5),
-                                    SizeVec = c(50,
-                                                200,
-                                                350,
-                                                500,
-                                                650,
-                                                800,
-                                                950,
-                                                1100,
-                                                1250,
-                                                1400,
-                                                1550,
-                                                1700,
-                                                1850),
+                                    SizeVec = seq(50, 20000, by = 150),
                                     LeverageVec = c(0,0.1),
                                     KVec = c(1,5),
                                     TypeSetting = "Linear") %>% data.frame()
