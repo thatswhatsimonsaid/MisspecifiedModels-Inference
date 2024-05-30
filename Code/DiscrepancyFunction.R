@@ -1,3 +1,20 @@
+### Summary:
+# A function used to measure the absolute difference between my results and
+# those of the original manuscript (Abadie, Imbens, Zheng, 2014).
+### Inputs:
+# epsilon: Discrepancy tolerance.
+# AIZResults: Results from the original manuscript.
+# SimSEMedianList: My standard error results.
+# CoverageList: My coverage rate results.
+### Output:
+# Discrepancy: A list of the discrepancy for the population estimand,
+#              conditional estimand, population standard error, conditional,
+#              standard error, all four coverage rates, and absolute difference
+#              between the conditional and population standard error.
+# LargeDiscrepancyIndices: Indices of cases whose discrepancies are larger than
+#                          the tolerance epsilon.
+# MeanDiscrepancy: The average discrepancy for each case.
+
 DiscrepancyFunction = function(epsilon, AIZResults, SimSEMedianList, CoverageList){
   
   ### Discrepancy ###

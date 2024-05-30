@@ -1,6 +1,12 @@
 AIZResults = function(type){
   
+  ### Summary: Returns the results of Abadie, Imbens, Zheng (2014) 
+  ### Inputs: "Linear", "Logistic", or "Application"
+  ### Output: Returns the linear, logistic, or economic application results
+  #           of Abadie, Imbens, Zheng (2014) 
+  
   ### Application Results ###
+  
   # Create the data frame
   AIZApplication <- data.frame(
     constant = c(1.66, 3.08, 3.03),

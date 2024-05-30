@@ -1,16 +1,18 @@
 SimDataLogistic = function(N, rho, K, delta, gamma){
   
-  ### Summary: Simulates Data according to the parameters of 
-      # Abadie, Imbens, and Zhang (2014)
+  ### Summary: Simulates logistic regression data according to the parameters of 
+  # Abadie, Imbens, and Zhang (2014)
   ### Inputs:
-    # N: Number of observations
-    # rho: Mixture/leverage parameter
-    # K: Number of covariates. Note the first covariate will always be 
-        # a mixture of a standard normal and log normal(0,0.5^2)
-    # delta: Misspecification parameter
-    # gamma: Heterogeneity parameter
+  # N: Number of observations
+  # rho: Mixture/leverage parameter
+  # K: Number of covariates. Note the first covariate will always be 
+  # a mixture of a standard normal and log normal(0,0.5^2)
+  # delta: Misspecification parameter
+  # gamma: Heterogeneity parameter
   ### Output:
-    # dat: A data set
+  # dat: A data set generated according to the parameters inputted in the 
+  #      logistic setting.
+  # mu: The true conditional probability of Y=1|X=x.
   
   ### Coefficient Matrix ###
   if(K == 1){CoefficientVector = matrix(1)}else if(K>1){

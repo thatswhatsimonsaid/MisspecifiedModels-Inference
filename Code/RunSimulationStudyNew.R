@@ -1,3 +1,18 @@
+### Summary:
+# A script to run the simulation in the high-performance computing cluster
+### Inputs:
+# Delta: Misspecification rate from the command line.
+# Rho: Leverage rate from the command line.
+# N: Number of observations from the command line.
+# Gamma: Heteroscedasticity rate from the command line.
+# K: Number of covariates from the command line.
+# TypeSetting: Linear/Logistic from the command line.
+# NSim: Number of simulations.
+### Output:
+# beta_hat_simulation: A .rds file containing the results of the function
+#                      SimulationFunction.
+
+
 # Set Up
 ## Libr.
 library(stats)
@@ -54,7 +69,7 @@ Output = args$Output
 
 ### Simulation ###
 set.seed(1)
-NSim = 10000
+NSim = 50000
 
 SimulationFunction(NSim = NSim, 
                    delta = delta,

@@ -7,7 +7,7 @@ ThetaCondFunction = function(dat, mu, TypeSetting){
   # mu: the N-vector whose i’th element is equal to µ_{Xi}, 
       # which is the mean of Y_i|X_{1i},...,X_{Ki}
   ### Output:
-  # Conditional regression estimate
+  # Conditional estimand
   
   ### Set Up ###
   N = nrow(dat)

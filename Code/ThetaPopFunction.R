@@ -1,12 +1,17 @@
 ThetaPopFunction = function(delta_i, rho_i, N_i, gamma_i, K_i, TypeSetting){
   
-  ### Summary: Calculates the population regression estimate 
-      # according to Abadie, Imbens, Zheng (2014)
+  ### Summary: Extracts the population regression estimand from the previously
+  #            numerically calculated population estimand of the script 
+  #            FindThetaPop.R.
   ### Input: 
+  # N: Number of observations
+  # rho: Mixture/leverage parameter
+  # K: Number of covariates.
   # delta: Misspecification parameter
-  # rho: Leverage parameter
+  # gamma: Heterogeneity parameter
+  # TypeSetting: Linear/Logistic
   ### Output:
-  # Population regression estimate
+  # Population estimand
 
   if(TypeSetting == "Linear"){
     # ThetaPopList = readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")
