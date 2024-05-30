@@ -39,7 +39,6 @@ Output = args$Output
 
 ### Set Up ###               
 NSim = 100000
-NSim = 100
 source(paste0("Code/SimData",TypeSetting,".R"))
 
 pb = txtProgressBar(min = 0, 
@@ -79,5 +78,4 @@ close(pb)
 
 ## Save ##
 beta_hat_simulation = c(delta = delta, rho = rho, N = N, gamma = gamma, K = K, BetaPop = mean(beta_hat_list))
-cbind()
 write.csv(beta_hat_simulation, Output)
