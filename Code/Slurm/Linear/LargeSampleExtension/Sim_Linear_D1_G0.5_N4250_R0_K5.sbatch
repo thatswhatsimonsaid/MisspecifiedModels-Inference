@@ -2,7 +2,7 @@
 #SBATCH --job-name Sim_Linear_D1_G0.5_N4250_R0_K5
 #SBATCH --partition medium
 #SBATCH --ntasks 1
-#SBATCH --time 2-00:00:00
+#SBATCH --time 7-00:00:00
 #SBATCH --mem-per-cpu=3000
 #SBATCH -o ClusterMessages/out/myscript_Sim_Linear_D1_G0.5_N4250_R0_K5_%j.out
 #SBATCH -e ClusterMessages/error/myscript_Sim_Linear_D1_G0.5_N4250_R0_K5_%j.err
