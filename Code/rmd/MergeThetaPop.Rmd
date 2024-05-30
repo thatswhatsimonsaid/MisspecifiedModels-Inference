@@ -30,6 +30,11 @@ dir = "/Users/simondn/Documents/Stats572/"
 TypeSetting  = "Linear"
 ```
 
+
+```{r}
+N50_2000FTP = readRDS(paste0(dir,"data/",TypeSetting,"/EstimatedThetaPop.rds"))
+```
+
 ## Functions
 ```{r}
 FileList = list.files(path =  paste0(dir,"data/",TypeSetting,"/EstimatedThetaPop"), 
@@ -46,5 +51,15 @@ ThetaPopList = data.frame(ThetaPopList)
 colnames(ThetaPopList) = c("delta","rho","N","gamma","K","ThetaPop")
 ThetaPopList = ThetaPopList %>% mutate(ThetaPop = round(ThetaPop,2))
 
-saveRDS(ThetaPopList,paste0(dir,"/data/",TypeSetting,"/EstimatedThetaPop/EstimatedThetaPop.rds"))
+saveRDS(AllThetaPopList,paste0(dir,"data/",TypeSetting,"/EstimatedThetaPop/EstimatedThetaPop.rds"))
 ```
+
+```{r}
+table(NewThetaPopList$N)
+table(N50_2000FTP$N)
+
+AllThetaPopList = rbind(N50_2000FTP, NewThetaPopList)
+```
+
+
+
