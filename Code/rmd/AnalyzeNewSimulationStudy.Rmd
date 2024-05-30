@@ -147,7 +147,11 @@ PivotWiderLargeSampleSE = PivotWiderLargeSampleSE %>%
 
 
 ### xtable ###
-# DifferenceTable %>% xtable(digits = 5, caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.")
+PivotWiderLargeSampleSE %>% 
+  select(-c(ID)) %>% 
+  xtable(digits = 5, 
+         caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.", 
+         include.rownames=FALSE)
 ```
 
 ## Plot
@@ -169,7 +173,9 @@ LastObservation <- LargeSampleBackToLong %>%
   filter(N_value == "N.2000")
   
 options(repr.plot.width=30, repr.plot.height=5)
-ggplot(data = LargeSampleBackToLong) +
+
+LargeSampleBackToLong %>% filter(Misspecification == "No") %>%
+ggplot() +
   
   ### Line ###
   geom_line( mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)), 
@@ -179,9 +185,9 @@ ggplot(data = LargeSampleBackToLong) +
                           linetype = `High Leverage`),
              size = 1) +
   ### Point ###
-  geom_point(data = LastObservation,
-             mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)), 
-                           y = 100*value, 
+  geom_point(data = LastObservation %>% filter(Misspecification == "No"),
+             mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)),
+                           y = 100*value,
                            shape = Heterogeneity,
                            color = Misspecification),  # Add shape aesthetic
              size = 3)  +
@@ -189,7 +195,7 @@ ggplot(data = LargeSampleBackToLong) +
   ### Labels ###
     xlab("Sample Size") + 
     ylab("Percent Change (%)") + 
-    scale_y_continuous(breaks = seq(-80, 0, by = 10)) +
+    scale_y_continuous(breaks = seq(-10, 0, by = 2)) +
     scale_x_continuous(breaks = seq(50, 2000, by = 150)) +
     ggtitle("Standard error reduction when using the conditional standard error estimate") +
     theme(plot.title =  element_text(size = 15, hjust = 0.5)) +
@@ -220,20 +226,20 @@ ggplot(data = LargeSampleBackToLong) +
 ### Percentage Change
 ```{r}
 ### Correctly Specified Models ###
-SmallSampleResultsTable %>%
-  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
-  mutate(PercentChange = 100*PercentChange) %>%
-    filter(Misspec. == "No") %>%
-  xtable(digits = 5,
-         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+# SmallSampleResultsTable %>%
+#   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+#   mutate(PercentChange = 100*PercentChange) %>%
+#     filter(Misspec. == "No") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
 
 ### Misspecified Models ###
-SmallSampleResultsTable %>%
-  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
-  mutate(PercentChange = 100*PercentChange) %>%
-    filter(Misspec. == "Yes") %>%
-  xtable(digits = 5,
-         caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
+# SmallSampleResultsTable %>%
+#   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+#   mutate(PercentChange = 100*PercentChange) %>%
+#     filter(Misspec. == "Yes") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
 
 ```
 ### Setting Percent Change
@@ -262,10 +268,10 @@ SmallSettingPercentChange
 ### Monte Carlo
 ```{r}
 SmallSampleMCCombined = SmallSampleMonteCarloResults$CombinedTables
-SmallSampleMCCombined %>% 
-  xtable(digits = 5,
-         caption = "he Monte carlo average, variance, and confidence intervals of ˆSE_{Pop} and ˆSE_{Cond} across
-50,000 replications.")
+# SmallSampleMCCombined %>% 
+#   xtable(digits = 5,
+#          caption = "he Monte carlo average, variance, and confidence intervals of ˆSE_{Pop} and ˆSE_{Cond} across
+# 50,000 replications.")
 ```
 
 
@@ -273,6 +279,21 @@ SmallSampleMCCombined %>%
 
 
 ### Coverage
+```{r}
+for(k in unique(LargeSampleResultsTable$SS)){
+LargeSampleResultsTable %>%
+  select(-c(Difference, Indicator)) %>%
+  filter(SS == k) %>%
+  xtable(digits = 5,
+         caption = paste0("Complete summary of simulation with sample size ", k)) %>%
+    print(include.rownames=FALSE)
+  
+}
+```
+
+
+
+
 ```{r}
 ### Correctly Specified Models ###
 # LargeSampleResultsTable %>% 
@@ -291,20 +312,20 @@ SmallSampleMCCombined %>%
 ### Percentage Change
 ```{r}
 ### Correctly Specified Models ###
-LargeSampleResultsTable %>%
-  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
-  mutate(PercentChange = 100*PercentChange) %>%
-    filter(Misspec. == "No") %>%
-  xtable(digits = 5,
-         caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
-
-### Misspecified Models ###
-LargeSampleResultsTable %>%
-  select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
-  mutate(PercentChange = 100*PercentChange) %>%
-    filter(Misspec. == "Yes") %>%
-  xtable(digits = 5,
-         caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
+# LargeSampleResultsTable %>%
+#   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+#   mutate(PercentChange = 100*PercentChange) %>%
+#     filter(Misspec. == "No") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
+# 
+# ### Misspecified Models ###
+# LargeSampleResultsTable %>%
+#   select(-c(ThetaPop_VPop, ThetaPop_VCond, ThetaCond_VPop, ThetaCond_VCond, Difference, Indicator)) %>%
+#   mutate(PercentChange = 100*PercentChange) %>%
+#     filter(Misspec. == "Yes") %>%
+#   xtable(digits = 5,
+#          caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
 
 ```
 ### Setting Percent Change

@@ -29,6 +29,8 @@ library(sandwich)
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
+
+
 ## Functions
 ```{r}
 source(paste0(dir,"Code/AIZResults.R"))
@@ -37,7 +39,7 @@ source(paste0(dir,"Code/MonteCarloResults.R"))
 source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
-## Results
+## Results 
 ```{r}
 ### AIZ Results ###
 SettingType = "Logistic"
@@ -86,13 +88,15 @@ DiscrepancyMeans
 
 # xtable
 ```{r}
-### Coverage ###
-# SmallSampleResultsTable[1:16, 1:9] %>% xtable(digits = 5) # Corectly Specified
-# SmallSampleResultsTable[17:32, 1:9] %>% xtable(digits = 5) # Misspecified
-# 
-# ### Standard Error/Percent Change ###
-# SmallSampleResultsTable[1:16, c(1:5,10:12)] %>% xtable(digits = 5) # Corectly Specified
-# SmallSampleResultsTable[17:32, c(1:5,10:12)] %>% xtable(digits = 5) # Misspecified
+SmallSampleMonteCarloResults$MonteCarliResults_Conditional %>% 
+  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                              Misspec. == 1 ~ "Yes"),
+         Homo. = case_when(Homo. == 0 ~ "Yes",
+                           Homo. == 0.5 ~ "No"),
+         Leverage = case_when(Leverage == 0 ~ "No",
+                              Leverage == 0.1 ~ "Yes")) %>%
+  xtable(digits = 5,
+         caption = "Monte Carlo results for the [population] standard error.")
 ```
 
 
