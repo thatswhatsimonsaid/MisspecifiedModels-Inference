@@ -1,4 +1,4 @@
-# Ph.D> Research Preliminary Exam (2024)
+# PhD. Research Preliminary Exam (2024)
 
 Implementation of Abadie, Imbens, Zheng (2014). Inference for Misspecified Models With Fixed Regressors.
 
@@ -27,7 +27,7 @@ The following list contains the scripts used in the simulations/application.
 - `RunSimulationStudyNew.R`runs the simulation function `SimulationFunction.R`with input from the terminal.
 - `SimDataLinear.R`simulates the linear regression data in the simulation.
 - `SimDataLogistic.R`simulates the logistic regression data in the simulation.
-- `SimulationFunction.R`runs the `OneIterationFunction.R``NSim.R`many times.
+- `SimulationFunction.R`runs the `OneIterationFunction.R` $NSim$ many times.
 - `ThetaCondFunction.R`calculates the conditional estimand from the data.
 - `ThetaPopFunction.R`extracts the population estimand for the given case found numerically from `FindThetaPop`.
 - `VHatCondFunction.R`calculates the conditional standard error estimate.
@@ -46,15 +46,15 @@ The following list contains the scripts used to compare and analyze the results 
 
 The following list contains the auxiliary scripts that are not directly used in the simulation but are necessary to set up the simulation.
 - `AIZResults.R`extracts the results from the original manuscript. 
-- `CreateParameterVectorFTP.R`creates the `.csv.R`file that contain the parameter vectors used in the simulation.
+- `CreateParameterVectorFTP.R`creates the `.csv`file that contain the parameter vectors used in the simulation.
 - `FindThetaPop.R`finds the population and conditional estimands numerically, as indicated by the original manuscript.
-- `MakeSbatchFilesFindThetaPop.R`creates the SLURM `.sbatch.R`files to find the population and conditional estimands numerically.
-- `MakeSbatchFilesSimulations.R`creates the SLURM `.sbatch.R`files to run the simulation.
+- `MakeSbatchFilesFindThetaPop.R`creates the SLURM `.sbatch` files to find the population and conditional estimands numerically.
+- `MakeSbatchFilesSimulations.R`creates the SLURM `.sbatch` files to run the simulation.
 - `MergeThetaPop.Rmd` merges the results of `FindThetaPop` into one `.rds` file.
 
 ## Running
 
-### Simulated datset
+### Simulated data
 
 The numerically calculated $\theta_{Pop}$ is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop}$ for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/LargeSampleExtension/` and type `./run.sh` in the terminal.
 
@@ -75,12 +75,12 @@ Rscript Code/RunSimulationStudyNew.R \
 The above command is an example of running the most basic simulation scenario in the terminal. To replicate all results in the original manuscript, go to `~/Code/SLURM/Linear/N50_200/` and type `./run.sh`. To replicate the extended results, go to `~/Code/SLURM/Linear/LargeSampleExtension/` and type `./run.sh`. 
 
 Arguments:
-- `--Delta` - Misspecification rate $\{0,1\}$
-- `--Rho` - High leverage rate $\{0,0.1\}$
-- `--N` - Sample size for each replication $\{50,200,350,...,9650, 9800, 9950\}$
-- `--Gamma` - Heteroscedasticity rate $\{0,0.5\}$
-- `--K` - Number of covariates $\{1,5\}$
-- `--TypeSetting` - Linear or logistic $\{"Linear", "Logistic"\}$
+- `--Delta` - Misspecification rate ${0,1}$
+- `--Rho` - High leverage rate ${0,0.1}$
+- `--N` - Sample size for each replication ${50,200,350,...,9650, 9800, 9950}$
+- `--Gamma` - Heteroscedasticity rate ${0,0.5}$
+- `--K` - Number of covariates ${1,5}$
+- `--TypeSetting` - Linear or logistic ${"Linear", "Logistic"}$
 - `--Output` - File to store output
 
 The same can be done in the logistic setting by changing `--TypeSetting` to `"Logistic"`, though there are are no large sample extensions in that setting. 
