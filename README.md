@@ -56,7 +56,7 @@ The following list contains the auxiliary scripts that are not directly used in 
 
 ### Simulated data
 
-The numerically calculated $\theta_{Pop}$ is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop}$ for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/LargeSampleExtension/` and type `./run.sh` in the terminal.
+The numerically calculated $\theta_{Pop} is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop} for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/LargeSampleExtension/` and type `./run.sh` in the terminal.
 
 All simulations are seeded. They should be reproducible.
 
@@ -75,12 +75,12 @@ Rscript Code/RunSimulationStudyNew.R \
 The above command is an example of running the most basic simulation scenario in the terminal. To replicate all results in the original manuscript, go to `~/Code/SLURM/Linear/N50_200/` and type `./run.sh`. To replicate the extended results, go to `~/Code/SLURM/Linear/LargeSampleExtension/` and type `./run.sh`. 
 
 Arguments:
-- `--Delta` - Misspecification rate ${0,1}$
-- `--Rho` - High leverage rate ${0,0.1}$
-- `--N` - Sample size for each replication ${50,200,350,...,9650, 9800, 9950}$
-- `--Gamma` - Heteroscedasticity rate ${0,0.5}$
-- `--K` - Number of covariates ${1,5}$
-- `--TypeSetting` - Linear or logistic ${"Linear", "Logistic"}$
+- `--Delta` - Misspecification rate {0,1}
+- `--Rho` - High leverage rate {0,0.1}
+- `--N` - Sample size for each replication {50,200,350,...,9650, 9800, 9950}
+- `--Gamma` - Heteroscedasticity rate {0,0.5}
+- `--K` - Number of covariates {1,5}
+- `--TypeSetting` - Linear or logistic {"Linear", "Logistic"}
 - `--Output` - File to store output
 
 The same can be done in the logistic setting by changing `--TypeSetting` to `"Logistic"`, though there are are no large sample extensions in that setting. 
