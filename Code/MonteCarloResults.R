@@ -1,3 +1,20 @@
+### Summary:
+# Extracts the monte carlo results across all NSim simulations for each of the 
+# simulation cases.
+### Inputs:
+# SimulationResultsReformatted: Reformatted simulation results.
+# SigFigs: Number of significant figures
+### Output:
+# Each of the following table will contain a column for each of the parameters 
+# used in the simulation, the average standard error estimate across NSim 
+# simulations, the variance of the standard error estimate across NSim 
+# simulations, and the monte carlo confidence interval. 
+# MonteCarliResults_Population contains this monte carlo results for only the 
+# population estimand, MonteCarliResults_Conditional contains this monte carlo 
+# results for only the CombinedTables, contains the monte carlo results for
+# both the population and conditional estimand.
+
+
 MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
   
   ### Set Up ###
@@ -25,7 +42,8 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
                                              "MCUL")
   
   MonteCarliResults_Population = MonteCarliResults_Population %>%
-    mutate(paste0("(",as.character(round(MCLL,SigFigs)),",",as.character(round(MCUL,SigFigs)),")" ))
+    mutate(paste0("(",as.character(round(MCLL,SigFigs)),",",
+                  as.character(round(MCUL,SigFigs)),")" ))
   
   colnames(MonteCarliResults_Population) = c("Misspec.", 
                                              "Homo.",
@@ -37,8 +55,10 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
                                              "MCLL", 
                                              "MCUL", 
                                              "Monte Carlo Confidence Intervals")
-  MonteCarliResults_Population = MonteCarliResults_Population %>% select(-c(MCLL,MCUL))
-  MonteCarliResults_Population[,6:7] = round(MonteCarliResults_Population[,6:7],SigFigs)
+  MonteCarliResults_Population = MonteCarliResults_Population %>% 
+    select(-c(MCLL,MCUL))
+  MonteCarliResults_Population[,6:7] = MonteCarliResults_Population[,6:7] %>%
+    round(SigFigs)
   
   ### Conditional ###
   MonteCarliResults_Conditional = cbind(MonteCarloMean[,1:5],
@@ -57,7 +77,8 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
                                               "MCUL")
   
   MonteCarliResults_Conditional = MonteCarliResults_Conditional %>%
-    mutate(paste0("(",as.character(round(MCLL,SigFigs)),",",as.character(round(MCUL,SigFigs)),")" ))
+    mutate(paste0("(",as.character(round(MCLL,SigFigs)),",",
+                  as.character(round(MCUL,SigFigs)),")" ))
   
   colnames(MonteCarliResults_Conditional) = c("Misspec.", 
                                               "Homo.",
@@ -69,16 +90,21 @@ MonteCarloResults = function(SimulationResultsReformatted, SigFigs){
                                               "MCLL", 
                                               "MCUL", 
                                               "Monte Carlo Confidence Intervals")
-  MonteCarliResults_Conditional = MonteCarliResults_Conditional %>% select(-c(MCLL,MCUL))
-  MonteCarliResults_Conditional[,6:7] = round(MonteCarliResults_Conditional[,6:7],SigFigs)
+  MonteCarliResults_Conditional = MonteCarliResults_Conditional %>% 
+    select(-c(MCLL,MCUL))
+  MonteCarliResults_Conditional[,6:7] = MonteCarliResults_Conditional[,6:7] %>%
+    round(SigFigs)
   
   ### Arrange ###
-  MonteCarliResults_Population = data.frame(MonteCarliResults_Population) %>% arrange(Misspec., Homo., SS, Leverage, K)
-  MonteCarliResults_Conditional = data.frame(MonteCarliResults_Conditional) %>% arrange(Misspec., Homo., SS, Leverage, K)
+  MonteCarliResults_Population = data.frame(MonteCarliResults_Population) %>% 
+    arrange(Misspec., Homo., SS, Leverage, K)
+  MonteCarliResults_Conditional = data.frame(MonteCarliResults_Conditional) %>% 
+    arrange(Misspec., Homo., SS, Leverage, K)
   
   
   ### Combined Table ###
-  CombinedTables = cbind(MonteCarliResults_Population, MonteCarliResults_Conditional[,6:8])
+  CombinedTables = cbind(MonteCarliResults_Population, 
+                         MonteCarliResults_Conditional[,6:8])
   colnames(CombinedTables) = c("Misspec.", 
                                "Homo.",
                                "SS",

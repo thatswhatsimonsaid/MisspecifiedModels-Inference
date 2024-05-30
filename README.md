@@ -56,7 +56,7 @@ The following list contains the auxiliary scripts that are not directly used in 
 
 ### Simulated data
 
-The numerically calculated $\theta_{Pop} is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop} for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/LargeSampleExtension/` and type `./run.sh` in the terminal.
+The numerically calculated $\theta_{Pop} is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop} for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/` and type `./run.sh` in the terminal.
 
 All simulations are seeded. They should be reproducible.
 

@@ -1,5 +1,5 @@
 SimDataLinear = function(N, rho, K, delta, gamma){
-  ### Summary: Simulates Data according to the parameters of 
+  ### Summary: Simulates linear data according to the parameters of 
       # Abadie, Imbens, and Zhang (2014)
   ### Inputs:
     # N: Number of observations
@@ -9,7 +9,9 @@ SimDataLinear = function(N, rho, K, delta, gamma){
     # delta: Misspecification parameter
     # gamma: Heterogeneity parameter
   ### Output:
-    # dat: A data set
+    # dat: A data set generated according to the parameters inputted in the 
+    #      linear setting.
+    # mu: The conditional expectation of Y given X
   
   ### Covariates ###
   X1 = sample(c(rnorm(N*(1-rho), mean = 0, sd = 1),

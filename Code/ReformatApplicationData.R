@@ -3,8 +3,20 @@ ReformatApplicationDataFunction = function(dat){
   ### Summary: Reformats Sachs and Warner (1997) data
   ### Input: Sachs and Warner (1997) data
   ### Output: Sachs and Warner (1997) data reformatted in the form of Abadie, Imbens, and Zheng (2014).
+  
   dat = dat %>% 
-    select(c(COUNTRY,OPEN6590,TROPICS,LIFE,ICRGE80,CGB7090,LGDPEA65,GEAP_POP,SXP,LIFE2,ACCESS,GR6590)) %>%
+    select(c(COUNTRY,
+             OPEN6590,
+             TROPICS,
+             LIFE,
+             ICRGE80,
+             CGB7090,
+             LGDPEA65,
+             GEAP_POP,
+             SXP,
+             LIFE2,
+             ACCESS,
+             GR6590)) %>%
     rename(name = COUNTRY,
            Y = GR6590,
            open = OPEN6590,

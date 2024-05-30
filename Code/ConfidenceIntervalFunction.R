@@ -2,7 +2,7 @@ ConfidenceIntervalFunction = function(ThetaHat, ThetaCond, ThetaPop, SEPop, SECo
   
   ### Summary: Calculates and returns the four confidence intervals according to Abadie, Imbens, and Zheng (2014)
   ### Inputs:
-    # ThetaHat: theta_hat: Regression estimate of theta 
+    # ThetaHat: theta_hat: OLS estimate of theta 
     # ThetaCond: theta_conditional: Conditional estimand of interest
     # ThetaPop: theta_population: Population estimand of interest
     # SEPop: Conditional estimated regression variance

@@ -1,13 +1,14 @@
 VHatCondFunction = function(dat, epsilon_hat, VarFixed = NA){
   
   ### Summary: Calculates the conditional variance estimator of 
-      # Abadie, Imbens, and Zheng (2014) with a for loop
+      # Abadie, Imbens, and Zheng (2014).
   ### Input: 
     # dat: Data set
     # epsilon_hat: Estimated regression errors/residuals
-    # VarFixed: Variables to condition on
+    # VarFixed: Variables to condition on. Note the VarFixed = NA means no
+    #           covariates were conditioned on.
   ### Output:
-    # VarCovMatrix = The conditional variance-covariance matrix
+    # VarCovMatrix = The estimated conditional variance-covariance matrix
     # RegressionSE = The estimated conditional standard errors
   
   ### Check if Simulation or Application ###

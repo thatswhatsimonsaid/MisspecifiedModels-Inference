@@ -1,17 +1,27 @@
-SimulationFunction = function(NSim, ParameterVector, delta, gamma, N, rho, K, VarFixed, TypeSetting){
+SimulationFunction = function(NSim, delta, gamma, N, rho, K, VarFixed, TypeSetting){
   
-  ### Summary: Runs the simulation of Abadie, Imbens, Zheng (2014)
+  ### Summary: Runs the simulation of Abadie, Imbens, Zheng (2014).
   ### Inputs:
-    # NSim: Number of simulations
-    # ParameterVector: A matrix containing the parameters delta, gamma, N, rho, and K.
-    # SimulationCase: Which row of the parameter vector to run. 
-    #                 Simulation cases are the same case as the table in Abadie, Imbens, Zheng (2014)
-    # VarFixed: Variables to condition on
+    # NSim: Number of simulations.
+    # Delta: Misspecification rate.
+    # Rho: Leverage rate.
+    # N: Number of observations.
+    # Gamma: Heteroscedasticity rate.
+    # K: Number of covariates.    
+    # VarFixed: Covariates to condition on. Note that VarFixed = NA means no 
+    #           covariates were conditioned on.
+    # TypeSetting: Linear/Logistic
   ### Output:
-    # SimulationSEResults: A (NSim x 2) matrix containing the standard error estimates of each iteration
-    # SimSEMedian: A (2x1) vector containing the median population and conditional standard errors
+    # SimSEMedian: A (2x1) vector containing the median population and 
+    #              conditional standard errors
+    # SimulationSEResults: A (NSim x 2) matrix containing the standard error 
+    #                      estimates of each iteration
+    # SimCoverageFrequency: The four numerics indicating the percent in which 
+    #                       the estimand is contained in the four confidence 
+    #                       intervals.
     # Parameters: Parameters delta, gamma, N, rho, K of the simulation case
-    # RunTime: A (NSim x 1) vector containing the time it took to run each iteration
+    # RunTime: A (NSim x 1) vector containing the time it took to run each 
+    #          iteration
   
   ### Set Up ###
   SimulationSEResults = matrix(nrow = NSim, ncol = 2)

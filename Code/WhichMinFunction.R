@@ -1,10 +1,11 @@
 WhichMinFunction = function(DistanceMatrix, k){
-  ### Summary: Returns the indices of the k'th lowest point of each of column
+  ### Summary: Finds the nearest neighbor of observation i. That is, it returns
+  #            the index/indices of the k'th nearest neighbor of observation i.
   ### Inputs:
-    # DistanceMatrix: A distance matrix
+    # DistanceMatrix: A distance matrix.
     # k: the k'th lowest. For the min, set k = 1.
   ### Output:
-    # MinIndices: The indices of the k'th lowest point
+    # MinIndices: The indices of the k'th lowest point.
   
   MinVal = apply(X = DistanceMatrix, 
                  MARGIN = 1, 

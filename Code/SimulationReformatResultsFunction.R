@@ -1,13 +1,17 @@
 SimulationReformatResultsFunction = function(SimulationResultsList){
   
-  ### Summary: Just reformats the data into the simulation table in Abadie, Imbens, Zheng (2014)
+  ### Summary: Just reformats the data into the simulation table in Abadie, 
+  #            Imbens, Zheng (2014)
   ### Inputs:
   # SimulationResultsList: Simulation results from the SimulationFunction.R
   ### Outputs:
-  # ParameterVector: Vector of Parameters for each case
+  # SimSEMedianList: Simulation results table reformatted into the format of 
+  #                  the original manuscript.
   # MonteCarloVariance: Monte carlo simulation variance across simulations
-  # CoverageList: A list of coverages using a combination of {theta_pop,theta_cond} and {Vpop,Vcond}
-  # SimSEMedianList: Simulation results table reformatted into the format of Abadie, Imbens, Zheng (2014)
+  # ParameterVector: Vector of Parameters for each case
+  # CoverageList: A list of coverages using a combination of the 
+  #               population/conditional estimand and population/conditional
+  #               standard error estimate.
   # RunTimeList: Run time of each case
   
   ### Set Up ###

@@ -1,3 +1,18 @@
+### Summary:
+# A script to numerically calculate the population estimand.
+### Inputs:
+# Delta: Misspecification rate from the command line.
+# Rho: Leverage rate from the command line.
+# N: Number of observations from the command line.
+# Gamma: Heteroscedasticity rate from the command line.
+# K: Number of covariates from the command line.
+# TypeSetting: Linear/Logistic from the command line.
+# NSim: Number of simulations.
+### Output:
+# beta_hat_simulation: A csv file containing the parameters Delta, Rho, N, 
+#                      Gamma, K and the population estimand.
+
+
 ### Libraries ###
 library(stats)
 library(tidyverse)
@@ -11,7 +26,7 @@ library(optparse)
 
 ### Set Up ###
 rm(list=ls())
-set.seed(420)
+set.seed(1)
 
 ### Data Generating Process ###
 
@@ -38,7 +53,7 @@ TypeSetting = args$TypeSetting
 Output = args$Output
 
 ### Set Up ###               
-NSim = 100000
+NSim = 1000000
 source(paste0("Code/SimData",TypeSetting,".R"))
 
 pb = txtProgressBar(min = 0, 

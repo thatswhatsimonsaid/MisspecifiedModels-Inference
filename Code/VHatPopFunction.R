@@ -1,13 +1,13 @@
 VHatPopFunction = function(dat, beta_hat){
   
   ### Summary: Calculates the robust sandwich estimator of 
-      # standard error according to Eicker, Huber, and White
+      # standard error according to Eicker, Huber, and White.
   ### Input: 
-    # dat: Data set
-    # beta_hat: Estimated regression coefficients
+    # dat: Data set.
+    # beta_hat: Estimated regression coefficients.
   ### Output:
-    # VarCovMatrix = The population variance-covariance matrix
-    # RegressionSE = The estimated population standard errors
+    # VarCovMatrix = The population variance-covariance matrix.
+    # RegressionSE = The estimated population standard errors.
   
   
   ### Check if Simulation or Application ###
