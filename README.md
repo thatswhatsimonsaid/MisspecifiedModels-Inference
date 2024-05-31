@@ -24,7 +24,7 @@ install.packages("ggplot2")
 The following list contains the scripts used in the simulations/application.
 - `ConfidenceIntervalFunction.R`checks for containment of our population and conditional estimands based on the population and conditional variances.
 - `OneIterationFunction.R`runs one iteration of our simulation.
-- `RunSimulationStudyNew.R`runs the simulation function `SimulationFunction.R`with input from the terminal.
+- `RunSimulationStudy.R`runs the simulation function `SimulationFunction.R`with input from the terminal.
 - `SimDataLinear.R`simulates the linear regression data in the simulation.
 - `SimDataLogistic.R`simulates the logistic regression data in the simulation.
 - `SimulationFunction.R`runs the `OneIterationFunction.R` $NSim$ many times.
@@ -63,7 +63,7 @@ All simulations are seeded. They should be reproducible.
 ```shell
 cd ~/Stats572
 module load R
-Rscript Code/RunSimulationStudyNew.R \
+Rscript Code/RunSimulationStudy.R \
     --Delta 0 \
     --Rho 0 \
     --N 50 \

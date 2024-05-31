@@ -36,7 +36,7 @@ for (i in 1:nrow(ParameterVector)) {
   sbatch_file <- file(paste0(dir,
                              "/Code/Slurm/",
                              TypeSetting,
-                             "/LargeSampleExtension/",
+                             "/RunSimulation/",
                              job_name, 
                              ".sbatch"), "w")
   writeLines(
@@ -60,7 +60,7 @@ for (i in 1:nrow(ParameterVector)) {
       "",
       "cd ~/Stats572",
       "module load R",
-      "Rscript Code/RunSimulationStudyNew.R \\",
+      "Rscript Code/RunSimulationStudy.R \\",
       paste("    --Delta ", misspec_vec, " \\", sep=""),
       paste("    --Rho ", leverage_vec, " \\", sep=""),
       paste("    --N ", size_vec, " \\", sep=""),

@@ -11,7 +11,7 @@
 
 cd ~/Stats572
 module load R
-Rscript Code/RunSimulationStudyNew.R \
+Rscript Code/RunSimulationStudy.R \
     --Delta 0 \
     --Rho 0.1 \
     --N 500 \
