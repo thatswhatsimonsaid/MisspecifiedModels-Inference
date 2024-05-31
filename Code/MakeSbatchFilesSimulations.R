@@ -46,7 +46,7 @@ for (i in 1:nrow(ParameterVector)) {
       "#SBATCH --partition medium",
       "#SBATCH --ntasks 1",
       "#SBATCH --time 7-00:00:00",
-      "#SBATCH --mem-per-cpu=3000",
+      "#SBATCH --mem-per-cpu=6000",
       paste("#SBATCH -o ClusterMessages/out/myscript_", 
             job_name, 
             "_%j.out", 
