@@ -54,12 +54,6 @@ ThetaPopList = ThetaPopList %>% mutate(ThetaPop = round(ThetaPop,2))
 saveRDS(AllThetaPopList,paste0(dir,"data/",TypeSetting,"/EstimatedThetaPop/EstimatedThetaPop.rds"))
 ```
 
-```{r}
-table(NewThetaPopList$N)
-table(N50_2000FTP$N)
-
-AllThetaPopList = rbind(N50_2000FTP, NewThetaPopList)
-```
 
 
 
