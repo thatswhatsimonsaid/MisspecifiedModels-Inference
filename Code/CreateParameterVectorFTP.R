@@ -16,15 +16,15 @@
 ### Set Up ###
 library(tidyverse)
 rm(list=ls())
-dir = "/Users/simondn/Documents/Stats572/data/Linear/Parameters/"
-TypeSetting = "Linear"
+TypeSetting = "Logistic"
+dir = paste0("/Users/simondn/Documents/Stats572/data/",TypeSetting,"/Parameters/")
 
 ExpandGridCombinations= expand.grid(MisspecVec = c(0,1),
                                     HomoskedVec = c(0,0.5),
                                     SizeVec = c(seq(50, 2000, by = 150),9950),
                                     LeverageVec = c(0,0.1),
                                     KVec = c(1,5),
-                                    TypeSetting = "Linear") %>% data.frame()
+                                    TypeSetting = TypeSetting) %>% data.frame()
 
 
 ### Find Theta Pop ###
