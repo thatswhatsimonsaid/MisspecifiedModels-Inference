@@ -15,15 +15,15 @@ install.packages("StatMatch")
 install.packages("xtable")
 install.packages("lmtest")
 install.packages("sandwich")
-install.packages("mixtools") # Did we use this
-install.packages("distr") # Did we use this
+install.packages("mixtools")
+install.packages("distr")
 install.packages("ggplot2")
 ```
 
 ## Implementation
 The following list contains the scripts used in the simulations/application.
-- `ConfidenceIntervalFunction.R`checks for containment of our population and conditional estimands based on the population and conditional variances.
-- `OneIterationFunction.R`runs one iteration of our simulation.
+- `ConfidenceIntervalFunction.R`checks for containment of the population and conditional estimands based on the population and conditional variances.
+- `OneIterationFunction.R`runs one iteration of the simulation.
 - `RunSimulationStudy.R`runs the simulation function `SimulationFunction.R`with input from the terminal.
 - `SimDataLinear.R`simulates the linear regression data in the simulation.
 - `SimDataLogistic.R`simulates the logistic regression data in the simulation.
@@ -87,6 +87,6 @@ The same can be done in the logistic setting by changing `--TypeSetting` to `"Lo
 
 ### Sachs and Warner (1997) dataset
 
-The dataset was obtained from https://www.bristol.ac.uk/Depts/Economics/Growth/sachs.htm. This is locally available in the `data/SachsWarner` directory under `sachs.csv`. Note that the website refers the reader to a more recent data set at Harvard's Center for International Development (CID). However, when contacting CID and Harvard Dataverse, they were unaware of any data set from their 1997 people. 
+The dataset was obtained from https://www.bristol.ac.uk/Depts/Economics/Growth/sachs.htm. This is locally available in the `data/SachsWarner` directory under `sachs.csv`. Note that the website refers the reader to a more recent data set at Harvard's Center for International Development (CID). However, when contacting CID and Harvard Dataverse, they were unaware of any data set from their 1997 paper. 
 
 The data from Sachs and Warner (1995), available on Harvard Dataverse, should not be confused with the 1997 dataset used in this report.
