@@ -202,6 +202,36 @@ ggplot() +
   theme_light()-> PercentChangeSSPlot
 ```
 
+# N = 9950
+```{r}
+### Get Files ###
+file_list = list.files(path =  paste0(dir,"Results/Linear/N9950"),
+                        pattern = "\\.rds$",
+                        full.names = TRUE)
+N9950Simulation = list()
+N9950Simulation = lapply(file_list, readRDS)
+rm(file_list)
+
+### Results ###
+N9950Simulation = SimulationReformatResultsFunction(N9950Simulation)
+N9950SEMedianList = N9950Simulation$SimSEMedianList
+N9950MonteCarloResults = MonteCarloResults(N9950Simulation, 5)
+N9950RunTimeList = N9950Simulation$RunTimeList  # in seconds
+N9950CoverageList = data.frame(N9950Simulation$CoverageList) 
+N9950ParameterVector = N9950Simulation$ParameterVector
+
+N9950ResultsTable = cbind(N9950SEMedianList[,c(1:5)],
+                                N9950CoverageList[,6:9],
+                                N9950SEMedianList[,6:10])
+rownames(N9950ResultsTable) = paste0("Case ", 1:nrow(N9950ResultsTable)) 
+
+N9950ResultsTable = N9950ResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+```
 
 
 # Presentation Xtable
