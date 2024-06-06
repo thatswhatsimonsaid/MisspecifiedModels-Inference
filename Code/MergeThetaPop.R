@@ -31,7 +31,7 @@ colnames(ThetaPopList) = c("delta","rho","N","gamma","K","ThetaPop")
 ThetaPopList = ThetaPopList %>% mutate(ThetaPop = round(ThetaPop,2))
 
 # Save
-saveRDS(AllThetaPopList,paste0("data/",TypeSetting,"/EstimatedThetaPop/EstimatedThetaPop.rds"))
+saveRDS(ThetaPopList,paste0("data/",TypeSetting,"/EstimatedThetaPop/EstimatedThetaPop.rds"))
 
 
 
