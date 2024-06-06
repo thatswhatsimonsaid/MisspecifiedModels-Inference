@@ -6,9 +6,18 @@ library(xtable)
 library(lmtest)
 library(sandwich)
 library(ggplot2)
+library(optparse)
 
 # Set up
 rm(list=ls())
+
+# Parser
+option_list = list(
+  make_option(c("--TypeSetting"), type = "character", default = "Linear", help = "Linear vs. Logistic", metavar = "character")
+)
+arg.parser = OptionParser(option_list = option_list)
+args = parse_args(arg.parser)
+TypeSetting = args$TypeSetting
 
 source("Code/AIZResults.R")
 source("Code/DiscrepancyFunction.R")
