@@ -18,4 +18,4 @@ Rscript Code/RunSimulationStudy.R \
     --Gamma 0 \
     --K 5 \
     --TypeSetting 'Logistic' \
-    --Output Results/Logistic/LargeSampleExtension/sim_D0_G0_N350_R0_K5.rds \
+    --Output Results/Logistic/SimulationRDS/sim_D0_G0_N350_R0_K5.rds \
