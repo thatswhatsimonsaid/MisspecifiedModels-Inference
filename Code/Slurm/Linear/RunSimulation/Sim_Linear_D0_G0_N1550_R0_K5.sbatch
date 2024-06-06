@@ -18,4 +18,4 @@ Rscript Code/RunSimulationStudy.R \
     --Gamma 0 \
     --K 5 \
     --TypeSetting 'Linear' \
-    --Output Results/LinearSimulationRDS/sim_D0_G0_N1550_R0_K5.rds \
+    --Output Results/Linear/SimulationRDS/sim_D0_G0_N1550_R0_K5.rds \

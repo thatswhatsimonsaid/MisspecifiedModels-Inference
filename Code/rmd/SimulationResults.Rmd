@@ -27,7 +27,7 @@ library(ggplot2)
 ## Rm. Var.
 ```{r}
 rm(list=ls())
-TypeSetting = "Linear"
+TypeSetting = "Logistic"
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
@@ -308,7 +308,7 @@ LargeSampleResultsTable %>%
 
 # Official Results
 ```{r}
-# write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
+write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
 # write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
 # write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
 ```
