@@ -3,7 +3,7 @@
 #SBATCH --partition short
 #SBATCH --ntasks 1
 #SBATCH --time 1:00:00
-#SBATCH --mem-per-cpu=100
+#SBATCH --mem-per-cpu=300
 #SBATCH -o ClusterMessages/out/myscript_MergeThetaPopLinear1_%j.out
 #SBATCH -e ClusterMessages/error/myscript_MergeThetaPopLinear_%j.err
 #SBATCH --mail-type=ALL
