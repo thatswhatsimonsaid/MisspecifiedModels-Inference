@@ -79,4 +79,4 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
                                                                                   Leverage == 0.1 ~ "Yes"))
 
 ### Save Results
-write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
+write.csv(SmallSampleResultsTable, paste0("Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
