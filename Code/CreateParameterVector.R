@@ -16,7 +16,7 @@
 ### Set Up ###
 library(tidyverse)
 rm(list=ls())
-TypeSetting = "Linear"
+TypeSetting = "Logistic"
 dir = paste0("/Users/simondn/Documents/Stats572/data/",TypeSetting,"/Parameters/")
 
 ExpandGridCombinations= expand.grid(MisspecVec = c(0,1),
