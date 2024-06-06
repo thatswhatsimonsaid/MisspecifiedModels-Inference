@@ -27,6 +27,7 @@ library(ggplot2)
 ## Rm. Var.
 ```{r}
 rm(list=ls())
+TypeSetting = "Linear"
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
@@ -39,23 +40,53 @@ source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
 ```
 
 ## Results
-### Small Sample
+### Extract Results 
 ```{r}
-### Get Files ###
-file_list = list.files(path =  paste0(dir,"Results/Linear/N50_200"),
+### Extract Results ###
+file_list = list.files(path =  paste0(dir,"Results/",TypeSetting,"/SimulationRDS"),
                         pattern = "\\.rds$",
                         full.names = TRUE)
-SmallSampleSimulation = list()
-SmallSampleSimulation = lapply(file_list, readRDS)
+SimulationResults_All = list()
+SimulationResults_All = lapply(file_list, readRDS)
+SimulationResults_All = SimulationReformatResultsFunction(SimulationResults_All)
 rm(file_list)
+```
 
-### Results ###
-SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
-SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList
-SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
-SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList  # in seconds
-SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList) 
-SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
+### Large Results
+```{r}
+LargeSampleSEMedianList = SimulationResults_All$SimSEMedianList
+LargeSampleMonteCarloResults = MonteCarloResults(SimulationResults_All, 5)
+LargeSampleRunTimeList = SimulationResults_All$RunTimeList  
+LargeSampleCoverageList = data.frame(SimulationResults_All$CoverageList) 
+LargeSampleParameterVector = SimulationResults_All$ParameterVector
+
+LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
+                                LargeSampleCoverageList[,6:9],
+                                LargeSampleSEMedianList[,6:10])
+rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable)) 
+
+LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+```
+
+
+### Small Sample
+```{r}
+SmallSampleSEMedianList = LargeSampleSEMedianList %>% filter(SS %in% c(50,200))
+list(MonteCarliResults_Population = LargeSampleMonteCarloResults$MonteCarliResults_Population 
+     %>% filter(SS %in% c(50,200)),
+     MonteCarliResults_Conditional = LargeSampleMonteCarloResults$MonteCarliResults_Conditional 
+     %>% filter(SS %in% c(50,200)),
+     CombinedTables = LargeSampleMonteCarloResults$CombinedTables 
+     %>% filter(SS %in% c(50,200))) -> SmallSampleMonteCarloResults
+
+SmallSampleRunTimeList = LargeSampleRunTimeList %>% filter(SS %in% c(50,200))
+SmallSampleCoverageList = LargeSampleCoverageList  %>% filter(SS %in% c(50,200))
+SmallSampleParameterVector = LargeSampleParameterVector %>% filter(SS %in% c(50,200))
 
 SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
                                 SmallSampleCoverageList[,6:9],
@@ -70,36 +101,6 @@ SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_whe
                                                                   Leverage == 0.1 ~ "Yes"))
 ```
 
-### Large Sample
-```{r}
-### Get Files ###
-file_list = list.files(path =  paste0(dir,"Results/Linear/ALL"),
-                        pattern = "\\.rds$",
-                        full.names = TRUE)
-LargeSampleSimulation = list()
-LargeSampleSimulation = lapply(file_list, readRDS)
-rm(file_list)
-
-### Results ###
-LargeSampleSimulation = SimulationReformatResultsFunction(LargeSampleSimulation)
-LargeSampleSEMedianList = LargeSampleSimulation$SimSEMedianList
-LargeSampleMonteCarloResults = MonteCarloResults(LargeSampleSimulation, 5)
-LargeSampleRunTimeList = LargeSampleSimulation$RunTimeList  # in seconds
-LargeSampleCoverageList = data.frame(LargeSampleSimulation$CoverageList)
-LargeSampleParameterVector = LargeSampleSimulation$ParameterVector
-
-LargeSampleResultsTable = cbind(LargeSampleSEMedianList[,c(1:5)],
-                                LargeSampleCoverageList[,6:9],
-                                LargeSampleSEMedianList[,6:10])
-rownames(LargeSampleResultsTable) = paste0("Case ", 1:nrow(LargeSampleResultsTable))
-
-LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-                                                                  Misspec. == 1 ~ "Yes"),
-                                             Homo. = case_when(Homo. == 0 ~ "Yes",
-                                                               Homo. == 0.5 ~ "No"),
-                                             Leverage = case_when(Leverage == 0 ~ "No",
-                                                                  Leverage == 0.1 ~ "Yes"))
-```
 
 # Percentage Change by N
 ## Set Up
@@ -202,38 +203,6 @@ ggplot() +
   theme_light()-> PercentChangeSSPlot
 ```
 
-# N = 9950
-```{r}
-### Get Files ###
-file_list = list.files(path =  paste0(dir,"Results/Linear/N9950"),
-                        pattern = "\\.rds$",
-                        full.names = TRUE)
-N9950Simulation = list()
-N9950Simulation = lapply(file_list, readRDS)
-rm(file_list)
-
-### Results ###
-N9950Simulation = SimulationReformatResultsFunction(N9950Simulation)
-N9950SEMedianList = N9950Simulation$SimSEMedianList
-N9950MonteCarloResults = MonteCarloResults(N9950Simulation, 5)
-N9950RunTimeList = N9950Simulation$RunTimeList  # in seconds
-N9950CoverageList = data.frame(N9950Simulation$CoverageList) 
-N9950ParameterVector = N9950Simulation$ParameterVector
-
-N9950ResultsTable = cbind(N9950SEMedianList[,c(1:5)],
-                                N9950CoverageList[,6:9],
-                                N9950SEMedianList[,6:10])
-rownames(N9950ResultsTable) = paste0("Case ", 1:nrow(N9950ResultsTable)) 
-
-N9950ResultsTable = N9950ResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
-                                                                  Misspec. == 1 ~ "Yes"),
-                                             Homo. = case_when(Homo. == 0 ~ "Yes",
-                                                               Homo. == 0.5 ~ "No"),
-                                             Leverage = case_when(Leverage == 0 ~ "No",
-                                                                  Leverage == 0.1 ~ "Yes"))
-```
-
-
 # Presentation Xtable
 ## Small Sample
 
@@ -272,29 +241,7 @@ N9950ResultsTable = N9950ResultsTable %>% mutate(Misspec. = case_when(Misspec. =
 #          caption = "Simulation results over $50,000$ replications with small samples (correctly specified models)")
 
 ```
-### Setting Percent Change
-```{r}
-X11 = mean(filter(SmallSampleResultsTable, Misspec. == "No")$PercentChange)
-X12 = mean(filter(SmallSampleResultsTable, Misspec. == "Yes")$PercentChange)
 
-X21 = mean(filter(SmallSampleResultsTable, Homo. == "Yes")$PercentChange)
-X22 = mean(filter(SmallSampleResultsTable, Homo. == "No")$PercentChange)
-           
-X31 = mean(filter(SmallSampleResultsTable, Leverage == "No")$PercentChange)
-X32 = mean(filter(SmallSampleResultsTable, Leverage == "Yes")$PercentChange)
-
-X41 = mean(filter(SmallSampleResultsTable, K == 1)$PercentChange)
-X42 = mean(filter(SmallSampleResultsTable, K == 5)$PercentChange)
-
-SmallSettingPercentChange = matrix(c(X11,X12,X21,X22,X31,X32,X41,X42),
-                                   ncol = 2,
-                                   byrow = TRUE)*100
-rownames(SmallSettingPercentChange) = c("Misspecification", "Heteroscedasticity", "High Leverage",  "More Covariates")
-colnames(SmallSettingPercentChange) = c("Without setting", "In setting")
-
-# SmallSettingPercentChange %>% xtable(digits = 5)
-SmallSettingPercentChange
-```
 ### Monte Carlo
 ```{r}
 SmallSampleMCCombined = SmallSampleMonteCarloResults$CombinedTables
@@ -358,26 +305,11 @@ LargeSampleResultsTable %>%
 #          caption = "Simulation results over $50,000$ replications with Large samples (correctly specified models)")
 
 ```
-### Setting Percent Change
+
+# Official Results
 ```{r}
-X11 = mean(filter(LargeSampleResultsTable, Misspec. == "No")$PercentChange)
-X12 = mean(filter(LargeSampleResultsTable, Misspec. == "Yes")$PercentChange)
-
-X21 = mean(filter(LargeSampleResultsTable, Homo. == "Yes")$PercentChange)
-X22 = mean(filter(LargeSampleResultsTable, Homo. == "No")$PercentChange)
-           
-X31 = mean(filter(LargeSampleResultsTable, Leverage == "No")$PercentChange)
-X32 = mean(filter(LargeSampleResultsTable, Leverage == "Yes")$PercentChange)
-
-X41 = mean(filter(LargeSampleResultsTable, K == 1)$PercentChange)
-X42 = mean(filter(LargeSampleResultsTable, K == 5)$PercentChange)
-
-LargeSettingPercentChange = matrix(c(X11,X12,X21,X22,X31,X32,X41,X42),
-                                   ncol = 2,
-                                   byrow = TRUE)*100
-rownames(LargeSettingPercentChange) = c("Misspecification", "Heteroscedasticity", "High Leverage",  "More Covariates")
-colnames(LargeSettingPercentChange) = c("Without setting", "In setting")
-
-# LargeSettingPercentChange %>% xtable(digits = 5)
-LargeSettingPercentChange
+# write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
+# write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
+# write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
 ```
+

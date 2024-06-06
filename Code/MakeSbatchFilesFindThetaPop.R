@@ -14,7 +14,7 @@
 # Read CSV file
 rm(list=ls())
 dir = "/Users/simondn/Documents/Stats572"
-typeSetting= "Logistic"
+typeSetting= "Linear"
 ParameterVector <- read.csv(paste0(dir,
                                    "/data/",
                                    typeSetting,
