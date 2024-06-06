@@ -36,5 +36,5 @@ write.csv(FTP_Combinations, file = paste0(dir,"ParameterVectorFindThetaPopALL.cs
 ### Run SLURM Simulations ###
 Simulation_Combinations = ExpandGridCombinations %>%
   mutate(JobName = paste0("Sim_",TypeSetting,"_D",MisspecVec,"_G",HomoskedVec,"_N",SizeVec,"_R",LeverageVec,"_K",KVec),
-         Output = paste0("Results/",TypeSetting,"SimulationRDS/sim_D",MisspecVec,"_G",HomoskedVec,"_N",SizeVec,"_R",LeverageVec,"_K",KVec, ".rds"))
+         Output = paste0("Results/",TypeSetting,"/SimulationRDS/sim_D",MisspecVec,"_G",HomoskedVec,"_N",SizeVec,"_R",LeverageVec,"_K",KVec, ".rds"))
 write.csv(Simulation_Combinations, file = paste0(dir,"ParameterVectorALL.csv"))
