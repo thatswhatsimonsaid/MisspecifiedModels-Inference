@@ -52,7 +52,7 @@ source(paste0(dir,"Code/WhichMinFunction.R"))
 ```{r}
 ### Set Up ###
 set.seed(1)
-TypeSetting = "Logistic"
+TypeSetting = "Linear"
 ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
                         HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
                         SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
@@ -85,12 +85,6 @@ SimulationResultsList[[i]] = SimulationFunction(NSim = NSim,
                                            K = K,
                                            VarFixed = NA,
                                            TypeSetting = TypeSetting)}
-
-# saveRDS(SimulationResultsList[[29]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0_K1.rds")
-# saveRDS(SimulationResultsList[[30]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0_K5.rds")
-# saveRDS(SimulationResultsList[[31]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0.1_K1.rds")
-# saveRDS(SimulationResultsList[[32]], "/Users/simondn/Documents/Stats572/Results/Logistic/N50_200/sim_D1_G0.5_N200_R0.1_K5.rds")
-
 ```
 
 

@@ -43,6 +43,7 @@ The following list contains the scripts used to compare and analyze the results 
 - `MonteCarloResults.R`extracts and reformats the monte carlo results from the simulations.
 - `ReformatApplicationData.R`reformats the application data into the format of the original manuscript.
 - `SimulationReformatResultsFunction.R`reformats the results of the simulation into the format of the original manuscript.
+- `SimulationResults.R` provides the results of my simulation in the same format of the original manuscript.
 
 The following list contains the auxiliary scripts that are not directly used in the simulation but are necessary to set up the simulation.
 - `AIZResults.R`extracts the results from the original manuscript. 
@@ -50,13 +51,13 @@ The following list contains the auxiliary scripts that are not directly used in 
 - `FindThetaPop.R`finds the population and conditional estimands numerically, as indicated by the original manuscript.
 - `MakeSbatchFilesFindThetaPop.R`creates the SLURM `.sbatch` files to find the population and conditional estimands numerically.
 - `MakeSbatchFilesSimulations.R`creates the SLURM `.sbatch` files to run the simulation.
-- `MergeThetaPop.Rmd` merges the results of `FindThetaPop` into one `.rds` file.
+- `MergeThetaPop.R` and `MergeThetaPop.Rmd` merges the results of `FindThetaPop` into one `.rds` file.
 
 ## Running
 
 ### Simulated data
 
-The numerically calculated $\theta_{Pop}$ is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop}$ for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/` and type `./run.sh` in the terminal.
+The numerically calculated $\theta_{Pop}$ is already in the folder `~data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds.` If you wish to recalculate $\theta_{Pop}$ for each simulation case, go to `~/Code/Slurm/Linear/FindThetaPop/` and type `./run.sh` in the terminal. Note that `FindThetaPop.R` is currently set to run over one million replications.
 
 All simulations are seeded. They should be reproducible.
 
@@ -72,12 +73,12 @@ Rscript Code/RunSimulationStudy.R \
     --TypeSetting 'Linear' \
     --Output Results/Linear/N50_200/_D0_R0_N50_G0_K1.rds \
 ```
-The above command is an example of running the most basic simulation scenario in the terminal. To replicate all results in the original manuscript, go to `~/Code/SLURM/Linear/N50_200/` and type `./run.sh`. To replicate the extended results, go to `~/Code/SLURM/Linear/LargeSampleExtension/` and type `./run.sh`. 
+The above command is an example of running the most basic simulation scenario in the terminal. To replicate all results in the original manuscript and my slight extension, go to `~/Code/SLURM/Linear/RunSimulation/` and type `./run.sh`. Note that `RunSimulationStudy.R` is currently set to run over fifty-thousand replications.
 
 Arguments:
 - `--Delta` - Misspecification rate {0,1}
 - `--Rho` - High leverage rate {0,0.1}
-- `--N` - Sample size for each replication {50,200,350,...,9650, 9800, 9950}
+- `--N` - Sample size for each replication {50,200,350,...,1850, 2000}
 - `--Gamma` - Heteroscedasticity rate {0,0.5}
 - `--K` - Number of covariates {1,5}
 - `--TypeSetting` - Linear or logistic {"Linear", "Logistic"}

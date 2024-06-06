@@ -32,11 +32,11 @@ file_list = list.files(path =  paste0("Results/",TypeSetting,"/SimulationRDS"),
 SimulationResults_All = list()
 SimulationResults_All = lapply(file_list, readRDS)
 SimulationResults_All = SimulationReformatResultsFunction(SimulationResults_All)
-rm(file_list)
+# rm(file_list)
 
 ### Large Results
 LargeSampleSEMedianList = SimulationResults_All$SimSEMedianList
-LargeSampleMonteCarloResults = MonteCarloResults(SimulationResults_All, 5)
+# LargeSampleMonteCarloResults = MonteCarloResults(SimulationResults_All, 5)
 LargeSampleRunTimeList = SimulationResults_All$RunTimeList  
 LargeSampleCoverageList = data.frame(SimulationResults_All$CoverageList) 
 LargeSampleParameterVector = SimulationResults_All$ParameterVector
@@ -55,12 +55,12 @@ LargeSampleResultsTable = LargeSampleResultsTable %>% mutate(Misspec. = case_whe
 
 
 SmallSampleSEMedianList = LargeSampleSEMedianList %>% filter(SS %in% c(50,200))
-list(MonteCarliResults_Population = LargeSampleMonteCarloResults$MonteCarliResults_Population 
-     %>% filter(SS %in% c(50,200)),
-     MonteCarliResults_Conditional = LargeSampleMonteCarloResults$MonteCarliResults_Conditional 
-     %>% filter(SS %in% c(50,200)),
-     CombinedTables = LargeSampleMonteCarloResults$CombinedTables 
-     %>% filter(SS %in% c(50,200))) -> SmallSampleMonteCarloResults
+# list(MonteCarliResults_Population = LargeSampleMonteCarloResults$MonteCarliResults_Population 
+#      %>% filter(SS %in% c(50,200)),
+#      MonteCarliResults_Conditional = LargeSampleMonteCarloResults$MonteCarliResults_Conditional 
+#      %>% filter(SS %in% c(50,200)),
+#      CombinedTables = LargeSampleMonteCarloResults$CombinedTables 
+#      %>% filter(SS %in% c(50,200))) -> SmallSampleMonteCarloResults
 
 SmallSampleRunTimeList = LargeSampleRunTimeList %>% filter(SS %in% c(50,200))
 SmallSampleCoverageList = LargeSampleCoverageList  %>% filter(SS %in% c(50,200))
