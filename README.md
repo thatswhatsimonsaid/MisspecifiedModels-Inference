@@ -21,6 +21,8 @@ install.packages("ggplot2")
 ```
 
 ## Implementation
+To see the results of the simulation, open and run the`SimulationResults.Rmd` file. The results are at the end. This section will describe the functions used to run the simulations.
+
 The following list contains the scripts used in the simulations/application.
 - `ConfidenceIntervalFunction.R`checks for containment of the population and conditional estimands based on the population and conditional variances.
 - `OneIterationFunction.R`runs one iteration of the simulation.
@@ -36,7 +38,7 @@ The following list contains the scripts used in the simulations/application.
 - `RunSimulationStudy.Rmd` runs the simulation locally (as opposed to the high-performance computing cluster).
 
 The following list contains the scripts used to compare and analyze the results of the simulation/application.
-- `AnalyzeNewSimulationStudy.Rmd` analyzes the extension with large sample sizes. 
+- `SimulationResults.Rmd` analyzes the extension with large sample sizes and provides the results.
 - `Application.Rmd` compares my results with those of the original manuscript for the Sachs and Warner (1997) data set.
 - `CompareSimulationStudy.Rmd` compares my results with those of the original manuscript for the simulation study.
 - `DiscrepancyFunction.R`checks for the discrepancy/differences between my results and those of the original manuscript.

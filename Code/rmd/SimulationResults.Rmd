@@ -27,7 +27,7 @@ library(ggplot2)
 ## Rm. Var.
 ```{r}
 rm(list=ls())
-TypeSetting = "Logistic"
+TypeSetting = "Linear"
 dir = "/Users/simondn/Documents/Stats572/"
 ```
 
@@ -115,6 +115,8 @@ SmallSampleSEMedianList %>%
   relocate(N.50, .before=N.200) %>% 
   data.frame -> PivotWiderSmallSampleSE
 
+
+if(TypeSetting == "Linear"){
 LargeSampleSEMedianList %>% 
   select(-c(Population, Conditional, Indicator, Difference)) %>%
   pivot_wider(names_from = SS,
@@ -137,6 +139,20 @@ LargeSampleSEMedianList %>%
   mutate(ID = 1:16) %>%
   relocate(ID, .before = "Misspec.") %>%
   data.frame -> PivotWiderLargeSampleSE
+  }else if(TypeSetting == "Logistic"){
+    LargeSampleSEMedianList %>% 
+  select(-c(Population, Conditional, Indicator, Difference)) %>%
+  pivot_wider(names_from = SS,
+              values_from = PercentChange) %>%
+  rename(N.50 = "50",
+         N.200 = "200",
+         N.500 = "500",
+         N.2000 = "2000") %>%
+      select(-c(N.500, N.2000)) %>%
+  mutate(ID = 1:16) %>%
+  relocate(ID, .before = "Misspec.") %>%
+  data.frame -> PivotWiderLargeSampleSE
+  }
 
 PivotWiderLargeSampleSE = PivotWiderLargeSampleSE %>%
   mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
@@ -148,14 +164,14 @@ PivotWiderLargeSampleSE = PivotWiderLargeSampleSE %>%
 
 
 ### xtable ###
-PivotWiderLargeSampleSE %>% 
-  select(-c(ID)) %>% 
-  xtable(digits = 5, 
-         caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.", 
-         include.rownames=FALSE)
+# PivotWiderLargeSampleSE %>% 
+#   select(-c(ID)) %>% 
+#   xtable(digits = 5, 
+#          caption = "Percent change in using conditional standard error estimates instead of population standard error estimates by sample size.", 
+#          include.rownames=FALSE)
 ```
 
-## Plot
+## Extension Plot (Linear only)
 ```{r}
 ### Pivot back to long format lol
 LargeSampleBackToLong <- pivot_longer(PivotWiderLargeSampleSE, 
@@ -175,7 +191,8 @@ LastObservation <- LargeSampleBackToLong %>%
   
 options(repr.plot.width=30, repr.plot.height=5)
 
-LargeSampleBackToLong %>% filter(Misspecification == "No") %>%
+LargeSampleBackToLong %>% 
+  # filter(Misspecification == "No") %>%
 ggplot() +
   
   ### Line ###
@@ -186,8 +203,9 @@ ggplot() +
                           linetype = `High Leverage`),
              size = 1) +
   ### Point ###
-  geom_point(data = LastObservation %>% filter(Misspecification == "No"),
-             mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)),
+  LastObservation %>% 
+  # filter(Misspecification == "No") %>%
+  geom_point(mapping = aes(x =as.numeric(gsub("N\\.", "", N_value)),
                            y = 100*value,
                            shape = Heterogeneity,
                            color = Misspecification),  # Add shape aesthetic
@@ -200,7 +218,7 @@ ggplot() +
     scale_x_continuous(breaks = seq(50, 2000, by = 150)) +
     ggtitle("Standard error reduction when using the conditional standard error estimate") +
     theme(plot.title =  element_text(size = 15, hjust = 0.5)) +
-  theme_light()-> PercentChangeSSPlot
+  theme_light()-> ExtensionPlotLinear
 ```
 
 # Presentation Xtable
@@ -257,15 +275,14 @@ SmallSampleMCCombined = SmallSampleMonteCarloResults$CombinedTables
 
 ### Coverage
 ```{r}
-for(k in unique(LargeSampleResultsTable$SS)){
-LargeSampleResultsTable %>%
-  select(-c(Difference, Indicator)) %>%
-  filter(SS == k) %>%
-  xtable(digits = 5,
-         caption = paste0("Complete summary of simulation with sample size ", k)) %>%
-    print(include.rownames=FALSE)
-  
-}
+# for(k in unique(LargeSampleResultsTable$SS)){
+# LargeSampleResultsTable %>%
+#   select(-c(Difference, Indicator)) %>%
+#   filter(SS == k) %>%
+#   xtable(digits = 5,
+#          caption = paste0("Complete summary of simulation with sample size ", k)) %>%
+#     print(include.rownames=FALSE)
+# }
 ```
 
 
@@ -308,8 +325,10 @@ LargeSampleResultsTable %>%
 
 # Official Results
 ```{r}
-write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
 # write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
-# write.csv(SmallSampleResultsTable, paste0(dir,"Results/",TypeSetting,"/SmallSampleResultsTable.csv"))
+SmallSampleResultsTable
+if(TypeSetting == "Linear"){
+  ExtensionPlotLinear}else if(TypeSetting == "Logistic"){
+  print("There was no extension for the logistic case, hence there is not a large sample extension plot.")}
 ```
 
