@@ -25,7 +25,7 @@ ThetaPopFunction = function(delta_i, rho_i, N_i, gamma_i, K_i, TypeSetting){
     ThetaPopList = suppressWarnings(tryCatch({readRDS("data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
                             error = function(e) {ThetaPopList <- readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")}))
   }else if(TypeSetting == "Logistic"){
-    ThetaPopList = suppressWarnings(tryCatch({readRDS("Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
+    ThetaPopList = suppressWarnings(tryCatch({readRDS("data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
                             error = function(e) {ThetaPopList <-  readRDS("/Users/simondn/Documents/Stats572/data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}))
   }
   
