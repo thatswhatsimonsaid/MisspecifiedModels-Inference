@@ -13,12 +13,20 @@ ThetaPopFunction = function(delta_i, rho_i, N_i, gamma_i, K_i, TypeSetting){
   ### Output:
   # Population estimand
   
+  # if(TypeSetting == "Linear"){
+  #   ThetaPopList = tryCatch({readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
+  #                           error = function(e) {ThetaPopList <- readRDS("data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")})
+  # }else if(TypeSetting == "Logistic"){
+  #   ThetaPopList = tryCatch({readRDS("/Users/simondn/Documents/Stats572/data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
+  #                           error = function(e) {ThetaPopList <-  readRDS("data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")})
+  # }
+  
   if(TypeSetting == "Linear"){
-    ThetaPopList = tryCatch({readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
-                            error = function(e) {ThetaPopList <- readRDS("data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")})
+    ThetaPopList = suppressWarnings(tryCatch({readRDS("data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
+                            error = function(e) {ThetaPopList <- readRDS("/Users/simondn/Documents/Stats572/data/Linear/EstimatedThetaPop/EstimatedThetaPop.rds")}))
   }else if(TypeSetting == "Logistic"){
-    ThetaPopList = tryCatch({readRDS("/Users/simondn/Documents/Stats572/data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
-                            error = function(e) {ThetaPopList <-  readRDS("data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")})
+    ThetaPopList = suppressWarnings(tryCatch({readRDS("Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}, 
+                            error = function(e) {ThetaPopList <-  readRDS("/Users/simondn/Documents/Stats572/data/Logistic/EstimatedThetaPop/EstimatedThetaPop.rds")}))
   }
   
   ### Assign Theta Pop ###
