@@ -1,0 +1,2 @@
+/var/spool/slurmd/job804694/slurm_script: line 16: 2092136 Killed                  Rscript Code/MergeThetaPop.R --TypeSetting 'Linear'
+slurmstepd: error: Detected 1 oom_kill event in StepId=804694.batch. Some of the step tasks have been OOM Killed.

@@ -1,0 +1,104 @@
+---
+title: "Stats 572 - Simulation Study Comparison"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+
+## Libr.
+```{r message=FALSE, warning=FALSE}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(xtable)
+library(lmtest)
+library(sandwich)
+```
+
+## Rm. Var.
+```{r}
+# rm(list=ls())
+dir = "/Users/simondn/Documents/Stats572/"
+```
+
+
+
+## Functions
+```{r}
+source(paste0(dir,"Code/AIZResults.R"))
+source(paste0(dir,"Code/DiscrepancyFunction.R"))
+source(paste0(dir,"Code/MonteCarloResults.R"))
+source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
+```
+
+## Results 
+```{r}
+### AIZ Results ###
+SettingType = "Logistic"
+AIZ = AIZResults(type = SettingType)
+
+### My Results ###
+file_list = list.files(path =  paste0(dir,"Results/",SettingType,"/N50_200"),
+                        pattern = "\\.rds$",
+                        full.names = TRUE)
+SmallSampleSimulation = list()
+SmallSampleSimulation = lapply(file_list, readRDS)
+rm(file_list)
+
+SmallSampleSimulation = SimulationReformatResultsFunction(SmallSampleSimulation)
+SmallSampleSEMedianList = SmallSampleSimulation$SimSEMedianList
+SmallSampleMonteCarloResults = MonteCarloResults(SmallSampleSimulation, 5)
+SmallSampleRunTimeList = SmallSampleSimulation$RunTimeList  # in seconds
+SmallSampleCoverageList = data.frame(SmallSampleSimulation$CoverageList) 
+SmallSampleParameterVector = SmallSampleSimulation$ParameterVector
+
+SmallSampleResultsTable = cbind(SmallSampleSEMedianList[,c(1:5)],
+                                SmallSampleCoverageList[,6:9],
+                                SmallSampleSEMedianList[,6:10]) %>%
+  select(-c(Difference,Indicator))
+rownames(SmallSampleResultsTable) = paste0("Case ", 1:nrow(SmallSampleResultsTable)) 
+
+SmallSampleResultsTable = SmallSampleResultsTable %>% mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                                                                  Misspec. == 1 ~ "Yes"),
+                                             Homo. = case_when(Homo. == 0 ~ "Yes",
+                                                               Homo. == 0.5 ~ "No"),
+                                             Leverage = case_when(Leverage == 0 ~ "No",
+                                                                  Leverage == 0.1 ~ "Yes"))
+
+# SmallSampleResultsTable
+```
+
+# Comparison
+```{r}
+DiscrepancyResults = DiscrepancyFunction(epsilon = 0.1, AIZ, SmallSampleSEMedianList, SmallSampleCoverageList)
+Dicrepancy = DiscrepancyResults$Discrepancy
+LargeDiscrepancyIndices = DiscrepancyResults$LargeDiscrepancyIndices
+DiscrepancyMeans = DiscrepancyResults$MeanDiscrepancy
+LargeDiscrepancyIndices
+DiscrepancyMeans
+```
+
+# xtable
+```{r}
+SmallSampleMonteCarloResults$MonteCarliResults_Conditional %>% 
+  mutate(Misspec. = case_when(Misspec. == 0 ~ "No",
+                              Misspec. == 1 ~ "Yes"),
+         Homo. = case_when(Homo. == 0 ~ "Yes",
+                           Homo. == 0.5 ~ "No"),
+         Leverage = case_when(Leverage == 0 ~ "No",
+                              Leverage == 0.1 ~ "Yes")) %>%
+  xtable(digits = 5,
+         caption = "Monte Carlo results for the [population] standard error.")
+```
+
+
+
+

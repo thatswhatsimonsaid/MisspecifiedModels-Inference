@@ -1,0 +1,94 @@
+---
+title: "Stats 572 - Run Simulation Study 1"
+author: "Simon Dovan Nguyen"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_collapsed: true
+    theme: lumen
+    css: assets/styles.css
+---
+
+# Set Up
+## Notes
+
+## Libr.
+```{r message=FALSE, warning=FALSE}
+library(stats)
+library(tidyverse)
+library(StatMatch)
+library(xtable)
+library(lmtest)
+library(sandwich)
+library(mixtools)
+library(distr)
+```
+
+## Rm. Var.
+```{r}
+rm(list=ls())
+dir = "/Users/simondn/Documents/Stats572/"
+```
+
+# Functions
+```{r}
+source(paste0(dir,"Code/AIZResults.R"))
+source(paste0(dir,"Code/ConfidenceIntervalFunction.R"))
+source(paste0(dir,"Code/OneIterationFunction.R"))
+source(paste0(dir,"Code/SimDataLinear.R"))
+source(paste0(dir,"Code/SimDataLogistic.R"))
+source(paste0(dir,"Code/SimulationFunction.R"))
+source(paste0(dir,"Code/SimulationReformatResultsFunction.R"))
+source(paste0(dir,"Code/ThetaCondFunction.R"))
+source(paste0(dir,"Code/ThetaPopFunction.R"))
+source(paste0(dir,"Code/VHatCondFunction.R"))
+source(paste0(dir,"Code/VHatPopFunction.R"))
+source(paste0(dir,"Code/WhichMinFunction.R"))
+```
+
+# Set Up
+```{r}
+### Set Up ###
+set.seed(1)
+TypeSetting = "Logistic"
+ParameterVector = cbind(MisspecVec = c(rep(0,16),rep(1,16)),                        # Delta: Misspecification Rate
+                        HomoskedVec = rep(c(rep(0,8), rep(0.5,8)),2),                # Gamma: Heteroskedasticity Rate
+                        SizeVec = rep(c(rep(50,4), rep(200,4)),4),                   # N: Observations
+                        LeverageVec = rep(c(0,0,0.1,0.1),8),                         # rho: Mixture Leverage
+                        KVec = rep(c(1,5),16)                                        # K: Parameters
+                        ) %>% data.frame
+```
+
+# Simulation
+```{r}
+### Run Simulation ###
+SimulationResultsList = list()
+NSim = 100
+for(i in 1:nrow(ParameterVector)){
+  ### Case ###
+  print(paste0("Case: ", i))
+  ### Parameters ###
+  delta = ParameterVector[i,1]
+  gamma = ParameterVector[i,2]
+  N = ParameterVector[i,3]
+  rho = ParameterVector[i,4]
+  K = ParameterVector[i,5]
+
+  ### Simulation ###
+SimulationResultsList[[i]] = SimulationFunction(NSim = NSim, 
+                                           delta = delta,
+                                           gamma = gamma,
+                                           N = N,
+                                           rho = rho,
+                                           K = K,
+                                           VarFixed = NA,
+                                           TypeSetting = TypeSetting)}
+```
+
+
+
+
+
+
